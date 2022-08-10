@@ -1,0 +1,35 @@
+server:
+  servlet:
+    context-path: /
+  port: 80
+file:
+  upload:
+    path: D:/starcms/contents/
+    relative:
+      path: /contents/**
+
+spring:
+  datasource:
+#    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/starcms_db?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: 123456
+    initialization-mode: never
+    data: classpath*:/db-import.sql
+
+  jpa:
+    database: MySQL
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      # 若由实体Bean自动创建表，则ddl-auto设置为always，如果由脚本创建表，则设置为none
+      ddl-auto: none
+    show-sql: true
+    open-in-view: true
+
+  thymeleaf:
+    cache: false
+    check-template-location: true
+    servlet:
+      content-type: text/html
+    enabled: true
+    encoding: utf-8

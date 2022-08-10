@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="topheader" class="header-section">
+    <!--logo and logo icon start-->
+    <div class="logo dark-logo-bg hidden-xs hidden-sm">
+        <a href="index.html">
+            <img th:src="@{/img/logo-icon.png}">
+            <span class="brand-name">StarCMS</span>
+        </a>
+    </div>
+    <div class="icon-logo dark-logo-bg hidden-xs hidden-sm">
+        <a href="index.html">
+            <img th:src="@{/img/logo-icon.png}">
+        </a>
+    </div>
+    <!--logo and logo icon end-->
+
+    <!--toggle button start-->
+    <a class="toggle-btn"><i class="fa fa-outdent"></i></a>
+    <!--toggle button end-->
+
+    <div class="notification-wrap">
+        <!--right notification start-->
+        <div class="right-notification">
+            <ul class="notification-menu">
+                <li>
+                    <form class="search-content" action="index.html" method="post">
+                        <input type="text" class="form-control" name="keyword" placeholder="Search...">
+                    </form>
+                </li>
+                <li>
+                    <a href="javascript:;" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <img th:src="@{/img/avatar-mini.jpg}" alt="">[[${session.user.realName}]]
+                        <span class=" fa fa-angle-down"></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-usermenu purple pull-right">
+                        <li>
+                            <a th:href="@{/backstage/user/toeditpwd}">
+                                <i class="fa fa-cog pull-right"></i>修改密码</a>
+                            </a>
+                        </li>
+                        <li><a th:href="@{/backstage/user/logout}"><i class="fa fa-sign-out pull-right"></i>退出</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!--right notification end-->
+    </div>
+</div>
+</body>
+</html>

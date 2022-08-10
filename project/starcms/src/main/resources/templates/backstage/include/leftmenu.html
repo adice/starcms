@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="leftmenu" class="sidebar-left">
+    <div class="sidebar-left-info">
+        <!-- visible small devices start-->
+        <div class=" search-field"></div>
+        <!-- visible small devices end-->
+        <!--sidebar nav start-->
+        <ul class="nav nav-pills nav-stacked side-navigation">
+            <li th:class="${activemenu eq 'homemenu' ? 'nav-active' : ''}"><a href="/backstage/index"><i class="fa fa-home"></i><span>主页</span></a></li>
+            <li th:class="${activemenu eq 'contentmenu' ? 'menu-list nav-active' : 'menu-list'}|"><a href=""><i class="fa fa-book"></i> <span>内容管理</span></a>
+                <ul class="child-list">
+                    <li th:class="${activechildmenu eq 'ccmenu' ? 'active' : ''}">
+                        <a href="/backstage/content/list"><i class="fa fa-book"></i>查看全部</a>
+                    </li>
+                    <li th:class="${activechildmenu eq 'ccmenu' + channel.id ? 'active' : ''}" style="margin-left: 16px;" th:each="channel : ${application.channels}">
+                        <a th:href="@{/backstage/content/list(channelId=${channel.id})}"><i class="fa fa-book"></i>[[${channel.title}]]</a>
+                        <ul class="child-list" style="display: block" th:if="${#lists.size(channel.childChannels) > 0}">
+                        <li th:class="${activechildmenu eq 'ccmenu' + childChannel.id ? 'active' : ''}" style="margin-left: 16px;" th:each="childChannel : ${channel.childChannels}">
+                            <a th:href="@{/backstage/content/list(channelId=${childChannel.id})}"><i class="fa fa-book"></i>[[${childChannel.title}]]</a>
+                        </li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </li>
+            <li class="menu-list"><a href=""><i class="fa fa-tasks"></i> <span>栏目管理</span></a>
+                <ul class="child-list">
+                    <li><a href="form-layout.html"><i class="fa fa-tasks"></i>栏目列表</a></li>
+                    <li><a href="advanced-components.html"><i class="fa fa-tasks"></i>新增栏目</a></li>
+                </ul>
+            </li>
+            <li th:class="${activemenu eq 'usermenu' ? 'menu-list nav-active' : 'menu-list'}"><a href="javascript:;"><i class="fa fa-users"></i> <span>用户管理</span></a>
+                <ul class="child-list">
+                    <li th:class="${activemenu eq 'usermenu' ? 'active' : ''}"><a th:href="@{/backstage/user/list}">用户列表</a></li>
+                    <li><a href="inbox-details.html">统计用户数据</a></li>
+                </ul>
+            </li>
+            <li>
+                <h3 class="navigation-title">Extra</h3>
+            </li>
+            <li class="menu-list"><a href=""><i class="fa fa-bar-chart-o"></i> <span>报表统计</span></a>
+                <ul class="child-list">
+                    <li><a href="flot-chart.html"> Flot Charts</a></li>
+                    <li><a href="morris-chart.html"> Morris Charts</a></li>
+                    <li><a href="chartjs.html"> Chartjs</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!--sidebar nav end-->
+    </div>
+</div>
+</body>
+</html>

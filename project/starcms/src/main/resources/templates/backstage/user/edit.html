@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/img/ico/favicon.png}">
+    <title>STARCMS</title>
+    <!--right slidebar-->
+    <link th:href="@{/css/slidebars.css}" rel="stylesheet">
+    <!--jquery-ui-->
+    <link th:href="@{/jquery-ui/jquery-ui-1.10.1.custom.min.css}" rel="stylesheet"/>
+    <!--common style-->
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link th:href="@{/css/style-responsive.css}" rel="stylesheet">
+    <!--jquery-toastr-->
+    <link th:href="@{/css/toastr.min.css}" rel="stylesheet"/>
+</head>
+<body class="sticky-header">
+<section>
+    <!-- sidebar left start-->
+    <div th:replace="backstage/include/leftmenu::leftmenu"></div>
+    <!-- sidebar left end-->
+
+    <!-- body content start-->
+    <div class="body-content">
+        <!-- header section start-->
+        <div th:replace="backstage/include/header::topheader"></div>
+        <!-- header section end-->
+
+        <!-- page head start-->
+        <div class="page-head">
+            <h3 class="m-b-less">
+                修改用户
+            </h3>
+            <div class="state-information">
+                <ol class="breadcrumb m-b-less bg-less">
+                    <li><a th:href="@{/backstage/index}">首页</a></li>
+                    <li><a th:href="@{/backstage/user/list}">用户管理</a></li>
+                    <li class="active">修改用户</li>
+                </ol>
+            </div>
+        </div>
+        <!-- page head end-->
+
+        <!--body wrapper start-->
+        <div class="wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            后台用户信息
+                        </header>
+                        <div class="panel-body">
+                            <form id="userform" class="form-horizontal tasi-form" action="/backstage/user/edit" method="post">
+                                <input type="hidden" name="id" th:value="${edituser.id}">
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-sm-2 control-label">账号*：</label>
+                                    <div class="col-sm-10">
+                                        <span th:text="${edituser.name}" class="form-control" disabled></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-sm-2 control-label">真实姓名*：</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" id="realName" name="realName" th:value="${edituser.realName}" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-sm-2 control-label">密码*：</label>
+                                    <div class="col-sm-10">
+                                        <input type="password" id="password" name="password" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-sm-2 control-label">确认密码*：</label>
+                                    <div class="col-sm-10">
+                                        <input type="password" id="password1" name="password1" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-sm-2 control-label">邮箱：</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" id="email" name="email" class="form-control" th:value="${edituser.email}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-sm-2 control-label">角色*：</label>
+                                    <div class="col-sm-10">
+                                        <label class="checkbox-custom inline check-success" th:each="role : ${roles}">
+                                            <input type="checkbox" name="role" th:id="'role' + ${role.key.id}"
+                                                   th:value="${role.key.id}" th:attr="checked=${role.value}">
+                                            <label th:for="'role' + ${role.key.id}" th:text="${role.key.name}"></label>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-sm-2 control-label">管理数据范围*：</label>
+                                    <div class="col-sm-10">
+                                        <label class="radio-custom inline radio-success">
+                                            <input type="radio" name="dataRange" id="dr1" value="1" th:attr="checked=${edituser.dataRange} != null ? (${edituser.dataRange == 1 ? true : false}) : true">
+                                            <label
+                                                for="dr1">所有数据</label>
+                                        </label>
+                                        <label class="radio-custom inline radio-success">
+                                            <input type="radio" name="dataRange" id="dr2" value="2" th:attr="checked=${edituser.dataRange} != null ? (${edituser.dataRange == 2 ? true : false}) : false">
+                                            <label for="dr2">自己的数据</label>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-sm-2 control-label">状态*：</label>
+                                    <div class="col-sm-10">
+                                        <label class="radio-custom inline radio-success">
+                                            <input type="radio" name="state" id="state1" value="1" th:attr="checked=${edituser.state} != null ? (${edituser.state == 1 ? true : false}) : true">
+                                            <label for="state1">正常</label>
+                                        </label>
+                                        <label class="radio-custom inline radio-success">
+                                            <input type="radio" name="state" id="state2" value="2" th:attr="checked=${edituser.state} != null ? (${edituser.state == 2 ? true : false}) : false">
+                                            <label for="state2">禁用</label>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-sm-2 control-label"></label>
+                                    <div class="col-sm-10">
+                                        <button type="submit" class="btn btn-success">保存</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <!--footer section start-->
+            <footer th:replace="backstage/include/footer::footer"></footer>
+            <!--footer section end-->
+        </div>
+        <!--body wrapper end-->
+    </div>
+    <!-- body content end-->
+</section>
+<div th:replace="backstage/include/jss"></div>
+<script th:src="@{/js/jquery.validate.min.js}" type="text/javascript"></script>
+<script th:src="@{/js/user-edit-validation.js}" type="text/javascript"></script>
+<script th:src="@{/js/toastr.min.js}" type="text/javascript"></script>
+<script type="text/javascript" th:if="${userinfo} != null">
+    $(document).ready(function () {
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "progressBar": true,
+            "positionClass": "toast-top-center",
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+        toastr.warning("[[${userinfo}]]", "提示");
+    });
+</script>
+</body>
+</html>
