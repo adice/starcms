@@ -10,7 +10,6 @@ $(document).ready(function () {
         acceptedFiles: ".pdf,.zip,.rar",
         autoProcessQueue: true,
         dictDefaultMessage: "点击或拖入需要上传的文件",
-        dictMaxFilesExceeded: "只能上传一个文件，请先删除旧文件",
         dictFileTooBig: "文件超过20MB，不允许上传",
         dictInvalidInputType: "只能上传 pdf/zip/rar",
         dictRemoveFile: "删除",

@@ -1,29 +1,31 @@
 $(document).ready(function () {
-    // 上传附件
+    // 上传图片
     Dropzone.autoDiscover = false;
-    $("#dropzattachments").dropzone({
-        url: "/backstage/uploadfile",
+    $("#dropzpic").dropzone({
+        url: "/backstage/uploadpic",
         paramName: "uploadfiles",
+        maxFiles: 1,
         maxFilesize: 20,
-        createImageThumbnails: false,
+        createImageThumbnails: true,
+        thumbnailWidth: 120,
         addRemoveLinks: true,
-        acceptedFiles: ".pdf,.zip,.rar",
+        acceptedFiles: ".jpg,.jpeg,.gif,.png,.bmp",
         autoProcessQueue: true,
         dictDefaultMessage: "点击或拖入需要上传的文件",
-        dictFileTooBig: "文件超过20MB，不允许上传",
-        dictInvalidInputType: "只能上传 pdf/zip/rar",
+        dictMaxFilesExceeded: "只能上传一个文件，请先删除旧文件",
+        dictFileTooBig: "文件超过2MB，不允许上传",
+        dictInvalidInputType: "只能上传图片，jpg/jpeg/gif/png/bmp",
         dictRemoveFile: "删除",
         dictCancelUpload: "取消",
         init: function () {
             this.on('success', function (files, response) {
                 //文件上传成功之后的操作
-                $("#attachments").val($("#attachments").val() + response[0].url + ",");
+                $("#pic").val(response[0].url);
                 files.path = response[0].url;
             });
             this.on('removedfile', function (files, response) {
-                $("#attachments").val($("#attachments").val().replace(files.path + ',', ''));
+                $("#pic").val($("#pic").val().replace(files.path, ''));
             });
         }
     });
-    
 });

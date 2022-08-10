@@ -1,15 +1,11 @@
 package com.starrysky.starcms.content.service;
 
-import com.starrysky.starcms.channel.dao.ChannelDao;
 import com.starrysky.starcms.content.dao.ContentDao;
 import com.starrysky.starcms.contentbook.dao.ContentBookDao;
-import com.starrysky.starcms.entity.BackgroundUser;
-import com.starrysky.starcms.entity.Channel;
-import com.starrysky.starcms.entity.Content;
-import com.starrysky.starcms.entity.ContentBook;
+import com.starrysky.starcms.contentpic.dao.ContentPicDao;
+import com.starrysky.starcms.entity.*;
 import com.starrysky.starcms.util.Constant;
 import org.springframework.data.domain.Page;
-import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +28,7 @@ public class ContentService {
     @Resource
     private ContentBookDao contentBookDao;
     @Resource
-    private ChannelDao channelDao;
+    private ContentPicDao contentPicDao;
 
     @Transactional(readOnly = true)
     public Page<Content> list(String title, Boolean recommend, Integer status, Integer[] channelIds, Integer userId, String name, String realName, int pageNum, int pageSize) throws Exception {
@@ -44,7 +40,6 @@ public class ContentService {
         channel.setId(channelId);
         content.setChannel(channel);
         content.setUser(backgroundUser);
-
         content.setAddTime(new Date());
         content.setViewCount(0);
         if (content.getStatus() == 0) {
@@ -85,6 +80,28 @@ public class ContentService {
         contentBook.setCover(cover);
         contentBook.setAttachments(attachments);
         this.contentBookDao.save(contentBook);
+    }
+
+    public void addPic(Content content, Integer channelId, BackgroundUser backgroundUser, String time, String place, String publisher, String pic) throws Exception {
+        Channel channel = new Channel();
+        channel.setId(channelId);
+        content.setChannel(channel);
+        content.setUser(backgroundUser);
+        content.setAddTime(new Date());
+        content.setViewCount(0);
+        if (content.getStatus() == 0) {
+            content.setStatus(Constant.CONTENT_STATUS_AUDITING);
+        }
+
+        ContentPic contentPic = new ContentPic();
+        contentPic.setTime(time);
+        contentPic.setPlace(place);
+        contentPic.setPublisher(publisher);
+        contentPic.setPath(pic);
+        contentPic.setContent(content);
+
+        this.contentDao.save(content);
+        this.contentPicDao.save(contentPic);
     }
 
     public void delete(int id) {
