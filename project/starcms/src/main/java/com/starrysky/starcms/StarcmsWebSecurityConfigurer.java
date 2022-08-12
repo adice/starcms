@@ -10,8 +10,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 import javax.annotation.Resource;
+import javax.sql.DataSource;
 
 /**
  * @ClassName StarcmsWebSecurityConfigurer
@@ -37,6 +42,7 @@ public class StarcmsWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/backstage/user/loginpage", "/css/**", "/js/**", "/img/**", "/fonts/**", "/jquery-ui/**", "/fuelux/**", "/sweetalert/**").permitAll()
                 .anyRequest().authenticated()
+                // 登录
                 .and()
                 .formLogin()
                 .loginPage("/backstage/user/loginpage")
@@ -46,13 +52,47 @@ public class StarcmsWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/backstage/index", true)
                 .successHandler(loginSuccessHandler)
                 .failureUrl("/backstage/user/loginpage")
+                // 注销
                 .and()
                 .logout()
                 .logoutUrl("/backstage/user/logout")
                 .logoutSuccessUrl("/backstage/user/loginpage")
                 .invalidateHttpSession(true)
-
+//                // 免密登录
+//                .and()
+//                .rememberMe()   // 以持久化的方式记录cookie信息
+//                .tokenRepository(persistentTokenRepository())
+//                .tokenValiditySeconds(7 * 24 * 60 * 60)
+                // csrf
                 .and()
-                .csrf().disable();
+                // 会话管理
+                .csrf().disable()
+                // 限制1个账号只能登录1次
+                .sessionManagement()
+                .maximumSessions(1) // 需要重写user的hashcode和equals方法
+                .expiredUrl("/backstage/user/loginpage")
+//                .maxSessionsPreventsLogin(true) // 禁止后登录用户登录
+                ;
+
+    }
+
+    /**
+     * DataSource和PersistenTokenRepository都是为了实现“记住我”的功能，
+     * 并将相关信息存入数据库中
+     */
+//    @Resource
+//    private DataSource dataSource;
+//
+//    @Bean
+//    public PersistentTokenRepository persistentTokenRepository(){
+//        JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
+//        jdbcTokenRepository.setDataSource(dataSource);
+//        jdbcTokenRepository.setCreateTableOnStartup(false);  // 第1此启动会创建表，下次要改为false
+//        return jdbcTokenRepository;
+//    }
+
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher(){
+        return new HttpSessionEventPublisher();
     }
 }

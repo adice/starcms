@@ -17,11 +17,11 @@ import java.util.Date;
 
 /**
  * @ClassName LoginSuccessHandler
- * @Description
+ * @Description 登录成功后的后续处理，此处记录了最后一次登录时间和登录次数加1
  * @Author adi
  * @Date 2022-08-12 10:37
  */
-@Service("loginSuccessHandler")
+@Service
 @Transactional
 public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
     @Resource
@@ -29,6 +29,7 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        // 更新登录时间和次数
         BackgroundUser backgroundUser = this.backgroundUserDao.findByName(authentication.getName());
         backgroundUser.setLastLoginTime(new Date());
         backgroundUser.setLoginCount(backgroundUser.getLoginCount() + 1);

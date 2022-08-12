@@ -7,7 +7,7 @@ import java.util.Collection;
 
 /**
  * @ClassName User
- * @Description
+ * @Description 与SpringSecurity有关的用户可以跟entity下的实体Bean合并成1个
  * @Author adi
  * @Date 2022-08-11 15:05
  */
@@ -100,5 +100,15 @@ public class SecurityUser implements UserDetails {
 
     public void setRealName(String realName) {
         this.realName = realName;
+    }
+
+    @Override
+    public int hashCode() {
+        return username.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return username.hashCode() == obj.hashCode();
     }
 }

@@ -47,7 +47,7 @@
             <div id="errorinfo" th:text="${session?.SPRING_SECURITY_LAST_EXCEPTION?.message}" style="color: #fff;"></div>
             <button class="btn btn-lg btn-success btn-block" type="submit" onclick="return check()">登录</button>
             <label class="checkbox-custom check-success">
-                <input type="checkbox" value="remember-me" id="checkbox1"> <label for="checkbox1">Remember me</label>
+                <input type="checkbox" name="remember-me" value="true" id="checkbox1"> <label for="checkbox1">7天内自动登录</label>
             </label>
         </div>
     </form>
