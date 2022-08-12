@@ -52,11 +52,20 @@ public class BackgroundUserController {
 //        }
 //    }
 
-//    @GetMapping("/logout")
+    //    @GetMapping("/logout")
 //    public String logout(HttpSession session) {
 //        session.invalidate();
 //        return "redirect:/backstage/user/login";
 //    }
+    @RequestMapping("/checkname")
+    @ResponseBody
+    public String checkName(String name) {
+        if (this.backgroundUserService.getByName(name)) {
+            return "exist";
+        } else {
+            return "noexist";
+        }
+    }
 
     @RequestMapping("/list")
     public String list(String name, String realName, Integer state, Integer pageNum, Integer pageSize, HttpServletRequest request) {
@@ -305,7 +314,7 @@ public class BackgroundUserController {
     }
 
     @GetMapping("/deletes/{ids}")
-    public String deletes(@PathVariable("ids") String ids){
+    public String deletes(@PathVariable("ids") String ids) {
         this.backgroundUserService.deletes(ids);
         return "redirect:/backstage/user/list";
     }

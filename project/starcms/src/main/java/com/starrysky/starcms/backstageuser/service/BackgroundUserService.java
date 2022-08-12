@@ -32,7 +32,7 @@ public class BackgroundUserService {
      * @param password
      * @return
      */
-    @Transactional(readOnly = false)
+    @Transactional()
     public BackgroundUser login(String name, String password) throws Exception {
         BackgroundUser backgroundUser = this.backgroundUserDao.findByNameAndState(name, Constant.STATE_NORMAL);
         if (backgroundUser == null) {
@@ -55,6 +55,10 @@ public class BackgroundUserService {
         }
     }
 
+    public boolean getByName(String name){
+        return this.backgroundUserDao.findByName(name) != null;
+    }
+
     /**
      * 检索后台用户
      *
@@ -67,7 +71,7 @@ public class BackgroundUserService {
         return this.backgroundUserDao.findDynamic(name, realName, state, pageNum, pageSize);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional()
     public BackgroundUser add(BackgroundUser user) {
         user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
         return this.backgroundUserDao.save(user);
@@ -77,7 +81,7 @@ public class BackgroundUserService {
         return this.backgroundUserDao.getOne(id);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional()
     public BackgroundUser edit(BackgroundUser user) throws Exception {
         BackgroundUser dbUser = this.backgroundUserDao.getOne(user.getId());
         dbUser.setRealName(user.getRealName());
@@ -91,19 +95,19 @@ public class BackgroundUserService {
         return this.backgroundUserDao.save(dbUser);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional()
     public void editPwd(int id, String password) throws Exception {
         BackgroundUser dbUser = this.backgroundUserDao.getOne(id);
         dbUser.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
         this.backgroundUserDao.save(dbUser);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional()
     public void delete(int id) {
         this.backgroundUserDao.deleteById(id);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional()
     public void deletes(String ids){
         String[] allId = ids.split(",");
         List<BackgroundUser> list = new ArrayList<>();
