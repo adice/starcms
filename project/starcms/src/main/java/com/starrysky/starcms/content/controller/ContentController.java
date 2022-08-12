@@ -6,8 +6,10 @@ import com.starrysky.starcms.entity.BackgroundUser;
 import com.starrysky.starcms.entity.Channel;
 import com.starrysky.starcms.entity.Content;
 import com.starrysky.starcms.entity.ContentBook;
+import com.starrysky.starcms.security.SecurityUser;
 import com.starrysky.starcms.util.Constant;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -266,7 +268,13 @@ public class ContentController {
         }
         if(checked){
             try {
-                BackgroundUser backgroundUser = (BackgroundUser) session.getAttribute("user");
+                // 自己实现登录时
+//                BackgroundUser backgroundUser = (BackgroundUser) session.getAttribute("user");
+                // 基于SpringSecurit
+                SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                BackgroundUser backgroundUser = new BackgroundUser();
+                backgroundUser.setId(securityUser.getId());
+
                 this.contentService.addBook(content, channelId, backgroundUser, seriesName, authorName, cover, attachments);
                 request.setAttribute("contentinfo", "填加书籍成功");
             } catch (Exception e) {
@@ -352,7 +360,12 @@ public class ContentController {
         }
         if(checked){
             try {
-                BackgroundUser backgroundUser = (BackgroundUser) session.getAttribute("user");
+                // 自己实现登录时
+//                BackgroundUser backgroundUser = (BackgroundUser) session.getAttribute("user");
+                // 基于SpringSecurit
+                SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                BackgroundUser backgroundUser = new BackgroundUser();
+                backgroundUser.setId(securityUser.getId());
                 this.contentService.addPic(content, channelId, backgroundUser, time, place, publisher, pic);
                 request.setAttribute("contentinfo", "填加图片成功");
             } catch (Exception e) {

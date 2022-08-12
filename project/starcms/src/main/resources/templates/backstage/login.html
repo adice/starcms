@@ -44,7 +44,7 @@
         <div class="login-wrap">
             <input type="text" id="username" name="name" value="admin" class="form-control" placeholder="账号" autofocus>
             <input type="password" id="password" name="password" value="123456" class="form-control" placeholder="密码">
-            <div id="errorinfo" th:text="${loginfail}" style="color: #fff;"></div>
+            <div id="errorinfo" th:text="${session?.SPRING_SECURITY_LAST_EXCEPTION?.message}" style="color: #fff;"></div>
             <button class="btn btn-lg btn-success btn-block" type="submit" onclick="return check()">登录</button>
             <label class="checkbox-custom check-success">
                 <input type="checkbox" value="remember-me" id="checkbox1"> <label for="checkbox1">Remember me</label>

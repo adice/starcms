@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -35,7 +36,7 @@
                 </li>
                 <li>
                     <a href="javascript:;" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        <img th:src="@{/img/avatar-mini.jpg}" alt="">[[${session.user.realName}]]
+                        <img th:src="@{/img/avatar-mini.jpg}" alt=""><span sec:authentication="principal.username"></span>
                         <span class=" fa fa-angle-down"></span>
                     </a>
                     <ul class="dropdown-menu dropdown-usermenu purple pull-right">

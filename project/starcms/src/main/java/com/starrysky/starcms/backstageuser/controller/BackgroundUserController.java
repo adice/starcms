@@ -29,34 +29,34 @@ public class BackgroundUserController {
     @Resource
     private BackgroundRoleService backgroundRoleService;
 
-    @GetMapping("/login")
+    @GetMapping("/loginpage")
     public String login() {
         return "/backstage/login";
     }
 
-    @PostMapping("/login")
-    public String login(String name, String password, HttpServletRequest request, HttpSession session) {
-        BackgroundUser backgroundUser = null;
-        try {
-            backgroundUser = this.backgroundUserService.login(name, password);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (backgroundUser != null) {
-            backgroundUser.setPassword("");
-            session.setAttribute("user", backgroundUser);
-            return "redirect:/backstage/index";
-        } else {
-            request.setAttribute("loginfail", "账号密码错误，请重试！");
-            return "/backstage/login";
-        }
-    }
+//    @PostMapping("/login")
+//    public String login(String name, String password, HttpServletRequest request, HttpSession session) {
+//        BackgroundUser backgroundUser = null;
+//        try {
+//            backgroundUser = this.backgroundUserService.login(name, password);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        if (backgroundUser != null) {
+//            backgroundUser.setPassword("");
+//            session.setAttribute("user", backgroundUser);
+//            return "redirect:/backstage/index";
+//        } else {
+//            request.setAttribute("loginfail", "账号密码错误，请重试！");
+//            return "/backstage/login";
+//        }
+//    }
 
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/backstage/user/login";
-    }
+//    @GetMapping("/logout")
+//    public String logout(HttpSession session) {
+//        session.invalidate();
+//        return "redirect:/backstage/user/login";
+//    }
 
     @RequestMapping("/list")
     public String list(String name, String realName, Integer state, Integer pageNum, Integer pageSize, HttpServletRequest request) {

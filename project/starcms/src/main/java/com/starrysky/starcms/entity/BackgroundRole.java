@@ -12,6 +12,7 @@ import javax.persistence.*;
 @Table(name = "bg_role")
 public class BackgroundRole {
     private int id;
+    private String title;
     private String name;
     private int priority;
     private int state;      // 1-正常，2-禁用
@@ -24,6 +25,14 @@ public class BackgroundRole {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Column(length = 20)
