@@ -2,8 +2,10 @@ INSERT INTO `bg_role` (id, title, name, priority, state) VALUES (1, 'ROLE_admin'
 INSERT INTO `bg_role` (id, title, name, priority, state) VALUES (2, 'ROLE_entry', '录入人员', 2, 1);
 INSERT INTO `bg_role` (id, title, name, priority, state) VALUES (3, 'ROLE_audit', '审核人员', 3, 1);
 COMMIT;
-INSERT INTO `bg_user` (id, name, password, real_name, regist_time, regist_ip, login_count, data_range, state)
- VALUES (1, 'admin', '123456', 'administrator', '2022-7-26', '127.0.0.1', 0, 1, 1);
+-- INSERT INTO `bg_user` (id, name, password, real_name, regist_time, regist_ip, login_count, data_range, state)
+--  VALUES (1, 'admin', '{noop}123456', 'administrator', '2022-7-26', '127.0.0.1', 0, 1, 1);
+ INSERT INTO `bg_user` (id, name, password, real_name, regist_time, regist_ip, login_count, data_range, state)
+ VALUES (1, 'admin', '{bcrypt}$2a$10$sv.ZgyVW3AANy.JB6GyQ/u0ibtaPDm7mGvSyu.V7GMjI/LqyrPMQW', 'administrator', '2022-7-26', '127.0.0.1', 0, 1, 1);
 --## $2a$10$sv.ZgyVW3AANy.JB6GyQ/u0ibtaPDm7mGvSyu.V7GMjI/LqyrPMQW
 COMMIT;
 INSERT INTO `ct_channel` (id, title, path, priority, parent_id, state) VALUES (1, '书籍', 'book', 1, null, 1);

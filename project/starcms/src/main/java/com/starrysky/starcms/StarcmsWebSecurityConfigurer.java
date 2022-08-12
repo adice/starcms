@@ -1,5 +1,6 @@
 package com.starrysky.starcms;
 
+import com.starrysky.starcms.security.LoginSuccessHandler;
 import com.starrysky.starcms.security.SecurityUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +15,7 @@ import javax.annotation.Resource;
 
 /**
  * @ClassName StarcmsWebSecurityConfigurer
- * @Description
+ * @Description SpringSecurity配置类
  * @Author adi
  * @Date 2022-08-10 10:11
  */
@@ -23,16 +24,13 @@ public class StarcmsWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     @Resource
     private SecurityUserDetailsService securityUserDetailsService;
+    @Resource
+    private LoginSuccessHandler loginSuccessHandler;
 
     @Override
     protected void configure(AuthenticationManagerBuilder builder) throws Exception {
         builder.userDetailsService(securityUserDetailsService);
     }
-
-//    @Bean
-//    public PasswordEncoder getPassWordENcoder() {
-//        return new BCryptPasswordEncoder();
-//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -46,6 +44,7 @@ public class StarcmsWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .usernameParameter("name")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/backstage/index", true)
+                .successHandler(loginSuccessHandler)
                 .failureUrl("/backstage/user/loginpage")
                 .and()
                 .logout()

@@ -5,6 +5,7 @@ import com.starrysky.starcms.entity.BackgroundRole;
 import com.starrysky.starcms.entity.BackgroundUser;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsPasswordService;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
@@ -50,4 +51,17 @@ public class SecurityUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("用户名不存在");
         }
     }
+
+    /**
+     * 自动升级密码加密规则，再实现 UserDetailsPasswordService及其方法
+     */
+//    @Override
+//    @Transactional()
+//    public UserDetails updatePassword(UserDetails userDetails, String newPassword) {
+//        BackgroundUser backgroundUser = this.backgroundUserDao.findByName(userDetails.getUsername());
+//        backgroundUser.setPassword(newPassword);
+//        this.backgroundUserDao.save(backgroundUser);
+//        return userDetails;
+//    }
+
 }

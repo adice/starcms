@@ -6,7 +6,7 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 
 /**
  * @ClassName ReloadMessageConfig
- * @Description
+ * @Description 用于SpringSecurity的提示信息显示中文
  * @Author adi
  * @Date 2022-08-11 17:56
  */
