@@ -136,6 +136,8 @@ public class ContentService {
                 this.contentDao.deleteById(id);
                 break;
             case 2:
+                this.contentPicDao.deleteByContent(content);
+                this.contentDao.deleteById(id);
                 break;
                 // TODO 其它栏目的删除
 

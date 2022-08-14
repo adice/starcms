@@ -37,12 +37,7 @@ public class ContentController {
     private BackgroundUserService backgroundUserService;
 
     /**
-     * give me some knife
-     * no not this short one that .blant.. one
-     * whose thing is that?
-     * it's the keyboard operator's thing
-     * that's a lovely spoon.
-     *
+     * 内容列表
      * @param title
      * @param recommend
      * @param status
@@ -54,7 +49,6 @@ public class ContentController {
      * @param request
      * @return
      */
-
     @RequestMapping("/list")
     public String list(String title, Boolean recommend, Integer status, Integer channelId, String name, String realName, Integer pageNum, Integer pageSize, HttpServletRequest request) {
         if (pageNum == null)
