@@ -66,8 +66,7 @@ public class StarcmsWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 // csrf
                 .and()
                 // 会话管理
-                .csrf()
-                .and()
+                .csrf().disable()
                 // 限制1个账号只能登录1次
                 .sessionManagement()
                 .maximumSessions(1) // 需要重写user的hashcode和equals方法

@@ -1,5 +1,6 @@
 package com.starrysky.starcms.content.controller;
 
+import com.starrysky.starcms.backstageuser.service.BackgroundUserService;
 import com.starrysky.starcms.content.service.ContentService;
 import com.starrysky.starcms.contentbook.service.ContentBookService;
 import com.starrysky.starcms.contentpic.service.ContentPicService;
@@ -32,6 +33,27 @@ public class ContentController {
     private ContentBookService contentBookService;
     @Resource
     private ContentPicService contentPicService;
+    @Resource
+    private BackgroundUserService backgroundUserService;
+
+    /**
+     * give me some knife
+     * no not this short one that .blant.. one
+     * whose thing is that?
+     * it's the keyboard operator's thing
+     * that's a lovely spoon.
+     *
+     * @param title
+     * @param recommend
+     * @param status
+     * @param channelId
+     * @param name
+     * @param realName
+     * @param pageNum
+     * @param pageSize
+     * @param request
+     * @return
+     */
 
     @RequestMapping("/list")
     public String list(String title, Boolean recommend, Integer status, Integer channelId, String name, String realName, Integer pageNum, Integer pageSize, HttpServletRequest request) {
@@ -44,6 +66,7 @@ public class ContentController {
             Integer[] channelIds = null;
             if (channelId != null) {
                 List<Channel> list = (List<Channel>) request.getServletContext().getAttribute("channels");
+                boolean beParent = false;
                 for (Channel temp : list) {
                     if (temp.getId() == channelId) {
                         channelIds = new Integer[temp.getChildChannels().size() + 1];
@@ -53,18 +76,22 @@ public class ContentController {
                             channelIds[i] = childChannel.getId();
                             i++;
                         }
-                    } else {
-                        channelIds = new Integer[1];
-                        channelIds[0] = channelId;
+                        beParent = true;
+                        break;
                     }
+                }
+                if (beParent == false) {
+                    channelIds = new Integer[1];
+                    channelIds[0] = channelId;
                 }
             }
             // 获取用户，用于查看是否只管理自己的内容
             Integer userId = null;
-            Object obj = request.getSession().getAttribute("user");
-            if(obj != null){
-                BackgroundUser backgroundUser = (BackgroundUser)obj;
-                if(backgroundUser.getDataRange() == Constant.DATA_RANGE_MYSELF){
+//            Object obj = request.getSession().getAttribute("user");
+            SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            BackgroundUser backgroundUser = backgroundUserService.getById(securityUser.getId());
+            if (backgroundUser != null) {
+                if (backgroundUser.getDataRange() == Constant.DATA_RANGE_MYSELF) {
                     userId = backgroundUser.getId();
                 }
             }
@@ -105,6 +132,8 @@ public class ContentController {
                 addBook(content, seriesName, authorName, cover, attachments, channelId, request, session);
                 break;
             case 2:
+            case 8:
+            case 9:
                 addPic(content, time, place, publisher, pic, channelId, request, session);
                 break;
             // TODO 新增其它类型数据
@@ -120,21 +149,23 @@ public class ContentController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if(content == null){
+        if (content == null) {
             request.setAttribute("activechildmenu", "ccmenu");
             return "redirect:/backstage/content/list";
         } else {
             getChannelForTree(content.getChannel().getId(), request);
-            switch(content.getChannel().getId()){
+            switch (content.getChannel().getId()) {
                 case 1:
                     ContentBook contentBook = this.contentBookService.getByContent(content);
                     request.setAttribute("contentbook", contentBook);
                     break;
                 case 2:
+                case 8:
+                case 9:
                     ContentPic contentPic = this.contentPicService.getByContent(content);
                     request.setAttribute("contentpic", contentPic);
                     break;
-                    // TODO 其它栏目的修改
+                // TODO 其它栏目的修改
 
             }
             request.setAttribute("content", content);
@@ -151,6 +182,8 @@ public class ContentController {
                 editBook(content, seriesName, authorName, cover, attachments, channelId, request);
                 break;
             case 2:
+            case 8:
+            case 9:
                 editPic(content, time, place, publisher, pic, channelId, request);
                 break;
             // TODO 新增其它类型数据
@@ -161,16 +194,16 @@ public class ContentController {
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") int id, @RequestParam("channelId") Integer channelId) {
         this.contentService.delete(id);
-        if(channelId == null)
+        if (channelId == null)
             return "redirect:/backstage/content/list";
         else
             return "redirect:/backstage/content/list?channelId=" + channelId;
     }
 
     @GetMapping("/deletes/{ids}")
-    public String deletes(@PathVariable("ids") String ids, @RequestParam("channelId") Integer channelId){
+    public String deletes(@PathVariable("ids") String ids, @RequestParam("channelId") Integer channelId) {
         this.contentService.deletes(ids);
-        if(channelId == null)
+        if (channelId == null)
             return "redirect:/backstage/content/list";
         else
             return "redirect:/backstage/content/list?channelId=" + channelId;
@@ -179,16 +212,16 @@ public class ContentController {
     @GetMapping("/check/{id}")
     public String check(@PathVariable("id") int id, @RequestParam("channelId") Integer channelId) {
         this.contentService.check(id);
-        if(channelId == null)
+        if (channelId == null)
             return "redirect:/backstage/content/list";
         else
             return "redirect:/backstage/content/list?channelId=" + channelId;
     }
 
     @GetMapping("/checks/{ids}")
-    public String checks(@PathVariable("ids") String ids, @RequestParam("channelId") Integer channelId){
+    public String checks(@PathVariable("ids") String ids, @RequestParam("channelId") Integer channelId) {
         this.contentService.checks(ids);
-        if(channelId == null)
+        if (channelId == null)
             return "redirect:/backstage/content/list";
         else
             return "redirect:/backstage/content/list?channelId=" + channelId;
@@ -197,16 +230,16 @@ public class ContentController {
     @GetMapping("/deny/{id}")
     public String deny(@PathVariable("id") int id, @RequestParam("channelId") Integer channelId) {
         this.contentService.deny(id);
-        if(channelId == null)
+        if (channelId == null)
             return "redirect:/backstage/content/list";
         else
             return "redirect:/backstage/content/list?channelId=" + channelId;
     }
 
     @GetMapping("/denys/{ids}")
-    public String denys(@PathVariable("ids") String ids, @RequestParam("channelId") Integer channelId){
+    public String denys(@PathVariable("ids") String ids, @RequestParam("channelId") Integer channelId) {
         this.contentService.denys(ids);
-        if(channelId == null)
+        if (channelId == null)
             return "redirect:/backstage/content/list";
         else
             return "redirect:/backstage/content/list?channelId=" + channelId;
@@ -214,6 +247,7 @@ public class ContentController {
 
     /**
      * 如果是1级栏目则直接存入request，如果是二级栏目，则获取其一级栏目存入request
+     *
      * @param channelId
      * @param request
      */
@@ -245,6 +279,7 @@ public class ContentController {
 
     /**
      * 添加书籍
+     *
      * @param content
      * @param seriesName
      * @param authorName
@@ -269,7 +304,7 @@ public class ContentController {
             request.setAttribute("contentinfo", "请上传附件");
             checked = false;
         }
-        if(checked){
+        if (checked) {
             try {
                 // 自己实现登录时
 //                BackgroundUser backgroundUser = (BackgroundUser) session.getAttribute("user");
@@ -303,6 +338,7 @@ public class ContentController {
 
     /**
      * 修改书籍
+     *
      * @param content
      * @param seriesName
      * @param authorName
@@ -340,6 +376,7 @@ public class ContentController {
 
     /**
      * 添加图片
+     *
      * @param content
      * @param time
      * @param place
@@ -361,7 +398,7 @@ public class ContentController {
             request.setAttribute("contentinfo", "请上传图片");
             checked = false;
         }
-        if(checked){
+        if (checked) {
             try {
                 // 自己实现登录时
 //                BackgroundUser backgroundUser = (BackgroundUser) session.getAttribute("user");
@@ -394,6 +431,7 @@ public class ContentController {
 
     /**
      * 修改图片
+     *
      * @param content
      * @param time
      * @param place
