@@ -2,10 +2,8 @@ package com.starrysky.starcms.content.controller;
 
 import com.starrysky.starcms.content.service.ContentService;
 import com.starrysky.starcms.contentbook.service.ContentBookService;
-import com.starrysky.starcms.entity.BackgroundUser;
-import com.starrysky.starcms.entity.Channel;
-import com.starrysky.starcms.entity.Content;
-import com.starrysky.starcms.entity.ContentBook;
+import com.starrysky.starcms.contentpic.service.ContentPicService;
+import com.starrysky.starcms.entity.*;
 import com.starrysky.starcms.security.SecurityUser;
 import com.starrysky.starcms.util.Constant;
 import org.springframework.data.domain.Page;
@@ -32,6 +30,8 @@ public class ContentController {
     private ContentService contentService;
     @Resource
     private ContentBookService contentBookService;
+    @Resource
+    private ContentPicService contentPicService;
 
     @RequestMapping("/list")
     public String list(String title, Boolean recommend, Integer status, Integer channelId, String name, String realName, Integer pageNum, Integer pageSize, HttpServletRequest request) {
@@ -131,6 +131,8 @@ public class ContentController {
                     request.setAttribute("contentbook", contentBook);
                     break;
                 case 2:
+                    ContentPic contentPic = this.contentPicService.getByContent(content);
+                    request.setAttribute("contentpic", contentPic);
                     break;
                     // TODO 其它栏目的修改
 
@@ -143,12 +145,13 @@ public class ContentController {
     }
 
     @PostMapping("/edit")
-    public String edit(Content content, String seriesName, String authorName, String cover, String attachments, Integer channelId, HttpServletRequest request) {
+    public String edit(Content content, String seriesName, String authorName, String cover, String attachments, String time, String place, String publisher, String pic, Integer channelId, HttpServletRequest request) {
         switch (channelId) {
             case 1:
                 editBook(content, seriesName, authorName, cover, attachments, channelId, request);
                 break;
             case 2:
+                editPic(content, time, place, publisher, pic, channelId, request);
                 break;
             // TODO 新增其它类型数据
         }
@@ -386,6 +389,40 @@ public class ContentController {
             request.setAttribute("time", time);
             request.setAttribute("place", place);
             request.setAttribute("publisher", publisher);
+        }
+    }
+
+    /**
+     * 修改图片
+     * @param content
+     * @param time
+     * @param place
+     * @param publisher
+     * @param pic
+     * @param channelId
+     * @param request
+     */
+    public void editPic(Content content, String time, String place, String publisher, String pic, Integer channelId, HttpServletRequest request) {
+        boolean checked = true;
+        if (channelId == null) {
+            request.setAttribute("contentinfo", "请选择栏目类型");
+            checked = false;
+        } else if (StringUtils.isEmpty(content.getTitle())) {
+            request.setAttribute("contentinfo", "请填写标题");
+            checked = false;
+        } else if (StringUtils.isEmpty(pic)) {
+            request.setAttribute("contentinfo", "请上传图片");
+            checked = false;
+        }
+        // 验证成功，新增内容，失败返回重新填写
+        if (checked) {
+            try {
+                this.contentService.editPic(content, channelId, time, place, publisher, pic);
+                request.setAttribute("contentinfo", "修改图片成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("contentinfo", "修改图片失败，请稍后再试");
+            }
         }
     }
 }

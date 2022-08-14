@@ -104,6 +104,30 @@ public class ContentService {
         this.contentPicDao.save(contentPic);
     }
 
+    public void editPic(Content content, Integer channelId, String time, String place, String publisher, String pic) throws Exception {
+        Content contentDb = this.contentDao.getOne(content.getId());
+        Channel channel = new Channel();
+        channel.setId(channelId);
+        contentDb.setChannel(channel);
+        contentDb.setTitle(content.getTitle());
+        contentDb.setShortTitle(content.getShortTitle());
+        contentDb.setLastEditTime(new Date());
+        contentDb.setRecommend(content.isRecommend());
+        if (content.getStatus() == 0) {
+            content.setStatus(Constant.CONTENT_STATUS_AUDITING);
+        }
+        contentDb.setTags(content.getTags());
+        contentDb.setTxt(content.getTxt());
+        this.contentDao.save(contentDb);
+
+        ContentPic contentPic = this.contentPicDao.findByContent(content);
+        contentPic.setTime(time);
+        contentPic.setPlace(place);
+        contentPic.setPublisher(publisher);
+        contentPic.setPath(pic);
+        this.contentPicDao.save(contentPic);
+    }
+
     public void delete(int id) {
         Content content = this.contentDao.getOne(id);
         switch(content.getChannel().getId()){

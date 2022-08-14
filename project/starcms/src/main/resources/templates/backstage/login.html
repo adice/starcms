@@ -45,6 +45,7 @@
             <input type="text" id="username" name="name" value="admin" class="form-control" placeholder="账号" autofocus>
             <input type="password" id="password" name="password" value="123456" class="form-control" placeholder="密码">
             <div id="errorinfo" th:text="${session?.SPRING_SECURITY_LAST_EXCEPTION?.message}" style="color: #fff;"></div>
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}" th:if="${_csrf}" />
             <button class="btn btn-lg btn-success btn-block" type="submit" onclick="return check()">登录</button>
             <label class="checkbox-custom check-success">
                 <input type="checkbox" name="remember-me" value="true" id="checkbox1"> <label for="checkbox1">7天内自动登录</label>
