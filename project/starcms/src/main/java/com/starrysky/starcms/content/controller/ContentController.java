@@ -120,15 +120,18 @@ public class ContentController {
     }
 
     @PostMapping("/add")
-    public String add(Content content, String seriesName, String authorName, String cover, String attachments, String time, String place, String publisher, String pic, Integer channelId, HttpServletRequest request, HttpSession session) {
+    public String add(Content content, String seriesName, String authorName, String cover, String attachments, String time, String place, String publisher, String pic, String path, Integer channelId, HttpServletRequest request, HttpSession session) {
         switch (channelId) {
             case 1:
-                addBook(content, seriesName, authorName, cover, attachments, channelId, request, session);
+                addBook(content, seriesName, authorName, cover, attachments, channelId, request);
                 break;
             case 2:
             case 8:
             case 9:
-                addPic(content, time, place, publisher, pic, channelId, request, session);
+                addPic(content, time, place, publisher, pic, channelId, request);
+                break;
+            case 3:
+                addRubbings(content, time, place, publisher, cover, path, channelId, request);
                 break;
             // TODO 新增其它类型数据
         }
@@ -281,9 +284,8 @@ public class ContentController {
      * @param attachments
      * @param channelId
      * @param request
-     * @param session
      */
-    public void addBook(Content content, String seriesName, String authorName, String cover, String attachments, Integer channelId, HttpServletRequest request, HttpSession session) {
+    public void addBook(Content content, String seriesName, String authorName, String cover, String attachments, Integer channelId, HttpServletRequest request) {
         boolean checked = true;
         if (channelId == null) {
             request.setAttribute("contentinfo", "请选择栏目类型");
@@ -378,9 +380,8 @@ public class ContentController {
      * @param pic
      * @param channelId
      * @param request
-     * @param session
      */
-    public void addPic(Content content, String time, String place, String publisher, String pic, Integer channelId, HttpServletRequest request, HttpSession session) {
+    public void addPic(Content content, String time, String place, String publisher, String pic, Integer channelId, HttpServletRequest request) {
         boolean checked = true;
         if (channelId == null) {
             request.setAttribute("contentinfo", "请选择栏目类型");
@@ -455,6 +456,64 @@ public class ContentController {
                 e.printStackTrace();
                 request.setAttribute("contentinfo", "修改图片失败，请稍后再试");
             }
+        }
+    }
+
+    /**
+     * 添加拓片
+     * @param content
+     * @param time
+     * @param place
+     * @param publisher
+     * @param pic
+     * @param path
+     * @param channelId
+     * @param request
+     */
+    public void addRubbings(Content content, String time, String place, String publisher, String pic, String path, Integer channelId, HttpServletRequest request) {
+        boolean checked = true;
+        if (channelId == null) {
+            request.setAttribute("contentinfo", "请选择栏目类型");
+            checked = false;
+        } else if (StringUtils.isEmpty(content.getTitle())) {
+            request.setAttribute("contentinfo", "请填写标题");
+            checked = false;
+        } else if (StringUtils.isEmpty(pic)) {
+            request.setAttribute("contentinfo", "请上传图片");
+            checked = false;
+        } else if(StringUtils.isEmpty(path)){
+            request.setAttribute("contentinfo", "请上传拓片");
+            checked = false;
+        }
+        if (checked) {
+            try {
+                // 自己实现登录时
+//                BackgroundUser backgroundUser = (BackgroundUser) session.getAttribute("user");
+                // 基于SpringSecurit
+                SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                BackgroundUser backgroundUser = new BackgroundUser();
+                backgroundUser.setId(securityUser.getId());
+                this.contentService.addRubbings(content, channelId, backgroundUser, time, place, publisher, pic, path);
+                request.setAttribute("contentinfo", "填加拓片成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("contentinfo", "填加拓片失败，请稍后再试");
+            }
+        } else {
+            // 普通属性
+            request.setAttribute("channelId", channelId);
+            request.setAttribute("title", content.getTitle());
+            request.setAttribute("shortTitle", content.getShortTitle());
+            request.setAttribute("recommend", content.isRecommend());
+            request.setAttribute("status", content.getStatus());
+            request.setAttribute("tags", content.getTags());
+            request.setAttribute("txt", content.getTxt());
+            // 跟书籍有关的属性
+            request.setAttribute("pic", pic);
+            request.setAttribute("time", time);
+            request.setAttribute("place", place);
+            request.setAttribute("publisher", publisher);
+            request.setAttribute("path", path);
         }
     }
 }

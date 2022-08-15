@@ -22,6 +22,13 @@ var Script = function () {
         $('#pic').on("focusout", function() {
             $(this).prop('readonly', false);
         });
+        $('#path').on("focusin", function() {
+            $(this).prop('readonly', true);
+        });
+
+        $('#path').on("focusout", function() {
+            $(this).prop('readonly', false);
+        });
         // validate form on keyup and submit
         $("#contentform").validate({
             debug: false,
@@ -41,6 +48,9 @@ var Script = function () {
                 pic: {
                     required: true
                 },
+                path: {
+                    required: true
+                }
             },
             messages: {
                 channelId: {
@@ -57,8 +67,10 @@ var Script = function () {
                 },
                 pic: {
                     required: "<font color='red'>请上传图片</font>"
+                },
+                pic: {
+                    required: "<font color='red'>请上传内容</font>"
                 }
-
             }
         });
     });

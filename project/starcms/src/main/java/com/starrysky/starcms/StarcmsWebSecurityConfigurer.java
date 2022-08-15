@@ -40,7 +40,8 @@ public class StarcmsWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/backstage/user/loginpage", "/css/**", "/js/**", "/img/**", "/fonts/**", "/jquery-ui/**", "/fuelux/**", "/sweetalert/**").permitAll()
+                .antMatchers("/backstage/user/loginpage", "/backstage/user/createvcode").permitAll()
+                .antMatchers("/css/**", "/js/**", "/img/**", "/fonts/**", "/jquery-ui/**", "/fuelux/**", "/sweetalert/**").permitAll()
                 .anyRequest().authenticated()
                 // 登录
                 .and()
@@ -57,16 +58,12 @@ public class StarcmsWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutUrl("/backstage/user/logout")
                 .logoutSuccessUrl("/backstage/user/loginpage")
-                .invalidateHttpSession(true)
-//                // 免密登录
-//                .and()
-//                .rememberMe()   // 以持久化的方式记录cookie信息
+                .invalidateHttpSession(true);
+//        http.rememberMe()   // 免密登录,以持久化的方式记录cookie信息
 //                .tokenRepository(persistentTokenRepository())
 //                .tokenValiditySeconds(7 * 24 * 60 * 60)
-                // csrf
-                .and()
-                // 会话管理
-                .csrf().disable()   // 表单用th:action，则自动添加一个隐藏域
+                // csrf 会话管理
+        http.csrf().disable()   // 启用csrf，表单用th:action，则自动添加一个隐藏域
                 // 限制1个账号只能登录1次
                 .sessionManagement()
                 .maximumSessions(1) // 需要重写user的hashcode和equals方法

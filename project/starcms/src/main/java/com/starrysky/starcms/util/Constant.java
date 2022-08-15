@@ -25,4 +25,7 @@ public class Constant {
     public static final int DATA_RANGE_ALL = 1;
     public static final int DATA_RANGE_MYSELF = 2;
 
+    // 验证码
+    public static final String KAPTCHA_SESSION_KEY = "vcode";
+
 }

@@ -3,6 +3,7 @@ package com.starrysky.starcms.content.service;
 import com.starrysky.starcms.content.dao.ContentDao;
 import com.starrysky.starcms.contentbook.dao.ContentBookDao;
 import com.starrysky.starcms.contentpic.dao.ContentPicDao;
+import com.starrysky.starcms.contentrubbings.dao.ContentRubbingsDao;
 import com.starrysky.starcms.entity.*;
 import com.starrysky.starcms.util.Constant;
 import org.springframework.data.domain.Page;
@@ -29,6 +30,8 @@ public class ContentService {
     private ContentBookDao contentBookDao;
     @Resource
     private ContentPicDao contentPicDao;
+    @Resource
+    private ContentRubbingsDao contentRubbingsDao;
 
     @Transactional(readOnly = true)
     public Page<Content> list(String title, Boolean recommend, Integer status, Integer[] channelIds, Integer userId, String name, String realName, int pageNum, int pageSize) throws Exception {
@@ -126,6 +129,29 @@ public class ContentService {
         contentPic.setPublisher(publisher);
         contentPic.setPath(pic);
         this.contentPicDao.save(contentPic);
+    }
+
+    public void addRubbings(Content content, Integer channelId, BackgroundUser backgroundUser, String time, String place, String publisher, String pic, String path) throws Exception {
+        Channel channel = new Channel();
+        channel.setId(channelId);
+        content.setChannel(channel);
+        content.setUser(backgroundUser);
+        content.setAddTime(new Date());
+        content.setViewCount(0);
+        if (content.getStatus() == 0) {
+            content.setStatus(Constant.CONTENT_STATUS_AUDITING);
+        }
+
+        ContentRubbings contentRubbings = new ContentRubbings();
+        contentRubbings.setTime(time);
+        contentRubbings.setPlace(place);
+        contentRubbings.setPublisher(publisher);
+        contentRubbings.setPath(pic);
+        contentRubbings.setPath(path);
+        contentRubbings.setContent(content);
+
+        this.contentDao.save(content);
+        this.contentRubbingsDao.save(contentRubbings);
     }
 
     public void delete(int id) {

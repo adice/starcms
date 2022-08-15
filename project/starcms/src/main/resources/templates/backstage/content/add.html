@@ -137,7 +137,32 @@
                                         <input type="text" id="authorName" name="authorName" th:value="${authorName}" class="form-control">
                                     </div>
                                 </div>
-                                <div class="form-group" th:if="${channelId == 1}">
+                                <div class="form-group" th:if="${channelId == 2 || channelId == 8 || channelId == 9 || channelId == 3}">
+                                    <label class="col-sm-2 col-sm-2 control-label">时间：</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" id="time" name="time" th:value="${time}" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group" th:if="${channelId == 2 || channelId == 8 || channelId == 9 || channelId == 3}">
+                                    <label class="col-sm-2 col-sm-2 control-label">地点：</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" id="place" name="place" th:value="${place}" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group" th:if="${channelId == 2 || channelId == 8 || channelId == 9 || channelId == 3}">
+                                    <label class="col-sm-2 col-sm-2 control-label">来源：</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" id="publisher" name="publisher" th:value="${publisher}" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group" th:if="${channelId == 2 || channelId == 8 || channelId == 9}">
+                                    <label class="col-sm-2 col-sm-2 control-label">图片<span style="color: red; ">*</span>：</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" id="pic" name="pic" th:value="${pic}" class="form-control">
+                                        <div id="dropzpic" class="dropzone"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group" th:if="${channelId == 1 || channelId == 3}">
                                     <label class="col-sm-2 col-sm-2 control-label">图片<span style="color: red; ">*</span>：</label>
                                     <div class="col-sm-10">
                                         <input type="text" id="cover" name="cover" th:value="${cover}" class="form-control">
@@ -151,29 +176,11 @@
                                         <div id="dropzattachments" class="dropzone"></div>
                                     </div>
                                 </div>
-                                <div class="form-group" th:if="${channelId == 2 || channelId == 8 || channelId == 9}">
-                                    <label class="col-sm-2 col-sm-2 control-label">时间：</label>
+                                <div class="form-group" th:if="${channelId == 3}">
+                                    <label class="col-sm-2 col-sm-2 control-label">内容<span style="color: red; ">*</span>：</label>
                                     <div class="col-sm-10">
-                                        <input type="text" id="time" name="time" th:value="${time}" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="form-group" th:if="${channelId == 2 || channelId == 8 || channelId == 9}">
-                                    <label class="col-sm-2 col-sm-2 control-label">地点：</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" id="place" name="place" th:value="${place}" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="form-group" th:if="${channelId == 2 || channelId == 8 || channelId == 9}">
-                                    <label class="col-sm-2 col-sm-2 control-label">来源：</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" id="publisher" name="publisher" th:value="${publisher}" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="form-group" th:if="${channelId == 2 || channelId == 8 || channelId == 9}">
-                                    <label class="col-sm-2 col-sm-2 control-label">图片<span style="color: red; ">*</span>：</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" id="pic" name="pic" th:value="${pic}" class="form-control">
-                                        <div id="dropzpic" class="dropzone"></div>
+                                        <input type="text" id="path" name="path" th:value="${path}" class="form-control">
+                                        <div id="dropzpath" class="dropzone"></div>
                                     </div>
                                 </div>
                                 <!--addition end-->
@@ -220,9 +227,10 @@
 <script th:src="@{/fuelux/js/tree.min.js}" type="text/javascript"></script>
 <script th:src="@{/js/tree-init-channel.js}" type="text/javascript"></script>
 <script th:src="@{/js/dropzone.min.js}" type="text/javascript"></script>
-<script th:src="@{/js/upload-cover.js}" type="text/javascript" th:if="${channelId == 1}"></script>
+<script th:src="@{/js/upload-cover.js}" type="text/javascript" th:if="${channelId == 1 || channelId == 3}"></script>
 <script th:src="@{/js/upload-attachments.js}" type="text/javascript" th:if="${channelId == 1}"></script>
 <script th:src="@{/js/upload-pic.js}" type="text/javascript" th:if="${channelId == 2 || channelId == 8 || channelId == 9}"></script>
+<script th:src="@{/js/upload-path.js}" type="text/javascript" th:if="${channelId == 3}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         // 标签输入框

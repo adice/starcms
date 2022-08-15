@@ -45,6 +45,8 @@
             <input type="text" id="username" name="name" value="admin" class="form-control" placeholder="账号" autofocus>
             <input type="password" id="password" name="password" value="123456" class="form-control" placeholder="密码">
             <div id="errorinfo" th:text="${session?.SPRING_SECURITY_LAST_EXCEPTION?.message}" style="color: #fff;"></div>
+            <input type="text" id="vcode" name="vode" value="" class="form-control" placeholder="验证码">
+            <img id="imgcode" th:src="@{/backstage/user/createvcode}" title="看不清，换一张" class="form-control"/>
             <button class="btn btn-lg btn-success btn-block" type="submit" onclick="return check()">登录</button>
             <label class="checkbox-custom check-success">
                 <input type="checkbox" name="remember-me" value="true" id="checkbox1"> <label for="checkbox1">7天内自动登录</label>
@@ -52,5 +54,12 @@
         </div>
     </form>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#imgcode").bind("click", function () {
+            $(this).hide().attr('src', '/backstage/user/createvcode?random=' + Math.random()).fadeIn();
+        });
+    });
+</script>
 </body>
 </html>
