@@ -4,6 +4,7 @@ import com.starrysky.starcms.backstageuser.service.BackgroundUserService;
 import com.starrysky.starcms.content.service.ContentService;
 import com.starrysky.starcms.contentbook.service.ContentBookService;
 import com.starrysky.starcms.contentpic.service.ContentPicService;
+import com.starrysky.starcms.contentrubbings.service.ContentRubbingsService;
 import com.starrysky.starcms.entity.*;
 import com.starrysky.starcms.security.SecurityUser;
 import com.starrysky.starcms.util.Constant;
@@ -33,6 +34,8 @@ public class ContentController {
     private ContentBookService contentBookService;
     @Resource
     private ContentPicService contentPicService;
+    @Resource
+    private ContentRubbingsService contentRubbingsService;
     @Resource
     private BackgroundUserService backgroundUserService;
 
@@ -154,13 +157,17 @@ public class ContentController {
             switch (content.getChannel().getId()) {
                 case 1:
                     ContentBook contentBook = this.contentBookService.getByContent(content);
-                    request.setAttribute("contentbook", contentBook);
+                    request.setAttribute("contentaddtion", contentBook);
                     break;
                 case 2:
                 case 8:
                 case 9:
                     ContentPic contentPic = this.contentPicService.getByContent(content);
-                    request.setAttribute("contentpic", contentPic);
+                    request.setAttribute("contentaddtion", contentPic);
+                    break;
+                case 3:
+                    ContentRubbings contentRubbings = this.contentRubbingsService.getByContent(content);
+                    request.setAttribute("contentaddtion", contentRubbings);
                     break;
                 // TODO 其它栏目的修改
 
@@ -173,7 +180,7 @@ public class ContentController {
     }
 
     @PostMapping("/edit")
-    public String edit(Content content, String seriesName, String authorName, String cover, String attachments, String time, String place, String publisher, String pic, Integer channelId, HttpServletRequest request) {
+    public String edit(Content content, String seriesName, String authorName, String cover, String attachments, String time, String place, String publisher, String pic, String path, Integer channelId, HttpServletRequest request) {
         switch (channelId) {
             case 1:
                 editBook(content, seriesName, authorName, cover, attachments, channelId, request);
@@ -182,6 +189,9 @@ public class ContentController {
             case 8:
             case 9:
                 editPic(content, time, place, publisher, pic, channelId, request);
+                break;
+            case 3:
+                editRubbings(content, time, place, publisher, cover, path, channelId, request);
                 break;
             // TODO 新增其它类型数据
         }
@@ -465,12 +475,12 @@ public class ContentController {
      * @param time
      * @param place
      * @param publisher
-     * @param pic
+     * @param cover
      * @param path
      * @param channelId
      * @param request
      */
-    public void addRubbings(Content content, String time, String place, String publisher, String pic, String path, Integer channelId, HttpServletRequest request) {
+    public void addRubbings(Content content, String time, String place, String publisher, String cover, String path, Integer channelId, HttpServletRequest request) {
         boolean checked = true;
         if (channelId == null) {
             request.setAttribute("contentinfo", "请选择栏目类型");
@@ -478,7 +488,7 @@ public class ContentController {
         } else if (StringUtils.isEmpty(content.getTitle())) {
             request.setAttribute("contentinfo", "请填写标题");
             checked = false;
-        } else if (StringUtils.isEmpty(pic)) {
+        } else if (StringUtils.isEmpty(cover)) {
             request.setAttribute("contentinfo", "请上传图片");
             checked = false;
         } else if(StringUtils.isEmpty(path)){
@@ -493,7 +503,7 @@ public class ContentController {
                 SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
                 BackgroundUser backgroundUser = new BackgroundUser();
                 backgroundUser.setId(securityUser.getId());
-                this.contentService.addRubbings(content, channelId, backgroundUser, time, place, publisher, pic, path);
+                this.contentService.addRubbings(content, channelId, backgroundUser, time, place, publisher, cover, path);
                 request.setAttribute("contentinfo", "填加拓片成功");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -509,11 +519,50 @@ public class ContentController {
             request.setAttribute("tags", content.getTags());
             request.setAttribute("txt", content.getTxt());
             // 跟书籍有关的属性
-            request.setAttribute("pic", pic);
+            request.setAttribute("cover", cover);
             request.setAttribute("time", time);
             request.setAttribute("place", place);
             request.setAttribute("publisher", publisher);
             request.setAttribute("path", path);
         }
     }
+
+    /**
+     * 修改拓片
+     * @param content
+     * @param time
+     * @param place
+     * @param publisher
+     * @param cover
+     * @param path
+     * @param channelId
+     * @param request
+     */
+    public void editRubbings(Content content, String time, String place, String publisher, String cover, String path, Integer channelId, HttpServletRequest request) {
+        boolean checked = true;
+        if (channelId == null) {
+            request.setAttribute("contentinfo", "请选择栏目类型");
+            checked = false;
+        } else if (StringUtils.isEmpty(content.getTitle())) {
+            request.setAttribute("contentinfo", "请填写标题");
+            checked = false;
+        } else if (StringUtils.isEmpty(cover)) {
+            request.setAttribute("contentinfo", "请上传图片");
+            checked = false;
+        } else if (StringUtils.isEmpty(path)) {
+            request.setAttribute("contentinfo", "请上传内容");
+            checked = false;
+        }
+        // 验证成功，新增内容，失败返回重新填写
+        if (checked) {
+            try {
+                this.contentService.editRubbings(content, channelId, time, place, publisher, cover, path);
+                request.setAttribute("contentinfo", "修改拓片成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("contentinfo", "修改拓片失败，请稍后再试");
+            }
+        }
+    }
+
 }

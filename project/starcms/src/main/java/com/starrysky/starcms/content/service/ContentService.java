@@ -154,6 +154,31 @@ public class ContentService {
         this.contentRubbingsDao.save(contentRubbings);
     }
 
+    public void editRubbings(Content content, Integer channelId, String time, String place, String publisher, String cover, String path) throws Exception {
+        Content contentDb = this.contentDao.getOne(content.getId());
+        Channel channel = new Channel();
+        channel.setId(channelId);
+        contentDb.setChannel(channel);
+        contentDb.setTitle(content.getTitle());
+        contentDb.setShortTitle(content.getShortTitle());
+        contentDb.setLastEditTime(new Date());
+        contentDb.setRecommend(content.isRecommend());
+        if (content.getStatus() == 0) {
+            content.setStatus(Constant.CONTENT_STATUS_AUDITING);
+        }
+        contentDb.setTags(content.getTags());
+        contentDb.setTxt(content.getTxt());
+        this.contentDao.save(contentDb);
+
+        ContentRubbings contentRubbings = this.contentRubbingsDao.findByContent(content);
+        contentRubbings.setTime(time);
+        contentRubbings.setPlace(place);
+        contentRubbings.setPublisher(publisher);
+        contentRubbings.setCover(cover);
+        contentRubbings.setPath(path);
+        this.contentRubbingsDao.save(contentRubbings);
+    }
+
     public void delete(int id) {
         Content content = this.contentDao.getOne(id);
         switch(content.getChannel().getId()){
@@ -162,7 +187,13 @@ public class ContentService {
                 this.contentDao.deleteById(id);
                 break;
             case 2:
+            case 8:
+            case 9:
                 this.contentPicDao.deleteByContent(content);
+                this.contentDao.deleteById(id);
+                break;
+            case 3:
+                this.contentRubbingsDao.deleteByContent(content);
                 this.contentDao.deleteById(id);
                 break;
                 // TODO 其它栏目的删除
