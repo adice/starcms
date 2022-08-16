@@ -136,6 +136,9 @@ public class ContentController {
             case 3:
                 addRubbings(content, time, place, publisher, cover, path, channelId, request);
                 break;
+            case 4:
+                addAudio(content, time, place, publisher, cover, path, channelId, request);
+                break;
             // TODO 新增其它类型数据
         }
         return "forward:/backstage/content/toadd?channelId=" + channelId;
@@ -192,6 +195,9 @@ public class ContentController {
                 break;
             case 3:
                 editRubbings(content, time, place, publisher, cover, path, channelId, request);
+                break;
+            case 4:
+                editAudio(content, time, place, publisher, cover, path, channelId, request);
                 break;
             // TODO 新增其它类型数据
         }
@@ -561,6 +567,102 @@ public class ContentController {
             } catch (Exception e) {
                 e.printStackTrace();
                 request.setAttribute("contentinfo", "修改拓片失败，请稍后再试");
+            }
+        }
+    }
+
+    /**
+     * 添加音频
+     * @param content
+     * @param time
+     * @param place
+     * @param publisher
+     * @param cover
+     * @param path
+     * @param channelId
+     * @param request
+     */
+    public void addAudio(Content content, String time, String place, String publisher, String cover, String path, Integer channelId, HttpServletRequest request) {
+        boolean checked = true;
+        if (channelId == null) {
+            request.setAttribute("contentinfo", "请选择栏目类型");
+            checked = false;
+        } else if (StringUtils.isEmpty(content.getTitle())) {
+            request.setAttribute("contentinfo", "请填写标题");
+            checked = false;
+        } else if (StringUtils.isEmpty(cover)) {
+            request.setAttribute("contentinfo", "请上传图片");
+            checked = false;
+        } else if(StringUtils.isEmpty(path)){
+            request.setAttribute("contentinfo", "请上传音频");
+            checked = false;
+        }
+        if (checked) {
+            try {
+                // 自己实现登录时
+//                BackgroundUser backgroundUser = (BackgroundUser) session.getAttribute("user");
+                // 基于SpringSecurit
+                SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                BackgroundUser backgroundUser = new BackgroundUser();
+                backgroundUser.setId(securityUser.getId());
+                this.contentService.addAudio(content, channelId, backgroundUser, time, place, publisher, cover, path);
+                request.setAttribute("contentinfo", "填加音频成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("contentinfo", "填加音频失败，请稍后再试");
+            }
+        } else {
+            // 普通属性
+            request.setAttribute("channelId", channelId);
+            request.setAttribute("title", content.getTitle());
+            request.setAttribute("shortTitle", content.getShortTitle());
+            request.setAttribute("recommend", content.isRecommend());
+            request.setAttribute("status", content.getStatus());
+            request.setAttribute("tags", content.getTags());
+            request.setAttribute("txt", content.getTxt());
+            // 跟书籍有关的属性
+            request.setAttribute("cover", cover);
+            request.setAttribute("time", time);
+            request.setAttribute("place", place);
+            request.setAttribute("publisher", publisher);
+            request.setAttribute("path", path);
+        }
+    }
+
+    /**
+     * 修改音频
+     * @param content
+     * @param time
+     * @param place
+     * @param publisher
+     * @param cover
+     * @param path
+     * @param channelId
+     * @param request
+     */
+    public void editAudio(Content content, String time, String place, String publisher, String cover, String path, Integer channelId, HttpServletRequest request) {
+        boolean checked = true;
+        if (channelId == null) {
+            request.setAttribute("contentinfo", "请选择栏目类型");
+            checked = false;
+        } else if (StringUtils.isEmpty(content.getTitle())) {
+            request.setAttribute("contentinfo", "请填写标题");
+            checked = false;
+        } else if (StringUtils.isEmpty(cover)) {
+            request.setAttribute("contentinfo", "请上传图片");
+            checked = false;
+        } else if (StringUtils.isEmpty(path)) {
+            request.setAttribute("contentinfo", "请上传内容");
+            checked = false;
+        }
+        // 验证成功，新增内容，失败返回重新填写
+        if (checked) {
+            try {
+                this.contentService.editAudio(content, channelId, time, place, publisher, cover, path);
+                request.setAttribute("contentinfo", "修改音频成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("contentinfo", "修改音频失败，请稍后再试");
             }
         }
     }

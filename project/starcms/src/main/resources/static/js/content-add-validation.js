@@ -60,7 +60,7 @@ var Script = function () {
                     required: "<font color='red'>请填写书籍名称</font>"
                 },
                 cover: {
-                    required: "<font color='red'>请上传书影</font>"
+                    required: "<font color='red'>请上传封面</font>"
                 },
                 attachments: {
                     required: "<font color='red'>请上传书籍</font>"
@@ -68,7 +68,7 @@ var Script = function () {
                 pic: {
                     required: "<font color='red'>请上传图片</font>"
                 },
-                pic: {
+                path: {
                     required: "<font color='red'>请上传内容</font>"
                 }
             }

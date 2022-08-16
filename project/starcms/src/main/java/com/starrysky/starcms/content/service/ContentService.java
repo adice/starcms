@@ -1,6 +1,7 @@
 package com.starrysky.starcms.content.service;
 
 import com.starrysky.starcms.content.dao.ContentDao;
+import com.starrysky.starcms.contentaudio.dao.ContentAudioDao;
 import com.starrysky.starcms.contentbook.dao.ContentBookDao;
 import com.starrysky.starcms.contentpic.dao.ContentPicDao;
 import com.starrysky.starcms.contentrubbings.dao.ContentRubbingsDao;
@@ -32,6 +33,8 @@ public class ContentService {
     private ContentPicDao contentPicDao;
     @Resource
     private ContentRubbingsDao contentRubbingsDao;
+    @Resource
+    private ContentAudioDao contentAudioDao;
 
     @Transactional(readOnly = true)
     public Page<Content> list(String title, Boolean recommend, Integer status, Integer[] channelIds, Integer userId, String name, String realName, int pageNum, int pageSize) throws Exception {
@@ -146,7 +149,7 @@ public class ContentService {
         contentRubbings.setTime(time);
         contentRubbings.setPlace(place);
         contentRubbings.setPublisher(publisher);
-        contentRubbings.setPath(pic);
+        contentRubbings.setCover(pic);
         contentRubbings.setPath(path);
         contentRubbings.setContent(content);
 
@@ -179,6 +182,54 @@ public class ContentService {
         this.contentRubbingsDao.save(contentRubbings);
     }
 
+    public void addAudio(Content content, Integer channelId, BackgroundUser backgroundUser, String time, String place, String publisher, String pic, String path) throws Exception {
+        Channel channel = new Channel();
+        channel.setId(channelId);
+        content.setChannel(channel);
+        content.setUser(backgroundUser);
+        content.setAddTime(new Date());
+        content.setViewCount(0);
+        if (content.getStatus() == 0) {
+            content.setStatus(Constant.CONTENT_STATUS_AUDITING);
+        }
+
+        ContentAudio contentAudio = new ContentAudio();
+        contentAudio.setTime(time);
+        contentAudio.setPlace(place);
+        contentAudio.setPublisher(publisher);
+        contentAudio.setCover(pic);
+        contentAudio.setPath(path);
+        contentAudio.setContent(content);
+
+        this.contentDao.save(content);
+        this.contentAudioDao.save(contentAudio);
+    }
+
+    public void editAudio(Content content, Integer channelId, String time, String place, String publisher, String cover, String path) throws Exception {
+        Content contentDb = this.contentDao.getOne(content.getId());
+        Channel channel = new Channel();
+        channel.setId(channelId);
+        contentDb.setChannel(channel);
+        contentDb.setTitle(content.getTitle());
+        contentDb.setShortTitle(content.getShortTitle());
+        contentDb.setLastEditTime(new Date());
+        contentDb.setRecommend(content.isRecommend());
+        if (content.getStatus() == 0) {
+            content.setStatus(Constant.CONTENT_STATUS_AUDITING);
+        }
+        contentDb.setTags(content.getTags());
+        contentDb.setTxt(content.getTxt());
+        this.contentDao.save(contentDb);
+
+        ContentAudio contentAudio = this.contentAudioDao.findByContent(content);
+        contentAudio.setTime(time);
+        contentAudio.setPlace(place);
+        contentAudio.setPublisher(publisher);
+        contentAudio.setCover(cover);
+        contentAudio.setPath(path);
+        this.contentAudioDao.save(contentAudio);
+    }
+
     public void delete(int id) {
         Content content = this.contentDao.getOne(id);
         switch(content.getChannel().getId()){
@@ -194,6 +245,10 @@ public class ContentService {
                 break;
             case 3:
                 this.contentRubbingsDao.deleteByContent(content);
+                this.contentDao.deleteById(id);
+                break;
+            case 4:
+                this.contentAudioDao.deleteByContent(content);
                 this.contentDao.deleteById(id);
                 break;
                 // TODO 其它栏目的删除
