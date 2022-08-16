@@ -4,6 +4,7 @@ $(document).ready(function () {
     $("#dropzpath").dropzone({
         url: "/backstage/uploadfile",
         paramName: "uploadfiles",
+        maxFiles: 1,
         maxFilesize: 20,
         createImageThumbnails: false,
         addRemoveLinks: true,
@@ -23,6 +24,7 @@ $(document).ready(function () {
                     this.files.push(mockFile);
                     $('.dz-image').html("<img data-dz-thumbnail=''>");
                     $('.dz-preview').addClass("dz-file-preview");
+                    $('.dz-size').children("span").hide();
                 }
             }
             this.on('success', function (files, response) {

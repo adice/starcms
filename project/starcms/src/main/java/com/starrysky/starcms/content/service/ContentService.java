@@ -5,6 +5,7 @@ import com.starrysky.starcms.contentaudio.dao.ContentAudioDao;
 import com.starrysky.starcms.contentbook.dao.ContentBookDao;
 import com.starrysky.starcms.contentpic.dao.ContentPicDao;
 import com.starrysky.starcms.contentrubbings.dao.ContentRubbingsDao;
+import com.starrysky.starcms.contentvideo.dao.ContentVideoDao;
 import com.starrysky.starcms.entity.*;
 import com.starrysky.starcms.util.Constant;
 import org.springframework.data.domain.Page;
@@ -35,6 +36,8 @@ public class ContentService {
     private ContentRubbingsDao contentRubbingsDao;
     @Resource
     private ContentAudioDao contentAudioDao;
+    @Resource
+    private ContentVideoDao contentVideoDao;
 
     @Transactional(readOnly = true)
     public Page<Content> list(String title, Boolean recommend, Integer status, Integer[] channelIds, Integer userId, String name, String realName, int pageNum, int pageSize) throws Exception {
@@ -242,6 +245,57 @@ public class ContentService {
         this.contentAudioDao.save(contentAudio);
     }
 
+    public void addVideo(Content content, Integer channelId, BackgroundUser backgroundUser, String time, String place, String publisher, String pic, String path) throws Exception {
+        Channel channel = new Channel();
+        channel.setId(channelId);
+        content.setChannel(channel);
+        content.setUser(backgroundUser);
+        content.setAddTime(new Date());
+        content.setViewCount(0);
+        if (content.getStatus() == 0) {
+            content.setStatus(Constant.CONTENT_STATUS_AUDITING);
+        }
+
+        ContentVideo contentVideo = new ContentVideo();
+        contentVideo.setTime(time);
+        contentVideo.setPlace(place);
+        contentVideo.setPublisher(publisher);
+        contentVideo.setCover(pic);
+        contentVideo.setPath(path);
+        contentVideo.setContent(content);
+
+        this.contentDao.save(content);
+        this.contentVideoDao.save(contentVideo);
+    }
+
+    public void editVideo(Content content, Integer channelId, String time, String place, String publisher, String cover, String path) throws Exception {
+        Content contentDb = this.contentDao.getOne(content.getId());
+        Channel channel = new Channel();
+        channel.setId(channelId);
+        contentDb.setChannel(channel);
+        contentDb.setTitle(content.getTitle());
+        contentDb.setShortTitle(content.getShortTitle());
+        contentDb.setLastEditTime(new Date());
+        contentDb.setRecommend(content.isRecommend());
+        // 原为草稿状态，修改为非草稿状态则进入待审核状态，其它情况不变，否则改为草稿状态
+        if (contentDb.getStatus() == 1 && content.getStatus() == 0) {
+            contentDb.setStatus(Constant.CONTENT_STATUS_AUDITING);
+        } else {
+            contentDb.setStatus(Constant.CONTENT_STATUS_DRAFT);
+        }
+        contentDb.setTags(content.getTags());
+        contentDb.setTxt(content.getTxt());
+        this.contentDao.save(contentDb);
+
+        ContentVideo contentVideo = this.contentVideoDao.findByContent(content);
+        contentVideo.setTime(time);
+        contentVideo.setPlace(place);
+        contentVideo.setPublisher(publisher);
+        contentVideo.setCover(cover);
+        contentVideo.setPath(path);
+        this.contentVideoDao.save(contentVideo);
+    }
+
     public void delete(int id) {
         Content content = this.contentDao.getOne(id);
         switch(content.getChannel().getId()){
@@ -261,6 +315,10 @@ public class ContentService {
                 break;
             case 4:
                 this.contentAudioDao.deleteByContent(content);
+                this.contentDao.deleteById(id);
+                break;
+            case 5:
+                this.contentVideoDao.deleteByContent(content);
                 this.contentDao.deleteById(id);
                 break;
                 // TODO 其它栏目的删除

@@ -6,6 +6,7 @@ import com.starrysky.starcms.contentaudio.service.ContentAudioService;
 import com.starrysky.starcms.contentbook.service.ContentBookService;
 import com.starrysky.starcms.contentpic.service.ContentPicService;
 import com.starrysky.starcms.contentrubbings.service.ContentRubbingsService;
+import com.starrysky.starcms.contentvideo.service.ContentVideoService;
 import com.starrysky.starcms.entity.*;
 import com.starrysky.starcms.security.SecurityUser;
 import com.starrysky.starcms.util.Constant;
@@ -39,6 +40,8 @@ public class ContentController {
     private ContentRubbingsService contentRubbingsService;
     @Resource
     private ContentAudioService contentAudioService;
+    @Resource
+    private ContentVideoService contentVideoService;
     @Resource
     private BackgroundUserService backgroundUserService;
 
@@ -142,6 +145,9 @@ public class ContentController {
             case 4:
                 addAudio(content, time, place, publisher, cover, path, channelId, request);
                 break;
+            case 5:
+                addVideo(content, time, place, publisher, cover, path, channelId, request);
+                break;
             // TODO 新增其它类型数据
         }
         return "forward:/backstage/content/toadd?channelId=" + channelId;
@@ -179,6 +185,9 @@ public class ContentController {
                     ContentAudio contentAudio = this.contentAudioService.getByContent(content);
                     request.setAttribute("contentaddtion", contentAudio);
                     break;
+                case 5:
+                    ContentVideo contentVideo = this.contentVideoService.getByContent(content);
+                    request.setAttribute("contentaddtion", contentVideo);
                 // TODO 其它栏目的修改
 
             }
@@ -205,6 +214,9 @@ public class ContentController {
                 break;
             case 4:
                 editAudio(content, time, place, publisher, cover, path, channelId, request);
+                break;
+            case 5:
+                editVideo(content, time, place, publisher, cover, path, channelId, request);
                 break;
             // TODO 新增其它类型数据
         }
@@ -670,6 +682,102 @@ public class ContentController {
             } catch (Exception e) {
                 e.printStackTrace();
                 request.setAttribute("contentinfo", "修改音频失败，请稍后再试");
+            }
+        }
+    }
+
+    /**
+     * 添加视频
+     * @param content
+     * @param time
+     * @param place
+     * @param publisher
+     * @param cover
+     * @param path
+     * @param channelId
+     * @param request
+     */
+    public void addVideo(Content content, String time, String place, String publisher, String cover, String path, Integer channelId, HttpServletRequest request) {
+        boolean checked = true;
+        if (channelId == null) {
+            request.setAttribute("contentinfo", "请选择栏目类型");
+            checked = false;
+        } else if (StringUtils.isEmpty(content.getTitle())) {
+            request.setAttribute("contentinfo", "请填写标题");
+            checked = false;
+        } else if (StringUtils.isEmpty(cover)) {
+            request.setAttribute("contentinfo", "请上传图片");
+            checked = false;
+        } else if(StringUtils.isEmpty(path)){
+            request.setAttribute("contentinfo", "请上传视频");
+            checked = false;
+        }
+        if (checked) {
+            try {
+                // 自己实现登录时
+//                BackgroundUser backgroundUser = (BackgroundUser) session.getAttribute("user");
+                // 基于SpringSecurit
+                SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                BackgroundUser backgroundUser = new BackgroundUser();
+                backgroundUser.setId(securityUser.getId());
+                this.contentService.addVideo(content, channelId, backgroundUser, time, place, publisher, cover, path);
+                request.setAttribute("contentinfo", "填加视频成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("contentinfo", "填加视频失败，请稍后再试");
+            }
+        } else {
+            // 普通属性
+            request.setAttribute("channelId", channelId);
+            request.setAttribute("title", content.getTitle());
+            request.setAttribute("shortTitle", content.getShortTitle());
+            request.setAttribute("recommend", content.isRecommend());
+            request.setAttribute("status", content.getStatus());
+            request.setAttribute("tags", content.getTags());
+            request.setAttribute("txt", content.getTxt());
+            // 跟书籍有关的属性
+            request.setAttribute("cover", cover);
+            request.setAttribute("time", time);
+            request.setAttribute("place", place);
+            request.setAttribute("publisher", publisher);
+            request.setAttribute("path", path);
+        }
+    }
+
+    /**
+     * 修改视频
+     * @param content
+     * @param time
+     * @param place
+     * @param publisher
+     * @param cover
+     * @param path
+     * @param channelId
+     * @param request
+     */
+    public void editVideo(Content content, String time, String place, String publisher, String cover, String path, Integer channelId, HttpServletRequest request) {
+        boolean checked = true;
+        if (channelId == null) {
+            request.setAttribute("contentinfo", "请选择栏目类型");
+            checked = false;
+        } else if (StringUtils.isEmpty(content.getTitle())) {
+            request.setAttribute("contentinfo", "请填写标题");
+            checked = false;
+        } else if (StringUtils.isEmpty(cover)) {
+            request.setAttribute("contentinfo", "请上传图片");
+            checked = false;
+        } else if (StringUtils.isEmpty(path)) {
+            request.setAttribute("contentinfo", "请上传内容");
+            checked = false;
+        }
+        // 验证成功，新增内容，失败返回重新填写
+        if (checked) {
+            try {
+                this.contentService.editVideo(content, channelId, time, place, publisher, cover, path);
+                request.setAttribute("contentinfo", "修改视频成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("contentinfo", "修改视频失败，请稍后再试");
             }
         }
     }

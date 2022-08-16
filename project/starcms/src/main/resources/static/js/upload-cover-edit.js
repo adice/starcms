@@ -22,6 +22,7 @@ $(document).ready(function () {
             this.displayExistingFile(mockFile, "http://localhost/contents" + $("#cover").val(), null, null, true);
             this.files.push(mockFile);
             this.options.maxFiles = this.options.maxFiles - 1;
+            $('.dz-size').children("span").hide();
             this.on('success', function (files, response) {
                 //文件上传成功之后的操作
                 $("#cover").val(response[0].url);
