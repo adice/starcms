@@ -2,6 +2,7 @@ package com.starrysky.starcms.content.controller;
 
 import com.starrysky.starcms.backstageuser.service.BackgroundUserService;
 import com.starrysky.starcms.content.service.ContentService;
+import com.starrysky.starcms.contentaudio.service.ContentAudioService;
 import com.starrysky.starcms.contentbook.service.ContentBookService;
 import com.starrysky.starcms.contentpic.service.ContentPicService;
 import com.starrysky.starcms.contentrubbings.service.ContentRubbingsService;
@@ -36,6 +37,8 @@ public class ContentController {
     private ContentPicService contentPicService;
     @Resource
     private ContentRubbingsService contentRubbingsService;
+    @Resource
+    private ContentAudioService contentAudioService;
     @Resource
     private BackgroundUserService backgroundUserService;
 
@@ -171,6 +174,10 @@ public class ContentController {
                 case 3:
                     ContentRubbings contentRubbings = this.contentRubbingsService.getByContent(content);
                     request.setAttribute("contentaddtion", contentRubbings);
+                    break;
+                case 4:
+                    ContentAudio contentAudio = this.contentAudioService.getByContent(content);
+                    request.setAttribute("contentaddtion", contentAudio);
                     break;
                 // TODO 其它栏目的修改
 

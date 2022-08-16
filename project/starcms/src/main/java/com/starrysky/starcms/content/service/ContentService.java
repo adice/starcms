@@ -73,8 +73,11 @@ public class ContentService {
         contentDb.setShortTitle(content.getShortTitle());
         contentDb.setLastEditTime(new Date());
         contentDb.setRecommend(content.isRecommend());
-        if (content.getStatus() == 0) {
-            content.setStatus(Constant.CONTENT_STATUS_AUDITING);
+        // 原为草稿状态，修改为非草稿状态则进入待审核状态，其它情况不变，否则改为草稿状态
+        if (contentDb.getStatus() == 1 && content.getStatus() == 0) {
+            contentDb.setStatus(Constant.CONTENT_STATUS_AUDITING);
+        } else {
+            contentDb.setStatus(Constant.CONTENT_STATUS_DRAFT);
         }
         contentDb.setTags(content.getTags());
         contentDb.setTxt(content.getTxt());
@@ -119,8 +122,11 @@ public class ContentService {
         contentDb.setShortTitle(content.getShortTitle());
         contentDb.setLastEditTime(new Date());
         contentDb.setRecommend(content.isRecommend());
-        if (content.getStatus() == 0) {
-            content.setStatus(Constant.CONTENT_STATUS_AUDITING);
+        // 原为草稿状态，修改为非草稿状态则进入待审核状态，其它情况不变，否则改为草稿状态
+        if (contentDb.getStatus() == 1 && content.getStatus() == 0) {
+            contentDb.setStatus(Constant.CONTENT_STATUS_AUDITING);
+        } else {
+            contentDb.setStatus(Constant.CONTENT_STATUS_DRAFT);
         }
         contentDb.setTags(content.getTags());
         contentDb.setTxt(content.getTxt());
@@ -166,8 +172,11 @@ public class ContentService {
         contentDb.setShortTitle(content.getShortTitle());
         contentDb.setLastEditTime(new Date());
         contentDb.setRecommend(content.isRecommend());
-        if (content.getStatus() == 0) {
-            content.setStatus(Constant.CONTENT_STATUS_AUDITING);
+        // 原为草稿状态，修改为非草稿状态则进入待审核状态，其它情况不变，否则改为草稿状态
+        if (contentDb.getStatus() == 1 && content.getStatus() == 0) {
+            contentDb.setStatus(Constant.CONTENT_STATUS_AUDITING);
+        } else {
+            contentDb.setStatus(Constant.CONTENT_STATUS_DRAFT);
         }
         contentDb.setTags(content.getTags());
         contentDb.setTxt(content.getTxt());
@@ -214,8 +223,11 @@ public class ContentService {
         contentDb.setShortTitle(content.getShortTitle());
         contentDb.setLastEditTime(new Date());
         contentDb.setRecommend(content.isRecommend());
-        if (content.getStatus() == 0) {
-            content.setStatus(Constant.CONTENT_STATUS_AUDITING);
+        // 原为草稿状态，修改为非草稿状态则进入待审核状态，其它情况不变，否则改为草稿状态
+        if (contentDb.getStatus() == 1 && content.getStatus() == 0) {
+            contentDb.setStatus(Constant.CONTENT_STATUS_AUDITING);
+        } else {
+            contentDb.setStatus(Constant.CONTENT_STATUS_DRAFT);
         }
         contentDb.setTags(content.getTags());
         contentDb.setTxt(content.getTxt());
