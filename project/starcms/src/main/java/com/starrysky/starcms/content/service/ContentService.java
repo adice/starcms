@@ -1,6 +1,8 @@
 package com.starrysky.starcms.content.service;
 
 import com.starrysky.starcms.content.dao.ContentDao;
+import com.starrysky.starcms.content3d.dao.Content3DDao;
+import com.starrysky.starcms.contentallscene.dao.ContentAllSceneDao;
 import com.starrysky.starcms.contentaudio.dao.ContentAudioDao;
 import com.starrysky.starcms.contentbook.dao.ContentBookDao;
 import com.starrysky.starcms.contentpic.dao.ContentPicDao;
@@ -24,7 +26,7 @@ import java.util.List;
  * @Date 2022-08-02 08:58
  */
 @Service
-@Transactional()
+@Transactional
 public class ContentService {
     @Resource
     private ContentDao contentDao;
@@ -38,6 +40,10 @@ public class ContentService {
     private ContentAudioDao contentAudioDao;
     @Resource
     private ContentVideoDao contentVideoDao;
+    @Resource
+    private Content3DDao content3DDao;
+    @Resource
+    private ContentAllSceneDao contentAllSceneDao;
 
     @Transactional(readOnly = true)
     public Page<Content> list(String title, Boolean recommend, Integer status, Integer[] channelIds, Integer userId, String name, String realName, int pageNum, int pageSize) throws Exception {
@@ -296,34 +302,130 @@ public class ContentService {
         this.contentVideoDao.save(contentVideo);
     }
 
+    public void add3D(Content content, Integer channelId, BackgroundUser backgroundUser, String publisher, String cover, String path) throws Exception {
+        Channel channel = new Channel();
+        channel.setId(channelId);
+        content.setChannel(channel);
+        content.setUser(backgroundUser);
+        content.setAddTime(new Date());
+        content.setViewCount(0);
+        if (content.getStatus() == 0) {
+            content.setStatus(Constant.CONTENT_STATUS_AUDITING);
+        }
+
+        Content3D content3D = new Content3D();
+        content3D.setPublisher(publisher);
+        content3D.setCover(cover);
+        content3D.setPath(path);
+        content3D.setContent(content);
+
+        this.contentDao.save(content);
+        this.content3DDao.save(content3D);
+
+    }
+
+    public void edit3D(Content content, Integer channelId, String publisher, String cover, String path) throws Exception {
+        Content contentDb = this.contentDao.getOne(content.getId());
+        Channel channel = new Channel();
+        channel.setId(channelId);
+        contentDb.setChannel(channel);
+        contentDb.setTitle(content.getTitle());
+        contentDb.setShortTitle(content.getShortTitle());
+        contentDb.setLastEditTime(new Date());
+        contentDb.setRecommend(content.isRecommend());
+        // 原为草稿状态，修改为非草稿状态则进入待审核状态，其它情况不变，否则改为草稿状态
+        if (contentDb.getStatus() == 1 && content.getStatus() == 0) {
+            contentDb.setStatus(Constant.CONTENT_STATUS_AUDITING);
+        } else {
+            contentDb.setStatus(Constant.CONTENT_STATUS_DRAFT);
+        }
+        contentDb.setTags(content.getTags());
+        contentDb.setTxt(content.getTxt());
+        this.contentDao.save(contentDb);
+
+        Content3D content3D = this.content3DDao.findByContent(content);
+        content3D.setPublisher(publisher);
+        content3D.setCover(cover);
+        content3D.setPath(path);
+        this.content3DDao.save(content3D);
+    }
+
+    public void addAllScene(Content content, Integer channelId, BackgroundUser backgroundUser, String publisher, String cover, String path) throws Exception {
+        Channel channel = new Channel();
+        channel.setId(channelId);
+        content.setChannel(channel);
+        content.setUser(backgroundUser);
+        content.setAddTime(new Date());
+        content.setViewCount(0);
+        if (content.getStatus() == 0) {
+            content.setStatus(Constant.CONTENT_STATUS_AUDITING);
+        }
+
+        ContentAllScene contentAllScene = new ContentAllScene();
+        contentAllScene.setPublisher(publisher);
+        contentAllScene.setCover(cover);
+        contentAllScene.setPath(path);
+        contentAllScene.setContent(content);
+
+        this.contentDao.save(content);
+        this.contentAllSceneDao.save(contentAllScene);
+
+    }
+
+    public void editAllScene(Content content, Integer channelId, String publisher, String cover, String path) throws Exception {
+        Content contentDb = this.contentDao.getOne(content.getId());
+        Channel channel = new Channel();
+        channel.setId(channelId);
+        contentDb.setChannel(channel);
+        contentDb.setTitle(content.getTitle());
+        contentDb.setShortTitle(content.getShortTitle());
+        contentDb.setLastEditTime(new Date());
+        contentDb.setRecommend(content.isRecommend());
+        // 原为草稿状态，修改为非草稿状态则进入待审核状态，其它情况不变，否则改为草稿状态
+        if (contentDb.getStatus() == 1 && content.getStatus() == 0) {
+            contentDb.setStatus(Constant.CONTENT_STATUS_AUDITING);
+        } else {
+            contentDb.setStatus(Constant.CONTENT_STATUS_DRAFT);
+        }
+        contentDb.setTags(content.getTags());
+        contentDb.setTxt(content.getTxt());
+        this.contentDao.save(contentDb);
+
+        ContentAllScene contentAllScene = this.contentAllSceneDao.findByContent(content);
+        contentAllScene.setPublisher(publisher);
+        contentAllScene.setCover(cover);
+        contentAllScene.setPath(path);
+        this.contentAllSceneDao.save(contentAllScene);
+    }
+
     public void delete(int id) {
         Content content = this.contentDao.getOne(id);
         switch(content.getChannel().getId()){
             case 1:
                 this.contentBookDao.deleteByContent(content);
-                this.contentDao.deleteById(id);
                 break;
             case 2:
             case 8:
             case 9:
                 this.contentPicDao.deleteByContent(content);
-                this.contentDao.deleteById(id);
                 break;
             case 3:
                 this.contentRubbingsDao.deleteByContent(content);
-                this.contentDao.deleteById(id);
                 break;
             case 4:
                 this.contentAudioDao.deleteByContent(content);
-                this.contentDao.deleteById(id);
                 break;
             case 5:
                 this.contentVideoDao.deleteByContent(content);
-                this.contentDao.deleteById(id);
                 break;
-                // TODO 其它栏目的删除
-
+            case 6:
+                this.content3DDao.deleteByContent(content);
+                break;
+            case 7:
+                this.contentAllSceneDao.deleteByContent(content);
+                break;
         }
+        this.contentDao.deleteById(id);
     }
 
     public void deletes(String ids){

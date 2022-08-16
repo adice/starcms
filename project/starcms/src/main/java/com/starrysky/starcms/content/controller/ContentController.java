@@ -2,6 +2,8 @@ package com.starrysky.starcms.content.controller;
 
 import com.starrysky.starcms.backstageuser.service.BackgroundUserService;
 import com.starrysky.starcms.content.service.ContentService;
+import com.starrysky.starcms.content3d.service.Content3DService;
+import com.starrysky.starcms.contentallscene.service.ContentAllSceneService;
 import com.starrysky.starcms.contentaudio.service.ContentAudioService;
 import com.starrysky.starcms.contentbook.service.ContentBookService;
 import com.starrysky.starcms.contentpic.service.ContentPicService;
@@ -42,6 +44,10 @@ public class ContentController {
     private ContentAudioService contentAudioService;
     @Resource
     private ContentVideoService contentVideoService;
+    @Resource
+    private Content3DService content3DService;
+    @Resource
+    private ContentAllSceneService contentAllSceneService;
     @Resource
     private BackgroundUserService backgroundUserService;
 
@@ -148,7 +154,12 @@ public class ContentController {
             case 5:
                 addVideo(content, time, place, publisher, cover, path, channelId, request);
                 break;
-            // TODO 新增其它类型数据
+            case 6:
+                add3D(content, publisher, cover, path, channelId, request);
+                break;
+            case 7:
+                addAllScene(content, publisher,cover, path, channelId, request);
+                break;
         }
         return "forward:/backstage/content/toadd?channelId=" + channelId;
     }
@@ -188,8 +199,15 @@ public class ContentController {
                 case 5:
                     ContentVideo contentVideo = this.contentVideoService.getByContent(content);
                     request.setAttribute("contentaddtion", contentVideo);
-                // TODO 其它栏目的修改
-
+                    break;
+                case 6:
+                    Content3D content3D = this.content3DService.getByContent(content);
+                    request.setAttribute("contentaddtion", content3D);
+                    break;
+                case 7:
+                    ContentAllScene contentAllScene = this.contentAllSceneService.getByContent(content);
+                    request.setAttribute("contentaddtion", contentAllScene);
+                    break;
             }
             request.setAttribute("content", content);
             request.setAttribute("activechildmenu", "ccmenu" + content.getChannel().getId());
@@ -218,7 +236,12 @@ public class ContentController {
             case 5:
                 editVideo(content, time, place, publisher, cover, path, channelId, request);
                 break;
-            // TODO 新增其它类型数据
+            case 6:
+                edit3D(content, publisher, cover, path, channelId, request);
+                break;
+            case 7:
+                editAllScene(content, publisher, cover, path, channelId, request);
+                break;
         }
         return "forward:/backstage/content/toedit/" + content.getId();
     }
@@ -778,6 +801,188 @@ public class ContentController {
             } catch (Exception e) {
                 e.printStackTrace();
                 request.setAttribute("contentinfo", "修改视频失败，请稍后再试");
+            }
+        }
+    }
+
+    /**
+     * 添加3D模型
+     * @param content
+     * @param publisher
+     * @param cover
+     * @param path
+     * @param channelId
+     * @param request
+     */
+    public void add3D(Content content, String publisher, String cover, String path, Integer channelId, HttpServletRequest request) {
+        boolean checked = true;
+        if (channelId == null) {
+            request.setAttribute("contentinfo", "请选择栏目类型");
+            checked = false;
+        } else if (StringUtils.isEmpty(content.getTitle())) {
+            request.setAttribute("contentinfo", "请填写标题");
+            checked = false;
+        } else if (StringUtils.isEmpty(cover)) {
+            request.setAttribute("contentinfo", "请上传图片");
+            checked = false;
+        } else if (StringUtils.isEmpty(path)) {
+            request.setAttribute("contentinfo", "请上传内容");
+            checked = false;
+        }
+        if (checked) {
+            try {
+                // 自己实现登录时
+//                BackgroundUser backgroundUser = (BackgroundUser) session.getAttribute("user");
+                // 基于SpringSecurit
+                SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                BackgroundUser backgroundUser = new BackgroundUser();
+                backgroundUser.setId(securityUser.getId());
+
+                this.contentService.add3D(content, channelId, backgroundUser, publisher, cover, path);
+                request.setAttribute("contentinfo", "填加3D模型成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("contentinfo", "填加3D模型失败，请稍后再试");
+            }
+        } else {
+            // 普通属性
+            request.setAttribute("channelId", channelId);
+            request.setAttribute("title", content.getTitle());
+            request.setAttribute("shortTitle", content.getShortTitle());
+            request.setAttribute("recommend", content.isRecommend());
+            request.setAttribute("status", content.getStatus());
+            request.setAttribute("tags", content.getTags());
+            request.setAttribute("txt", content.getTxt());
+            // 跟书籍有关的属性
+            request.setAttribute("cover", cover);
+            request.setAttribute("path", path);
+            request.setAttribute("publisher", publisher);
+        }
+    }
+
+    /**
+     * 修改3D模型
+     * @param content
+     * @param publisher
+     * @param cover
+     * @param path
+     * @param channelId
+     * @param request
+     */
+    public void edit3D(Content content, String publisher, String cover, String path, Integer channelId, HttpServletRequest request) {
+        boolean checked = true;
+        if (channelId == null) {
+            request.setAttribute("contentinfo", "请选择栏目类型");
+            checked = false;
+        } else if (StringUtils.isEmpty(content.getTitle())) {
+            request.setAttribute("contentinfo", "请填写标题");
+            checked = false;
+        } else if (StringUtils.isEmpty(cover)) {
+            request.setAttribute("contentinfo", "请上传图片");
+            checked = false;
+        } else if (StringUtils.isEmpty(path)) {
+            request.setAttribute("contentinfo", "请上传内容");
+            checked = false;
+        }
+        // 验证成功，新增内容，失败返回重新填写
+        if (checked) {
+            try {
+                this.contentService.edit3D(content, channelId, publisher, cover, path);
+                request.setAttribute("contentinfo", "修改3D模型成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("contentinfo", "修改3D模型失败，请稍后再试");
+            }
+        }
+    }
+
+    /**
+     * 添加360全景
+     * @param content
+     * @param publisher
+     * @param cover
+     * @param path
+     * @param channelId
+     * @param request
+     */
+    public void addAllScene(Content content, String publisher, String cover, String path, Integer channelId, HttpServletRequest request) {
+        boolean checked = true;
+        if (channelId == null) {
+            request.setAttribute("contentinfo", "请选择栏目类型");
+            checked = false;
+        } else if (StringUtils.isEmpty(content.getTitle())) {
+            request.setAttribute("contentinfo", "请填写标题");
+            checked = false;
+        } else if (StringUtils.isEmpty(cover)) {
+            request.setAttribute("contentinfo", "请上传图片");
+            checked = false;
+        } else if (StringUtils.isEmpty(path)) {
+            request.setAttribute("contentinfo", "请上传内容");
+            checked = false;
+        }
+        if (checked) {
+            try {
+                // 自己实现登录时
+//                BackgroundUser backgroundUser = (BackgroundUser) session.getAttribute("user");
+                // 基于SpringSecurit
+                SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                BackgroundUser backgroundUser = new BackgroundUser();
+                backgroundUser.setId(securityUser.getId());
+
+                this.contentService.addAllScene(content, channelId, backgroundUser, publisher, cover, path);
+                request.setAttribute("contentinfo", "填加360全景成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("contentinfo", "填加360全景失败，请稍后再试");
+            }
+        } else {
+            // 普通属性
+            request.setAttribute("channelId", channelId);
+            request.setAttribute("title", content.getTitle());
+            request.setAttribute("shortTitle", content.getShortTitle());
+            request.setAttribute("recommend", content.isRecommend());
+            request.setAttribute("status", content.getStatus());
+            request.setAttribute("tags", content.getTags());
+            request.setAttribute("txt", content.getTxt());
+            // 跟书籍有关的属性
+            request.setAttribute("cover", cover);
+            request.setAttribute("path", path);
+            request.setAttribute("publisher", publisher);
+        }
+    }
+
+    /**
+     * 修改360全景
+     * @param content
+     * @param publisher
+     * @param cover
+     * @param path
+     * @param channelId
+     * @param request
+     */
+    public void editAllScene(Content content, String publisher, String cover, String path, Integer channelId, HttpServletRequest request) {
+        boolean checked = true;
+        if (channelId == null) {
+            request.setAttribute("contentinfo", "请选择栏目类型");
+            checked = false;
+        } else if (StringUtils.isEmpty(content.getTitle())) {
+            request.setAttribute("contentinfo", "请填写标题");
+            checked = false;
+        } else if (StringUtils.isEmpty(cover)) {
+            request.setAttribute("contentinfo", "请上传图片");
+            checked = false;
+        } else if (StringUtils.isEmpty(path)) {
+            request.setAttribute("contentinfo", "请上传内容");
+            checked = false;
+        }
+        // 验证成功，新增内容，失败返回重新填写
+        if (checked) {
+            try {
+                this.contentService.editAllScene(content, channelId, publisher, cover, path);
+                request.setAttribute("contentinfo", "修改360全景成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("contentinfo", "修改360全景失败，请稍后再试");
             }
         }
     }

@@ -11,7 +11,7 @@ $(document).ready(function () {
         acceptedFiles: ".mp4,.mov,.avi,.wmv",
         autoProcessQueue: true,
         dictDefaultMessage: "点击或拖入需要上传的文件",
-        dictFileTooBig: "文件超过20MB，不允许上传",
+        dictFileTooBig: "文件超过500MB，不允许上传",
         dictInvalidInputType: "只能上传视频",
         dictRemoveFile: "删除",
         dictCancelUpload: "取消",
