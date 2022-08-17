@@ -10,6 +10,17 @@ public class Constant {
 
     public static final String UPLOAD_PATH = "D:/starcms/contents/";
 
+    // 栏目编号
+    public static final int CHANNEL_BOOK = 1;
+    public static final int CHANNEL_PIC = 2;
+    public static final int CHANNEL_RUBBINGS = 3;
+    public static final int CHANNEL_AUDIO = 4;
+    public static final int CHANNEL_VIDEO = 5;
+    public static final int CHANNEL_3D = 6;
+    public static final int CHANNEL_ALLSCENE = 7;
+    public static final int CHANNEL_MURAL = 8;
+    public static final int CHANNEL_PAINTING = 9;
+
     // 内容状态，1-草稿，2-审核中，3-审核通过，4-审核失败，5-回收站（删除）
     public static final int CONTENT_STATUS_DRAFT = 1;
     public static final int CONTENT_STATUS_AUDITING = 2;

@@ -51,15 +51,7 @@ public class ContentService {
     }
 
     public void addBook(Content content, Integer channelId, BackgroundUser backgroundUser, String seriesName, String authorName, String cover, String attachments) throws Exception {
-        Channel channel = new Channel();
-        channel.setId(channelId);
-        content.setChannel(channel);
-        content.setUser(backgroundUser);
-        content.setAddTime(new Date());
-        content.setViewCount(0);
-        if (content.getStatus() == 0) {
-            content.setStatus(Constant.CONTENT_STATUS_AUDITING);
-        }
+        addContent(content, channelId, backgroundUser);
 
         ContentBook contentBook = new ContentBook();
         contentBook.setSeriesName(seriesName);
@@ -74,23 +66,7 @@ public class ContentService {
     }
 
     public void editBook(Content content, Integer channelId, String seriesName, String authorName, String cover, String attachments) throws Exception {
-        Content contentDb = this.contentDao.getOne(content.getId());
-        Channel channel = new Channel();
-        channel.setId(channelId);
-        contentDb.setChannel(channel);
-        contentDb.setTitle(content.getTitle());
-        contentDb.setShortTitle(content.getShortTitle());
-        contentDb.setLastEditTime(new Date());
-        contentDb.setRecommend(content.isRecommend());
-        // 原为草稿状态，修改为非草稿状态则进入待审核状态，其它情况不变，否则改为草稿状态
-        if (contentDb.getStatus() == 1 && content.getStatus() == 0) {
-            contentDb.setStatus(Constant.CONTENT_STATUS_AUDITING);
-        } else {
-            contentDb.setStatus(Constant.CONTENT_STATUS_DRAFT);
-        }
-        contentDb.setTags(content.getTags());
-        contentDb.setTxt(content.getTxt());
-        this.contentDao.save(contentDb);
+        editContent(content, channelId);
 
         ContentBook contentBook = this.contentBookDao.findByContent(content);
         contentBook.setSeriesName(seriesName);
@@ -101,15 +77,7 @@ public class ContentService {
     }
 
     public void addPic(Content content, Integer channelId, BackgroundUser backgroundUser, String time, String place, String publisher, String pic) throws Exception {
-        Channel channel = new Channel();
-        channel.setId(channelId);
-        content.setChannel(channel);
-        content.setUser(backgroundUser);
-        content.setAddTime(new Date());
-        content.setViewCount(0);
-        if (content.getStatus() == 0) {
-            content.setStatus(Constant.CONTENT_STATUS_AUDITING);
-        }
+        addContent(content, channelId, backgroundUser);
 
         ContentPic contentPic = new ContentPic();
         contentPic.setTime(time);
@@ -123,23 +91,7 @@ public class ContentService {
     }
 
     public void editPic(Content content, Integer channelId, String time, String place, String publisher, String pic) throws Exception {
-        Content contentDb = this.contentDao.getOne(content.getId());
-        Channel channel = new Channel();
-        channel.setId(channelId);
-        contentDb.setChannel(channel);
-        contentDb.setTitle(content.getTitle());
-        contentDb.setShortTitle(content.getShortTitle());
-        contentDb.setLastEditTime(new Date());
-        contentDb.setRecommend(content.isRecommend());
-        // 原为草稿状态，修改为非草稿状态则进入待审核状态，其它情况不变，否则改为草稿状态
-        if (contentDb.getStatus() == 1 && content.getStatus() == 0) {
-            contentDb.setStatus(Constant.CONTENT_STATUS_AUDITING);
-        } else {
-            contentDb.setStatus(Constant.CONTENT_STATUS_DRAFT);
-        }
-        contentDb.setTags(content.getTags());
-        contentDb.setTxt(content.getTxt());
-        this.contentDao.save(contentDb);
+        editContent(content, channelId);
 
         ContentPic contentPic = this.contentPicDao.findByContent(content);
         contentPic.setTime(time);
@@ -150,15 +102,7 @@ public class ContentService {
     }
 
     public void addRubbings(Content content, Integer channelId, BackgroundUser backgroundUser, String time, String place, String publisher, String pic, String path) throws Exception {
-        Channel channel = new Channel();
-        channel.setId(channelId);
-        content.setChannel(channel);
-        content.setUser(backgroundUser);
-        content.setAddTime(new Date());
-        content.setViewCount(0);
-        if (content.getStatus() == 0) {
-            content.setStatus(Constant.CONTENT_STATUS_AUDITING);
-        }
+        addContent(content, channelId, backgroundUser);
 
         ContentRubbings contentRubbings = new ContentRubbings();
         contentRubbings.setTime(time);
@@ -173,23 +117,7 @@ public class ContentService {
     }
 
     public void editRubbings(Content content, Integer channelId, String time, String place, String publisher, String cover, String path) throws Exception {
-        Content contentDb = this.contentDao.getOne(content.getId());
-        Channel channel = new Channel();
-        channel.setId(channelId);
-        contentDb.setChannel(channel);
-        contentDb.setTitle(content.getTitle());
-        contentDb.setShortTitle(content.getShortTitle());
-        contentDb.setLastEditTime(new Date());
-        contentDb.setRecommend(content.isRecommend());
-        // 原为草稿状态，修改为非草稿状态则进入待审核状态，其它情况不变，否则改为草稿状态
-        if (contentDb.getStatus() == 1 && content.getStatus() == 0) {
-            contentDb.setStatus(Constant.CONTENT_STATUS_AUDITING);
-        } else {
-            contentDb.setStatus(Constant.CONTENT_STATUS_DRAFT);
-        }
-        contentDb.setTags(content.getTags());
-        contentDb.setTxt(content.getTxt());
-        this.contentDao.save(contentDb);
+        editContent(content, channelId);
 
         ContentRubbings contentRubbings = this.contentRubbingsDao.findByContent(content);
         contentRubbings.setTime(time);
@@ -201,15 +129,7 @@ public class ContentService {
     }
 
     public void addAudio(Content content, Integer channelId, BackgroundUser backgroundUser, String time, String place, String publisher, String pic, String path) throws Exception {
-        Channel channel = new Channel();
-        channel.setId(channelId);
-        content.setChannel(channel);
-        content.setUser(backgroundUser);
-        content.setAddTime(new Date());
-        content.setViewCount(0);
-        if (content.getStatus() == 0) {
-            content.setStatus(Constant.CONTENT_STATUS_AUDITING);
-        }
+        addContent(content, channelId, backgroundUser);
 
         ContentAudio contentAudio = new ContentAudio();
         contentAudio.setTime(time);
@@ -224,23 +144,7 @@ public class ContentService {
     }
 
     public void editAudio(Content content, Integer channelId, String time, String place, String publisher, String cover, String path) throws Exception {
-        Content contentDb = this.contentDao.getOne(content.getId());
-        Channel channel = new Channel();
-        channel.setId(channelId);
-        contentDb.setChannel(channel);
-        contentDb.setTitle(content.getTitle());
-        contentDb.setShortTitle(content.getShortTitle());
-        contentDb.setLastEditTime(new Date());
-        contentDb.setRecommend(content.isRecommend());
-        // 原为草稿状态，修改为非草稿状态则进入待审核状态，其它情况不变，否则改为草稿状态
-        if (contentDb.getStatus() == 1 && content.getStatus() == 0) {
-            contentDb.setStatus(Constant.CONTENT_STATUS_AUDITING);
-        } else {
-            contentDb.setStatus(Constant.CONTENT_STATUS_DRAFT);
-        }
-        contentDb.setTags(content.getTags());
-        contentDb.setTxt(content.getTxt());
-        this.contentDao.save(contentDb);
+        editContent(content, channelId);
 
         ContentAudio contentAudio = this.contentAudioDao.findByContent(content);
         contentAudio.setTime(time);
@@ -252,15 +156,7 @@ public class ContentService {
     }
 
     public void addVideo(Content content, Integer channelId, BackgroundUser backgroundUser, String time, String place, String publisher, String pic, String path) throws Exception {
-        Channel channel = new Channel();
-        channel.setId(channelId);
-        content.setChannel(channel);
-        content.setUser(backgroundUser);
-        content.setAddTime(new Date());
-        content.setViewCount(0);
-        if (content.getStatus() == 0) {
-            content.setStatus(Constant.CONTENT_STATUS_AUDITING);
-        }
+        addContent(content, channelId, backgroundUser);
 
         ContentVideo contentVideo = new ContentVideo();
         contentVideo.setTime(time);
@@ -275,23 +171,7 @@ public class ContentService {
     }
 
     public void editVideo(Content content, Integer channelId, String time, String place, String publisher, String cover, String path) throws Exception {
-        Content contentDb = this.contentDao.getOne(content.getId());
-        Channel channel = new Channel();
-        channel.setId(channelId);
-        contentDb.setChannel(channel);
-        contentDb.setTitle(content.getTitle());
-        contentDb.setShortTitle(content.getShortTitle());
-        contentDb.setLastEditTime(new Date());
-        contentDb.setRecommend(content.isRecommend());
-        // 原为草稿状态，修改为非草稿状态则进入待审核状态，其它情况不变，否则改为草稿状态
-        if (contentDb.getStatus() == 1 && content.getStatus() == 0) {
-            contentDb.setStatus(Constant.CONTENT_STATUS_AUDITING);
-        } else {
-            contentDb.setStatus(Constant.CONTENT_STATUS_DRAFT);
-        }
-        contentDb.setTags(content.getTags());
-        contentDb.setTxt(content.getTxt());
-        this.contentDao.save(contentDb);
+        editContent(content, channelId);
 
         ContentVideo contentVideo = this.contentVideoDao.findByContent(content);
         contentVideo.setTime(time);
@@ -303,15 +183,7 @@ public class ContentService {
     }
 
     public void add3D(Content content, Integer channelId, BackgroundUser backgroundUser, String publisher, String cover, String path) throws Exception {
-        Channel channel = new Channel();
-        channel.setId(channelId);
-        content.setChannel(channel);
-        content.setUser(backgroundUser);
-        content.setAddTime(new Date());
-        content.setViewCount(0);
-        if (content.getStatus() == 0) {
-            content.setStatus(Constant.CONTENT_STATUS_AUDITING);
-        }
+        addContent(content, channelId, backgroundUser);
 
         Content3D content3D = new Content3D();
         content3D.setPublisher(publisher);
@@ -325,23 +197,7 @@ public class ContentService {
     }
 
     public void edit3D(Content content, Integer channelId, String publisher, String cover, String path) throws Exception {
-        Content contentDb = this.contentDao.getOne(content.getId());
-        Channel channel = new Channel();
-        channel.setId(channelId);
-        contentDb.setChannel(channel);
-        contentDb.setTitle(content.getTitle());
-        contentDb.setShortTitle(content.getShortTitle());
-        contentDb.setLastEditTime(new Date());
-        contentDb.setRecommend(content.isRecommend());
-        // 原为草稿状态，修改为非草稿状态则进入待审核状态，其它情况不变，否则改为草稿状态
-        if (contentDb.getStatus() == 1 && content.getStatus() == 0) {
-            contentDb.setStatus(Constant.CONTENT_STATUS_AUDITING);
-        } else {
-            contentDb.setStatus(Constant.CONTENT_STATUS_DRAFT);
-        }
-        contentDb.setTags(content.getTags());
-        contentDb.setTxt(content.getTxt());
-        this.contentDao.save(contentDb);
+        editContent(content, channelId);
 
         Content3D content3D = this.content3DDao.findByContent(content);
         content3D.setPublisher(publisher);
@@ -351,15 +207,7 @@ public class ContentService {
     }
 
     public void addAllScene(Content content, Integer channelId, BackgroundUser backgroundUser, String publisher, String cover, String path) throws Exception {
-        Channel channel = new Channel();
-        channel.setId(channelId);
-        content.setChannel(channel);
-        content.setUser(backgroundUser);
-        content.setAddTime(new Date());
-        content.setViewCount(0);
-        if (content.getStatus() == 0) {
-            content.setStatus(Constant.CONTENT_STATUS_AUDITING);
-        }
+        addContent(content, channelId, backgroundUser);
 
         ContentAllScene contentAllScene = new ContentAllScene();
         contentAllScene.setPublisher(publisher);
@@ -373,23 +221,7 @@ public class ContentService {
     }
 
     public void editAllScene(Content content, Integer channelId, String publisher, String cover, String path) throws Exception {
-        Content contentDb = this.contentDao.getOne(content.getId());
-        Channel channel = new Channel();
-        channel.setId(channelId);
-        contentDb.setChannel(channel);
-        contentDb.setTitle(content.getTitle());
-        contentDb.setShortTitle(content.getShortTitle());
-        contentDb.setLastEditTime(new Date());
-        contentDb.setRecommend(content.isRecommend());
-        // 原为草稿状态，修改为非草稿状态则进入待审核状态，其它情况不变，否则改为草稿状态
-        if (contentDb.getStatus() == 1 && content.getStatus() == 0) {
-            contentDb.setStatus(Constant.CONTENT_STATUS_AUDITING);
-        } else {
-            contentDb.setStatus(Constant.CONTENT_STATUS_DRAFT);
-        }
-        contentDb.setTags(content.getTags());
-        contentDb.setTxt(content.getTxt());
-        this.contentDao.save(contentDb);
+        editContent(content, channelId);
 
         ContentAllScene contentAllScene = this.contentAllSceneDao.findByContent(content);
         contentAllScene.setPublisher(publisher);
@@ -401,27 +233,27 @@ public class ContentService {
     public void delete(int id) {
         Content content = this.contentDao.getOne(id);
         switch(content.getChannel().getId()){
-            case 1:
+            case Constant.CHANNEL_BOOK:
                 this.contentBookDao.deleteByContent(content);
                 break;
-            case 2:
-            case 8:
-            case 9:
+            case Constant.CHANNEL_PIC:
+            case Constant.CHANNEL_MURAL:
+            case Constant.CHANNEL_PAINTING:
                 this.contentPicDao.deleteByContent(content);
                 break;
-            case 3:
+            case Constant.CHANNEL_RUBBINGS:
                 this.contentRubbingsDao.deleteByContent(content);
                 break;
-            case 4:
+            case Constant.CHANNEL_AUDIO:
                 this.contentAudioDao.deleteByContent(content);
                 break;
-            case 5:
+            case Constant.CHANNEL_VIDEO:
                 this.contentVideoDao.deleteByContent(content);
                 break;
-            case 6:
+            case Constant.CHANNEL_3D:
                 this.content3DDao.deleteByContent(content);
                 break;
-            case 7:
+            case Constant.CHANNEL_ALLSCENE:
                 this.contentAllSceneDao.deleteByContent(content);
                 break;
         }
@@ -470,5 +302,37 @@ public class ContentService {
 
     public Content getById(int id) throws Exception {
         return this.contentDao.getOne(id);
+    }
+
+    private void addContent(Content content, Integer channelId, BackgroundUser backgroundUser) {
+        Channel channel = new Channel();
+        channel.setId(channelId);
+        content.setChannel(channel);
+        content.setUser(backgroundUser);
+        content.setAddTime(new Date());
+        content.setViewCount(0);
+        if (content.getStatus() == 0) {
+            content.setStatus(Constant.CONTENT_STATUS_AUDITING);
+        }
+    }
+
+    private void editContent(Content content, Integer channelId) {
+        Content contentDb = this.contentDao.getOne(content.getId());
+        Channel channel = new Channel();
+        channel.setId(channelId);
+        contentDb.setChannel(channel);
+        contentDb.setTitle(content.getTitle());
+        contentDb.setShortTitle(content.getShortTitle());
+        contentDb.setLastEditTime(new Date());
+        contentDb.setRecommend(content.isRecommend());
+        // 原为草稿状态，修改为非草稿状态则进入待审核状态，其它情况不变，否则改为草稿状态
+        if (contentDb.getStatus() == 1 && content.getStatus() == 0) {
+            contentDb.setStatus(Constant.CONTENT_STATUS_AUDITING);
+        } else {
+            contentDb.setStatus(Constant.CONTENT_STATUS_DRAFT);
+        }
+        contentDb.setTags(content.getTags());
+        contentDb.setTxt(content.getTxt());
+        this.contentDao.save(contentDb);
     }
 }

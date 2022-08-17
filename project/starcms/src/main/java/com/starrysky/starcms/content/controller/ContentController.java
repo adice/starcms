@@ -137,27 +137,27 @@ public class ContentController {
     @PostMapping("/add")
     public String add(Content content, String seriesName, String authorName, String cover, String attachments, String time, String place, String publisher, String pic, String path, Integer channelId, HttpServletRequest request, HttpSession session) {
         switch (channelId) {
-            case 1:
+            case Constant.CHANNEL_BOOK:
                 addBook(content, seriesName, authorName, cover, attachments, channelId, request);
                 break;
-            case 2:
-            case 8:
-            case 9:
+            case Constant.CHANNEL_PIC:
+            case Constant.CHANNEL_MURAL:
+            case Constant.CHANNEL_PAINTING:
                 addPic(content, time, place, publisher, pic, channelId, request);
                 break;
-            case 3:
+            case Constant.CHANNEL_RUBBINGS:
                 addRubbings(content, time, place, publisher, cover, path, channelId, request);
                 break;
-            case 4:
+            case Constant.CHANNEL_AUDIO:
                 addAudio(content, time, place, publisher, cover, path, channelId, request);
                 break;
-            case 5:
+            case Constant.CHANNEL_VIDEO:
                 addVideo(content, time, place, publisher, cover, path, channelId, request);
                 break;
-            case 6:
+            case Constant.CHANNEL_3D:
                 add3D(content, publisher, cover, path, channelId, request);
                 break;
-            case 7:
+            case Constant.CHANNEL_ALLSCENE:
                 addAllScene(content, publisher,cover, path, channelId, request);
                 break;
         }
@@ -178,33 +178,33 @@ public class ContentController {
         } else {
             getChannelForTree(content.getChannel().getId(), request);
             switch (content.getChannel().getId()) {
-                case 1:
+                case Constant.CHANNEL_BOOK:
                     ContentBook contentBook = this.contentBookService.getByContent(content);
                     request.setAttribute("contentaddtion", contentBook);
                     break;
-                case 2:
-                case 8:
-                case 9:
+                case Constant.CHANNEL_PIC:
+                case Constant.CHANNEL_MURAL:
+                case Constant.CHANNEL_PAINTING:
                     ContentPic contentPic = this.contentPicService.getByContent(content);
                     request.setAttribute("contentaddtion", contentPic);
                     break;
-                case 3:
+                case Constant.CHANNEL_RUBBINGS:
                     ContentRubbings contentRubbings = this.contentRubbingsService.getByContent(content);
                     request.setAttribute("contentaddtion", contentRubbings);
                     break;
-                case 4:
+                case Constant.CHANNEL_AUDIO:
                     ContentAudio contentAudio = this.contentAudioService.getByContent(content);
                     request.setAttribute("contentaddtion", contentAudio);
                     break;
-                case 5:
+                case Constant.CHANNEL_VIDEO:
                     ContentVideo contentVideo = this.contentVideoService.getByContent(content);
                     request.setAttribute("contentaddtion", contentVideo);
                     break;
-                case 6:
+                case Constant.CHANNEL_3D:
                     Content3D content3D = this.content3DService.getByContent(content);
                     request.setAttribute("contentaddtion", content3D);
                     break;
-                case 7:
+                case Constant.CHANNEL_ALLSCENE:
                     ContentAllScene contentAllScene = this.contentAllSceneService.getByContent(content);
                     request.setAttribute("contentaddtion", contentAllScene);
                     break;
@@ -219,27 +219,27 @@ public class ContentController {
     @PostMapping("/edit")
     public String edit(Content content, String seriesName, String authorName, String cover, String attachments, String time, String place, String publisher, String pic, String path, Integer channelId, HttpServletRequest request) {
         switch (channelId) {
-            case 1:
+            case Constant.CHANNEL_BOOK:
                 editBook(content, seriesName, authorName, cover, attachments, channelId, request);
                 break;
-            case 2:
-            case 8:
-            case 9:
+            case Constant.CHANNEL_PIC:
+            case Constant.CHANNEL_MURAL:
+            case Constant.CHANNEL_PAINTING:
                 editPic(content, time, place, publisher, pic, channelId, request);
                 break;
-            case 3:
+            case Constant.CHANNEL_RUBBINGS:
                 editRubbings(content, time, place, publisher, cover, path, channelId, request);
                 break;
-            case 4:
+            case Constant.CHANNEL_AUDIO:
                 editAudio(content, time, place, publisher, cover, path, channelId, request);
                 break;
-            case 5:
+            case Constant.CHANNEL_VIDEO:
                 editVideo(content, time, place, publisher, cover, path, channelId, request);
                 break;
-            case 6:
+            case Constant.CHANNEL_3D:
                 edit3D(content, publisher, cover, path, channelId, request);
                 break;
-            case 7:
+            case Constant.CHANNEL_ALLSCENE:
                 editAllScene(content, publisher, cover, path, channelId, request);
                 break;
         }
