@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/img/ico/favicon.png}">
+    <title>STARCMS</title>
+    <link th:href="@{/css/slidebars.css}" rel="stylesheet">
+    <!--common style-->
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link th:href="@{/css/style-responsive.css}" rel="stylesheet">
+</head>
+<body class="sticky-header">
+<section>
+    <!-- sidebar left start-->
+    <div th:replace="backstage/include/leftmenu::leftmenu"></div>
+    <!-- sidebar left end-->
+
+    <!-- body content start-->
+    <div class="body-content">
+        <!-- header section start-->
+        <div th:replace="backstage/include/header::topheader"></div>
+        <!-- header section end-->
+
+        <!-- page head start-->
+        <div class="page-head">
+            <h3>
+                StarCMS
+            </h3>
+            <span class="sub-title">Welcome to StarCMS</span>
+        </div>
+        <!-- page head end-->
+
+        <!--body wrapper start-->
+        <div class="wrapper">
+            <div class="row">
+                <div class="col-md-10">
+                    <h3>您无权访问，请返回<a th:href="@{/backstage/index}">首页</a></h3>
+                </div>
+            </div>
+        </div>
+        <!--body wrapper end-->
+        <!--footer section start-->
+        <footer th:replace="backstage/include/footer::footer"></footer>
+        <!--footer section end-->
+    </div>
+    <!-- body content end-->
+</section>
+<div th:replace="backstage/include/jss"></div>
+</body>
+</html>

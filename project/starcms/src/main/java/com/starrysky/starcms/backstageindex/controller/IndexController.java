@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 public class IndexController {
 
     @RequestMapping("/index")
-    public String index(HttpServletRequest request){
+    public String index(HttpServletRequest request) {
         request.setAttribute("activemenu", "homemenu");
         return "/backstage/index";
     }
@@ -25,6 +25,11 @@ public class IndexController {
     @GetMapping("/loginpage")
     public String login() {
         return "/backstage/login";
+    }
+
+    @RequestMapping("/unauthen")
+    public String unauthen() {
+        return "/backstage/unauthen";
     }
 
     //    @Resource

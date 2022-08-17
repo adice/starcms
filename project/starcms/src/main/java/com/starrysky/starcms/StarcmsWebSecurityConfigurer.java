@@ -41,10 +41,10 @@ public class StarcmsWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 // 授权
-                .mvcMatchers("/backstage/user", "/backstage/channel").hasRole("admin")
-                .mvcMatchers("/backstage/content", "/backstage/user/").hasAnyRole("admin", "entry", "audit")
+                .mvcMatchers("/backstage/user/**", "/backstage/channel/**").hasRole("admin")
+                .mvcMatchers("/backstage/content/**").hasAnyRole("admin", "entry", "audit")
                 // 认证
-                .antMatchers("/backstage/loginpage", "/backstage/createvcode").permitAll()
+                .antMatchers("/backstage/loginpage", "/backstage/unauthen", "/backstage/createvcode").permitAll()
                 .antMatchers("/css/**", "/js/**", "/img/**", "/fonts/**", "/jquery-ui/**", "/fuelux/**", "/sweetalert/**").permitAll()
                 .anyRequest().authenticated()
                 // 登录
@@ -66,6 +66,7 @@ public class StarcmsWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 //        http.rememberMe()   // 免密登录,以持久化的方式记录cookie信息
 //                .tokenRepository(persistentTokenRepository())
 //                .tokenValiditySeconds(7 * 24 * 60 * 60)
+
                 // csrf 会话管理
         http.csrf().disable()   // 启用csrf，表单用th:action，则自动添加一个隐藏域
                 // 限制1个账号只能登录1次
@@ -74,6 +75,8 @@ public class StarcmsWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .expiredUrl("/backstage/user/loginpage")
 //                .maxSessionsPreventsLogin(true) // 禁止后登录用户登录
                 ;
+        http.exceptionHandling()
+                .accessDeniedPage("/backstage/unauthen");
 
     }
 
