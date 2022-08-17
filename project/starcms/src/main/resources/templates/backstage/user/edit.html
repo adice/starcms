@@ -51,7 +51,7 @@
                             后台用户信息
                         </header>
                         <div class="panel-body">
-                            <form id="userform" class="form-horizontal tasi-form" action="/backstage/user/edit" method="post">
+                            <form id="userform" class="form-horizontal tasi-form" th:action="@{/backstage/user/edit}" method="post">
                                 <input type="hidden" name="id" th:value="${edituser.id}">
                                 <div class="form-group">
                                     <label class="col-sm-2 col-sm-2 control-label">账号*：</label>

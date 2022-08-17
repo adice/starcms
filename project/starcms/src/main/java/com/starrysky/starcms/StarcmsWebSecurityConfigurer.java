@@ -40,24 +40,28 @@ public class StarcmsWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/backstage/user/loginpage", "/backstage/user/createvcode").permitAll()
+                // 授权
+                .mvcMatchers("/backstage/user", "/backstage/channel").hasRole("admin")
+                .mvcMatchers("/backstage/content", "/backstage/user/").hasAnyRole("admin", "entry", "audit")
+                // 认证
+                .antMatchers("/backstage/loginpage", "/backstage/createvcode").permitAll()
                 .antMatchers("/css/**", "/js/**", "/img/**", "/fonts/**", "/jquery-ui/**", "/fuelux/**", "/sweetalert/**").permitAll()
                 .anyRequest().authenticated()
                 // 登录
                 .and()
                 .formLogin()
-                .loginPage("/backstage/user/loginpage")
-                .loginProcessingUrl("/backstage/user/login")
+                .loginPage("/backstage/loginpage")
+                .loginProcessingUrl("/backstage/login")
                 .usernameParameter("name")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/backstage/index", true)
                 .successHandler(loginSuccessHandler)
-                .failureUrl("/backstage/user/loginpage")
+                .failureUrl("/backstage/loginpage")
                 // 注销
                 .and()
                 .logout()
-                .logoutUrl("/backstage/user/logout")
-                .logoutSuccessUrl("/backstage/user/loginpage")
+                .logoutUrl("/backstage/logout")
+                .logoutSuccessUrl("/backstage/loginpage")
                 .invalidateHttpSession(true);
 //        http.rememberMe()   // 免密登录,以持久化的方式记录cookie信息
 //                .tokenRepository(persistentTokenRepository())

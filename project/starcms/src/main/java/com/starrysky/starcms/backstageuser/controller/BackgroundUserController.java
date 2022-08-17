@@ -4,7 +4,9 @@ import com.starrysky.starcms.backstageuser.service.BackgroundUserService;
 import com.starrysky.starcms.entity.BackgroundRole;
 import com.starrysky.starcms.entity.BackgroundUser;
 import com.starrysky.starcms.role.service.BackgroundRoleService;
+import com.starrysky.starcms.security.SecurityUser;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -28,42 +30,6 @@ public class BackgroundUserController {
     private BackgroundUserService backgroundUserService;
     @Resource
     private BackgroundRoleService backgroundRoleService;
-//    @Resource
-//    private Producer captchaProducer;
-
-    @GetMapping("/loginpage")
-    public String login() {
-        return "/backstage/login";
-    }
-
-//    @RequestMapping("/createvcode")
-//    public void createCode(HttpServletRequest request, HttpServletResponse response) {
-//        HttpSession session = request.getSession();
-//        response.setDateHeader("Expires", 0);
-//        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
-//        response.addHeader("Cache-Control", "post-check=0, pre-check=0");
-//        response.setHeader("Pragma", "no-cache");
-//        response.setContentType("image/jpg");
-//        //生成验证码
-//        String capText = captchaProducer.createText();
-//        session.setAttribute(Constant.KAPTCHA_SESSION_KEY, capText);
-//        //向客户端写出
-//        ServletOutputStream out = null;
-//        try {
-//            BufferedImage bi = captchaProducer.createImage(capText);
-//            out = response.getOutputStream();
-//            ImageIO.write(bi, "jpg", out);
-//            out.flush();
-//        } catch(Exception e){
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                out.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
 
 //    @PostMapping("/login")
 //    public String login(String name, String password, HttpServletRequest request, HttpSession session) {
@@ -316,9 +282,10 @@ public class BackgroundUserController {
         }
         // 验证成功，新建用户，失败返回重新填写
         if (checked) {
-            Object obj = session.getAttribute("user");
+//            Object obj = session.getAttribute("user");
+            Object obj =  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if (obj != null) {
-                BackgroundUser user = (BackgroundUser) obj;
+                SecurityUser user = (SecurityUser) obj;
                 try {
                     this.backgroundUserService.editPwd(user.getId(), password);
                     request.setAttribute("userinfo", "修改成功");

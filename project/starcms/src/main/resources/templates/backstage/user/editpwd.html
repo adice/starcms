@@ -51,7 +51,7 @@
                             个人密码
                         </header>
                         <div class="panel-body">
-                            <form id="userform" class="form-horizontal tasi-form" action="/backstage/user/editpwd" method="post">
+                            <form id="userform" class="form-horizontal tasi-form" th:action="@{/backstage/user/editpwd}" method="post">
                                 <div class="form-group">
                                     <label class="col-sm-2 col-sm-2 control-label">密码*：</label>
                                     <div class="col-sm-10">

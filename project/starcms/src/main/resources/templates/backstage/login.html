@@ -40,7 +40,7 @@
 
 <h2 class="form-heading">欢迎使用内容管理系统</h2>
 <div class="container log-row">
-    <form class="form-signin" th:action="@{/backstage/user/login}" method="post" onsubmit="return check()">
+    <form class="form-signin" th:action="@{/backstage/login}" method="post" onsubmit="return check()">
         <div class="login-wrap">
             <input type="text" id="username" name="name" value="admin" class="form-control" placeholder="账号" autofocus>
             <input type="password" id="password" name="password" value="123456" class="form-control" placeholder="密码">

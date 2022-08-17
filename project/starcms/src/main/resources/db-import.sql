@@ -8,6 +8,8 @@ COMMIT;
  VALUES (1, 'admin', '{bcrypt}$2a$10$sv.ZgyVW3AANy.JB6GyQ/u0ibtaPDm7mGvSyu.V7GMjI/LqyrPMQW', 'administrator', '2022-7-26', '127.0.0.1', 0, 1, 1);
 --## $2a$10$sv.ZgyVW3AANy.JB6GyQ/u0ibtaPDm7mGvSyu.V7GMjI/LqyrPMQW
 COMMIT;
+INSERT INTO  `rel_role_backgrounduser` (user_id, role_id) VALUES (1, 1);
+COMMIT;
 INSERT INTO `ct_channel` (id, title, path, priority, parent_id, state) VALUES (1, '书籍', 'book', 1, null, 1);
 INSERT INTO `ct_channel` (id, title, path, priority, parent_id, state) VALUES (2, '图片', 'pic', 2, null, 1);
 INSERT INTO `ct_channel` (id, title, path, priority, parent_id, state) VALUES (3, '拓片', 'rubbings', 3, null, 1);
