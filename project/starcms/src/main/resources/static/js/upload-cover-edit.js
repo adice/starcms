@@ -27,9 +27,11 @@ $(document).ready(function () {
                 //文件上传成功之后的操作
                 $("#cover").val(response[0].url);
                 files.path = response[0].url;
+                $("html").niceScroll().resize();
             });
             this.on('removedfile', function (files, response) {
                 $("#cover").val($("#cover").val().replace(files.path, ''));
+                $("html").niceScroll().resize();
                 if($("#cover").val() == "")
                     this.options.maxFiles = 1;
             });
