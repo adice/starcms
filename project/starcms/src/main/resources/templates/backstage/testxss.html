@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/img/ico/favicon.png}">
+    <title>登录</title>
+    <!-- Base Styles -->
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link th:href="@{/css/style-responsive.css}" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script th:src="@{/js/html5shiv.js}"></script>
+    <script th:src="@{/js/respond.min.js}"></script>
+    <![endif]-->
+    <!--jquery-1.10.2.min-->
+    <script th:src="@{/js/jquery-1.10.2.min.js}"></script>
+    <script type="text/javascript">
+        $(function() {
+            check = function() {
+                var username = document.getElementById("username").value;
+                var password = document.getElementById("password").value;
+                if (username == "") {
+                    $("#errorinfo").text("请填写账号！");
+                    return false;
+                }
+                if (password == "") {
+                    $("#errorinfo").text("请填写密码！");
+                    return false;
+                }
+                return true;
+            }
+        });
+    </script>
+</head>
+<body class="login-body">
+
+<div class="login-logo">
+    <img th:src="@{/img/login_logo.png}" alt=""/>
+</div>
+
+<h2 class="form-heading">欢迎使用内容管理系统</h2>
+<div class="container log-row">
+    <form class="form-signin" th:action="@{/backstage/login}" method="post" onsubmit="return check()">
+        <div class="login-wrap">
+            <span th:text="${content.txt}"></span>
+        </div>
+    </form>
+</div>
+</body>
+</html>

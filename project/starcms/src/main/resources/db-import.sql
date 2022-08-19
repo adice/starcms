@@ -19,4 +19,5 @@ INSERT INTO `ct_channel` (id, title, path, priority, parent_id, state) VALUES (6
 INSERT INTO `ct_channel` (id, title, path, priority, parent_id, state) VALUES (7, '360全景', 'allscene', 7, null, 1);
 INSERT INTO `ct_channel` (id, title, path, priority, parent_id, state) VALUES (8, '壁画', 'mural', 1, 2, 1);
 INSERT INTO `ct_channel` (id, title, path, priority, parent_id, state) VALUES (9, '年画', 'painting', 2, 2, 1);
+INSERT INTO `ct_channel` (id, title, path, priority, parent_id, state) VALUES (10, '报刊内容', 'journal', 8, null, 1);
 COMMIT;

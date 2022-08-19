@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/img/ico/favicon.png}">
+    <title>STARCMS</title>
+    <!--right slidebar-->
+    <link th:href="@{/css/slidebars.css}" rel="stylesheet">
+    <!--jquery-ui-->
+    <link th:href="@{/jquery-ui/jquery-ui-1.10.1.custom.min.css}" rel="stylesheet"/>
+    <!--jquery-toastr-->
+    <link th:href="@{/css/toastr.min.css}" rel="stylesheet"/>
+    <!--common style-->
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link th:href="@{/css/style-responsive.css}" rel="stylesheet">
+    <!--sweetalert-->
+    <link th:href="@{/sweetalert/sweetalert.css}" rel="stylesheet">
+</head>
+<body class="sticky-header">
+<section>
+    <!-- sidebar left start-->
+    <div th:replace="backstage/include/leftmenu::leftmenu"></div>
+    <!-- sidebar left end-->
+
+    <!-- body content start-->
+    <div class="body-content">
+        <!-- header section start-->
+        <div th:replace="backstage/include/header::topheader"></div>
+        <!-- header section end-->
+
+        <!-- page head start-->
+        <div class="page-head">
+            <h3 class="m-b-less">
+                报刊列表
+            </h3>
+            <div class="state-information">
+                <ol class="breadcrumb m-b-less bg-less">
+                    <li><a th:href="@{/backstage/index}">首页</a></li>
+                    <li class="active">报刊列表</li>
+                </ol>
+            </div>
+        </div>
+        <!-- page head end-->
+
+        <!--body wrapper start-->
+        <div class="wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <section class="panel">
+                        <div class="panel-body">
+                            <form class="form-inline" id="searchForm" name="searchForm" th:action="@{/backstage/journal/list}" method="post">
+                                <div class="form-group">
+                                    报刊名：<input type="text" name="title" class="form-control" placeholder="报刊名" th:value="${param.title}">
+                                </div>
+                                <label class="checkbox-custom inline check-success">
+                                    <input type="checkbox" name="state" value="2" id="checkbox1" th:checked="${param.state} != null ? (${param.state[0]} == 2 ? 'true' : 'false') : 'false'" > <label for="checkbox1">禁用</label>
+                                </label>
+                                <input type="hidden" id="pageNum" name="pageNum" th:value="${page.number + 1}" >
+                                <input type="hidden" id="pageSize" name="pageSize" th:value="${page.size}" >
+                                <button type="button" id="btnSearch" class="btn btn-success">查询</button>
+                            </form>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <section class="panel">
+                        <header class="panel-heading head-border">
+                            <button type="button" sec:authorize="hasAnyRole('admin', 'entry')" id="btndeletes" class="btn btn-success fa fa-minus-square">  删除多项</button>
+                            <button type="button" sec:authorize="hasAnyRole('admin', 'entry')" class="btn btn-success fa fa-plus" style="margin-left: 20px;" onclick="location.href='/backstage/journal/toadd'">  新增</button>
+                        </header>
+                        <table class="table table-striped custom-table table-hover">
+                            <thead>
+                            <tr>
+                                <th>
+                                    <label class="checkbox-custom inline check-success">
+                                        <input type="checkbox" name="cbdeletes" id="cbdeletes">
+                                        <label for="cbdeletes">序号</label>
+                                    </label>
+                                </th>
+                                <th><i class="fa fa-book"></i>报刊名</th>
+                                <th><i class="fa fa-building-o"></i>出版社</th>
+                                <th><i class="fa fa-line-chart"></i>开始时间</th>
+                                <th><i class="fa fa-circle-o-notch"></i>结束时间</th>
+                                <th><i class=" fa fa-lock"></i>禁用</th>
+                                <th class="hidden-xs"><i class="fa fa-cogs"></i>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="journal, journalstat : ${page}">
+                                <td>
+                                    <label class="checkbox-custom inline check-success">
+                                        <input type="checkbox" name="cbdelete"  th:id="'cbdelete'+${journalstat.count}" th:value="${journal.id}">
+                                        <label th:for="'cbdelete'+${journalstat.count}" th:text="${journalstat.count}"></label>
+                                    </label>
+                                </td>
+                                <td th:text="${journal.title}"></td>
+                                <td class="hidden-xs" th:text="${journal.publisher}"></td>
+                                <td th:text="${#dates.format(journal.beginTime, 'yyyy-MM-dd')}"></td>
+                                <td th:text="${#dates.format(journal.endTime, 'yyyy-MM-dd')}"></td>
+                                <td><span class="label label-info label-mini" th:text="${journal.state == 1 ? '否' : '是'}"></span></td>
+                                <td class="hidden-xs">
+                                    <button class="btn btn-primary btn-xs" sec:authorize="hasAnyRole('admin', 'entry')" th:alt-title="修改" th:onclick="location.href='/backstage/journal/toedit/[[${journal.id}]]'">
+                                        <i class="fa fa-pencil"></i></button>
+                                    <button class="btn btn-danger btn-xs" sec:authorize="hasAnyRole('admin', 'entry')" th:alt-title="删除" th:onclick="deleteJournal([[${journal.id}]])">
+                                        <i class="fa fa-trash-o "></i></button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!-- page start -->
+                        <div class="tbl-footer clearfix">
+                            <div class="tbl-info pull-left">
+                                <span th:text="'总共 ' + ${page.totalElements} + ' 条数据，当前是第 ' + ${page.number + 1} + ' 页，总共 ' + ${page.totalPages} + ' 页'">
+                                </span>
+                                <span style="margin-left: 20px; display: inline-block">
+                                    <select id="countofpage" name="countofpage" class="form-control" style="width: 100px;">
+                                        <option value="10" th:attr="selected=${page.size == 10 ? 'true' : 'false'}">10条/页</option>
+                                        <option value="20" th:attr="selected=${page.size == 20 ? 'true' : 'false'}">20条/页</option>
+                                        <option value="100" th:attr="selected=${page.size == 100 ? 'true' : 'false'}">100条/页</option>
+                                        <option value="200" th:attr="selected=${page.size == 200 ? 'true' : 'false'}">200条/页</option>
+                                    </select>
+                                </span>
+                                <span style="margin-left: 20px; margin-right: 10px; display: inline-block">跳转到</span>
+                                <span style="display: inline-block">
+                                    <input id="txtJumpNum" type="text" class="form-control inline" style="width: 60px;">
+                                </span>
+                                <span style="display: inline-block">
+                                    <button id="btnJumpNum" type="button" class="btn btn-success fa fa-arrow-right"> 跳转</button>
+                                </span>
+                            </div>
+                            <div class="tbl-pagin pull-right">
+                                <div>
+                                    <ul class="pagination">
+                                        <li th:class="|paginate_button ${page.number <= 0 ? 'active disabled' : ''}|" tabindex="0">
+                                            <a th:href="${page.number <= 0 ? 'javascript:;' : 'javascript:jumpPage(1)'}">1</a>
+                                        </li>
+                                        <li th:class="paginate_button" tabindex="0" th:if="${page.number - 3 > 0}">
+                                            <a href="javascript:;">...</a>
+                                        </li>
+                                        <li th:if="${page.totalPages > 2}" th:class="|paginate_button ${page.number + 1 == i ? 'active disabled' : ''}|"
+                                            th:each="i : ${#numbers.sequence((page.number - 3 > 0 ? page.number - 1 : 2), page.number + 3 > page.totalPages ? page.totalPages - 1 : page.number + 3)}">
+                                            <a th:href="${page.number + 1 == i ? 'javascript:;' : 'javascript:jumpPage(' + i + ')'}" th:text="${i}"></a>
+                                        </li>
+                                        <li th:class="paginate_button" tabindex="0" th:if="${page.number + 3 < page.totalPages}">
+                                            <a href="javascript:;">...</a>
+                                        </li>
+                                        <li th:if="${page.totalPages > 1}" th:class="|paginate_button ${page.number + 1 >= page.totalPages ? 'active disabled' : ''}|" tabindex="0">
+                                            <a th:href="${page.number + 1 >= page.totalPages ? 'javascript:;' : 'javascript:jumpPage(' + page.totalPages +')'}" th:text="${page.totalPages}"></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- page end -->
+                    </section>
+                </div>
+            </div>
+            <!--body wrapper end-->
+            <!--footer section start-->
+            <footer th:replace="backstage/include/footer::footer"></footer>
+            <!--footer section end-->
+        </div>
+    </div>
+    <!-- body content end-->
+</section>
+<div th:replace="backstage/include/jss"></div>
+<script th:src="@{/sweetalert/sweetalert.min.js}" type="text/javascript"></script>
+<!-- page -->
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#btnSearch").click(function(){
+            $("#pageNum").val("");
+            $("#searchForm").submit();
+        });
+        $("#countofpage").change(function(){
+            $("#pageSize").val($(this).val());
+            $("#searchForm").submit();
+        });
+        $("#txtJumpNum").keypress(function(event){
+            if(event.which == 13 && $("#txtJumpNum").val() != ""){
+                if($("#txtJumpNum").val() - 0 <= 1) {
+                    $("#pageNum").val(1);
+                } else if($("#txtJumpNum").val() - 0 >= [[${page.totalPages}]]) {
+                    $("#pageNum").val([[${page.totalPages}]]);
+                } else {
+                    $("#pageNum").val($("#txtJumpNum").val());
+                }
+                $("#searchForm").submit();
+            }
+        });
+        $("#btnJumpNum").click(function(){
+            if($("#txtJumpNum").val() - 0 <= 1) {
+                $("#pageNum").val(1);
+            } else if($("#txtJumpNum").val() - 0 >= [[${page.totalPages}]]) {
+                $("#pageNum").val([[${page.totalPages}]]);
+            } else {
+                $("#pageNum").val($("#txtJumpNum").val());
+            }
+            $("#searchForm").submit();
+        });
+        jumpPage = function(pageNum){
+            $("#pageNum").val(pageNum);
+            $("#searchForm").submit();
+        }
+
+        $("#cbdeletes").click(function(){
+            $("input[name='cbdelete']").each(function(i, item){
+                $(item).prop("checked", $("#cbdeletes").prop("checked"));
+            });
+        });
+        deleteJournal = function (id) {
+            swal({
+                title: "您确定要删除吗？",
+                type: "warning",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                confirmButtonText: "是的",
+                confirmButtonColor: "#ec6c62"
+            }, function() {
+                window.location.href="/backstage/journal/delete/" + id;
+            });
+        }
+        $("#btndeletes").click(function () {
+            var checkValue = "";
+            $("input[name='cbdelete']:checked").each(function(i, item){
+                checkValue = checkValue + $(item).val() + ",";
+            });
+            if(checkValue != ""){
+                swal({
+                    title: "您确定要删除吗？",
+                    type: "warning",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "是的",
+                    confirmButtonColor: "#ec6c62"
+                }, function() {
+                    window.location.href="/backstage/journal/deletes/" + checkValue;
+                });
+            }else{
+                swal("请先选择要删除的数据");
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -43,6 +43,7 @@ public class StarcmsWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 // 授权
                 .mvcMatchers("/backstage/user/**", "/backstage/channel/**").hasRole("admin")
                 .mvcMatchers("/backstage/content/**").hasAnyRole("admin", "entry", "audit")
+                .mvcMatchers("/backstage/journal/**").hasAnyRole("admin", "entry")
                 // 认证
                 .antMatchers("/backstage/loginpage", "/backstage/unauthen", "/backstage/createvcode").permitAll()
                 .antMatchers("/css/**", "/js/**", "/img/**", "/fonts/**", "/jquery-ui/**", "/fuelux/**", "/sweetalert/**").permitAll()
@@ -66,8 +67,7 @@ public class StarcmsWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 //        http.rememberMe()   // 免密登录,以持久化的方式记录cookie信息
 //                .tokenRepository(persistentTokenRepository())
 //                .tokenValiditySeconds(7 * 24 * 60 * 60)
-
-                // csrf 会话管理
+        // csrf 会话管理
         http.csrf().disable()   // 启用csrf，表单用th:action，则自动添加一个隐藏域
                 // 限制1个账号只能登录1次
                 .sessionManagement()
@@ -75,6 +75,12 @@ public class StarcmsWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .expiredUrl("/backstage/user/loginpage")
 //                .maxSessionsPreventsLogin(true) // 禁止后登录用户登录
                 ;
+        // 防止XSS
+//        http.headers()
+//                .xssProtection()
+//                .and()
+//                .contentSecurityPolicy("script-src 'self'");
+        // 认证失败跳转
         http.exceptionHandling()
                 .accessDeniedPage("/backstage/unauthen");
 
