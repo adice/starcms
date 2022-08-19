@@ -13,7 +13,7 @@ import java.util.Date;
 @Table(name = "ct_news")
 public class ContentNews {
     private int id;
-    private Date time;
+    private Date newsTime;
     private int section;
     private String position;
     private String path;
@@ -32,12 +32,12 @@ public class ContentNews {
     }
 
     @Temporal(TemporalType.DATE)
-    public Date getTime() {
-        return time;
+    public Date getNewsTime() {
+        return newsTime;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setNewsTime(Date newsTime) {
+        this.newsTime = newsTime;
     }
 
     public int getSection() {

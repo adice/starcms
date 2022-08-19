@@ -3,6 +3,7 @@ package com.starrysky.starcms.journal.service;
 import com.starrysky.starcms.entity.BackgroundUser;
 import com.starrysky.starcms.entity.Journal;
 import com.starrysky.starcms.journal.dao.JournalDao;
+import com.starrysky.starcms.util.Constant;
 import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,11 @@ public class JournalService {
     @Transactional(readOnly = true)
     public Page<Journal> list(String title, Integer state, int pageNum, int pageSize) throws Exception {
         return journalDao.findDynamic(title, state, pageNum, pageSize);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Journal> listNormal() {
+        return journalDao.findByState(Constant.STATE_NORMAL);
     }
 
     @Transactional(readOnly = true)

@@ -50,6 +50,15 @@ var Script = function () {
                 },
                 path: {
                     required: true
+                },
+                journalId: {
+                    required: true
+                },
+                newsTime: {
+                    required: true
+                },
+                section: {
+                    required: true
                 }
             },
             messages: {
@@ -70,6 +79,15 @@ var Script = function () {
                 },
                 path: {
                     required: "<font color='red'>请上传内容</font>"
+                },
+                journalId: {
+                    required: "<font color='red'>请选择报刊</font>"
+                },
+                newsTime: {
+                    required: "<font color='red'>请填写时间</font>"
+                },
+                section: {
+                    required: "<font color='red'>请填写板块</font>"
                 }
             }
         });

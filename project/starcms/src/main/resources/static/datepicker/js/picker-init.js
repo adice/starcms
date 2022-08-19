@@ -12,4 +12,9 @@ $(function(){
         autoclose: true,
         format: 'yyyy-mm-dd'
     });
+    $('#newsTime').datepicker({
+        language: "zh-CN",
+        autoclose: true,
+        format: 'yyyy-mm-dd'
+    });
 });

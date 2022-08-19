@@ -66,7 +66,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">日期范围</label>
+                                    <label class="col-sm-2 control-label">日期<span style="color: red;">*</span>：</label>
                                     <div class="col-md-10">
                                         <div id="dateDiv" class="input-group input-large custom-date-range" data-date-format="yyyy-mm-dd">
                                             <input type="text" class="form-control dpd1" id="beginTime" name="beginTime" th:value="${beginTime}">
@@ -151,7 +151,7 @@
                 if(result == "null") {
                     $("#titleInfo").css("color", "red");
                     $("#titleInfo").text("请填写报刊名称");
-                }alert(result == "exist");
+                }
                 if (result == "exist") {
                     $("#titleInfo").css("color", "red");
                     $("#titleInfo").text("该报刊名已存在，不用再添加");

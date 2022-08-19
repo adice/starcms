@@ -5,6 +5,7 @@ import com.starrysky.starcms.content3d.dao.Content3DDao;
 import com.starrysky.starcms.contentallscene.dao.ContentAllSceneDao;
 import com.starrysky.starcms.contentaudio.dao.ContentAudioDao;
 import com.starrysky.starcms.contentbook.dao.ContentBookDao;
+import com.starrysky.starcms.contentnews.dao.ContentNewsDao;
 import com.starrysky.starcms.contentpic.dao.ContentPicDao;
 import com.starrysky.starcms.contentrubbings.dao.ContentRubbingsDao;
 import com.starrysky.starcms.contentvideo.dao.ContentVideoDao;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,6 +46,9 @@ public class ContentService {
     private Content3DDao content3DDao;
     @Resource
     private ContentAllSceneDao contentAllSceneDao;
+    @Resource
+    private ContentNewsDao contentNewsDao;
+
 
     @Transactional(readOnly = true)
     public Page<Content> list(String title, Boolean recommend, Integer status, Integer[] channelIds, Integer userId, String name, String realName, int pageNum, int pageSize) throws Exception {
@@ -221,6 +226,34 @@ public class ContentService {
     }
 
     public void editAllScene(Content content, Integer channelId, String publisher, String cover, String path) throws Exception {
+        editContent(content, channelId);
+
+        ContentAllScene contentAllScene = this.contentAllSceneDao.findByContent(content);
+        contentAllScene.setPublisher(publisher);
+        contentAllScene.setCover(cover);
+        contentAllScene.setPath(path);
+        this.contentAllSceneDao.save(contentAllScene);
+    }
+
+    public void addNews(Content content, Integer channelId, BackgroundUser backgroundUser, Integer journalId, Date newsTime, Integer section, String position, String path, HttpServletRequest request) throws Exception {
+        addContent(content, channelId, backgroundUser);
+
+        ContentNews contentNews = new ContentNews();
+        Journal journal = new Journal();
+        journal.setId(journalId);
+        contentNews.setJournal(journal);
+        contentNews.setNewsTime(newsTime);
+        contentNews.setSection(section);
+        contentNews.setPosition(position);
+        contentNews.setPath(path);
+        contentNews.setContent(content);
+
+        this.contentDao.save(content);
+        this.contentNewsDao.save(contentNews);
+
+    }
+
+    public void editNews(Content content, Integer channelId, String publisher, String cover, String path) throws Exception {
         editContent(content, channelId);
 
         ContentAllScene contentAllScene = this.contentAllSceneDao.findByContent(content);

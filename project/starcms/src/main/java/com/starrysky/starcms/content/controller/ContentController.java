@@ -10,17 +10,24 @@ import com.starrysky.starcms.contentpic.service.ContentPicService;
 import com.starrysky.starcms.contentrubbings.service.ContentRubbingsService;
 import com.starrysky.starcms.contentvideo.service.ContentVideoService;
 import com.starrysky.starcms.entity.*;
+import com.starrysky.starcms.journal.service.JournalService;
 import com.starrysky.starcms.security.SecurityUser;
 import com.starrysky.starcms.util.Constant;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -50,9 +57,12 @@ public class ContentController {
     private ContentAllSceneService contentAllSceneService;
     @Resource
     private BackgroundUserService backgroundUserService;
+    @Resource
+    private JournalService journalService;
 
     /**
      * 内容列表
+     *
      * @param title
      * @param recommend
      * @param status
@@ -129,13 +139,22 @@ public class ContentController {
             return "redirect:/backstage/content/list";
         } else {
             getChannelForTree(channelId, request);
+            if (channelId == Constant.CHANNEL_JOURNAL) {
+                List<Journal> list = this.journalService.listNormal();
+                if (list != null && list.size() > 0) {
+                    request.setAttribute("journals", list);
+                } else {
+                    request.setAttribute("contentinfo", "请先添加报刊");
+                }
+            }
             request.setAttribute("activechildmenu", "ccmenu" + channelId);
             return "/backstage/content/add";
         }
     }
 
     @PostMapping("/add")
-    public String add(Content content, String seriesName, String authorName, String cover, String attachments, String time, String place, String publisher, String pic, String path, Integer channelId, HttpServletRequest request, HttpSession session) {
+    public String add(Content content, String seriesName, String authorName, String cover, String attachments, String time, String place, String publisher,
+                      String pic, String path, Date newsTime, Integer section, String position, Integer journalId, Integer channelId, HttpServletRequest request) {
         switch (channelId) {
             case Constant.CHANNEL_BOOK:
                 addBook(content, seriesName, authorName, cover, attachments, channelId, request);
@@ -158,8 +177,10 @@ public class ContentController {
                 add3D(content, publisher, cover, path, channelId, request);
                 break;
             case Constant.CHANNEL_ALLSCENE:
-                addAllScene(content, publisher,cover, path, channelId, request);
+                addAllScene(content, publisher, cover, path, channelId, request);
                 break;
+            case Constant.CHANNEL_JOURNAL:
+                addNews(content, newsTime, section, position, journalId, path, channelId, request);
         }
         return "forward:/backstage/content/toadd?channelId=" + channelId;
     }
@@ -519,6 +540,7 @@ public class ContentController {
 
     /**
      * 添加拓片
+     *
      * @param content
      * @param time
      * @param place
@@ -539,7 +561,7 @@ public class ContentController {
         } else if (StringUtils.isEmpty(cover)) {
             request.setAttribute("contentinfo", "请上传图片");
             checked = false;
-        } else if(StringUtils.isEmpty(path)){
+        } else if (StringUtils.isEmpty(path)) {
             request.setAttribute("contentinfo", "请上传拓片");
             checked = false;
         }
@@ -577,6 +599,7 @@ public class ContentController {
 
     /**
      * 修改拓片
+     *
      * @param content
      * @param time
      * @param place
@@ -615,6 +638,7 @@ public class ContentController {
 
     /**
      * 添加音频
+     *
      * @param content
      * @param time
      * @param place
@@ -635,7 +659,7 @@ public class ContentController {
         } else if (StringUtils.isEmpty(cover)) {
             request.setAttribute("contentinfo", "请上传图片");
             checked = false;
-        } else if(StringUtils.isEmpty(path)){
+        } else if (StringUtils.isEmpty(path)) {
             request.setAttribute("contentinfo", "请上传音频");
             checked = false;
         }
@@ -673,6 +697,7 @@ public class ContentController {
 
     /**
      * 修改音频
+     *
      * @param content
      * @param time
      * @param place
@@ -711,6 +736,7 @@ public class ContentController {
 
     /**
      * 添加视频
+     *
      * @param content
      * @param time
      * @param place
@@ -731,7 +757,7 @@ public class ContentController {
         } else if (StringUtils.isEmpty(cover)) {
             request.setAttribute("contentinfo", "请上传图片");
             checked = false;
-        } else if(StringUtils.isEmpty(path)){
+        } else if (StringUtils.isEmpty(path)) {
             request.setAttribute("contentinfo", "请上传视频");
             checked = false;
         }
@@ -769,6 +795,7 @@ public class ContentController {
 
     /**
      * 修改视频
+     *
      * @param content
      * @param time
      * @param place
@@ -807,6 +834,7 @@ public class ContentController {
 
     /**
      * 添加3D模型
+     *
      * @param content
      * @param publisher
      * @param cover
@@ -862,6 +890,7 @@ public class ContentController {
 
     /**
      * 修改3D模型
+     *
      * @param content
      * @param publisher
      * @param cover
@@ -898,6 +927,7 @@ public class ContentController {
 
     /**
      * 添加360全景
+     *
      * @param content
      * @param publisher
      * @param cover
@@ -953,6 +983,7 @@ public class ContentController {
 
     /**
      * 修改360全景
+     *
      * @param content
      * @param publisher
      * @param cover
@@ -987,4 +1018,78 @@ public class ContentController {
         }
     }
 
+    /**
+     * 添加报刊的新闻
+     * @param content
+     * @param newsTime
+     * @param section
+     * @param position
+     * @param journalId
+     * @param path
+     * @param channelId
+     * @param request
+     */
+    public void addNews(Content content, Date newsTime, Integer section, String position, Integer journalId, String path, Integer channelId, HttpServletRequest request) {
+        boolean checked = true;
+        if (channelId == null) {
+            request.setAttribute("contentinfo", "请选择栏目类型");
+            checked = false;
+        } else if (StringUtils.isEmpty(content.getTitle())) {
+            request.setAttribute("contentinfo", "请填写标题");
+            checked = false;
+        } else if (StringUtils.isEmpty(path)) {
+            request.setAttribute("contentinfo", "请上传图片");
+            checked = false;
+        } else if (StringUtils.isEmpty(path)) {
+            request.setAttribute("contentinfo", "请上传视频");
+            checked = false;
+        } else if (journalId == null) {
+            request.setAttribute("contentinfo", "请选择报刊");
+            checked = false;
+        } else if (newsTime == null) {
+            request.setAttribute("contentinfo", "请设置报刊日期");
+            checked = false;
+        } else if (section == null) {
+            request.setAttribute("contentinfo", "请设置报刊版面");
+            checked = false;
+        } else if (StringUtils.isEmpty(position)) {
+            request.setAttribute("contentinfo", "请设置新闻位置");
+            checked = false;
+        }
+        if (checked) {
+            try {
+                // 自己实现登录时
+                SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                BackgroundUser backgroundUser = new BackgroundUser();
+                backgroundUser.setId(securityUser.getId());
+                this.contentService.addNews(content, channelId, backgroundUser, journalId, newsTime, section, position, path, request);
+                request.setAttribute("contentinfo", "填加报刊的新闻成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("contentinfo", "填加报刊的新闻失败，请稍后再试");
+            }
+        } else {
+            // 普通属性
+            request.setAttribute("channelId", channelId);
+            request.setAttribute("title", content.getTitle());
+            request.setAttribute("shortTitle", content.getShortTitle());
+            request.setAttribute("recommend", content.isRecommend());
+            request.setAttribute("status", content.getStatus());
+            request.setAttribute("tags", content.getTags());
+            request.setAttribute("txt", content.getTxt());
+            // 跟书籍有关的属性
+            request.setAttribute("journalId", journalId);
+            request.setAttribute("newsTime", newsTime);
+            request.setAttribute("section", section);
+            request.setAttribute("position", position);
+            request.setAttribute("path", path);
+        }
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder, WebRequest request) {
+        //转换日期
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
 }

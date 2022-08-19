@@ -20,6 +20,7 @@ public class Constant {
     public static final int CHANNEL_ALLSCENE = 7;
     public static final int CHANNEL_MURAL = 8;
     public static final int CHANNEL_PAINTING = 9;
+    public static final int CHANNEL_JOURNAL = 10;
 
     // 内容状态，1-草稿，2-审核中，3-审核通过，4-审核失败，5-回收站（删除）
     public static final int CONTENT_STATUS_DRAFT = 1;

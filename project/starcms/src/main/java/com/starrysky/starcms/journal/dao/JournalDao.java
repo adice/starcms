@@ -39,4 +39,6 @@ public interface JournalDao extends JpaRepository<Journal, Integer>, JpaSpecific
     }
 
     public Journal findByTitle(String title);
+
+    public List<Journal> findByState(int state);
 }
