@@ -6,6 +6,7 @@ import com.starrysky.starcms.content3d.service.Content3DService;
 import com.starrysky.starcms.contentallscene.service.ContentAllSceneService;
 import com.starrysky.starcms.contentaudio.service.ContentAudioService;
 import com.starrysky.starcms.contentbook.service.ContentBookService;
+import com.starrysky.starcms.contentnews.service.ContentNewsService;
 import com.starrysky.starcms.contentpic.service.ContentPicService;
 import com.starrysky.starcms.contentrubbings.service.ContentRubbingsService;
 import com.starrysky.starcms.contentvideo.service.ContentVideoService;
@@ -55,6 +56,8 @@ public class ContentController {
     private Content3DService content3DService;
     @Resource
     private ContentAllSceneService contentAllSceneService;
+    @Resource
+    private ContentNewsService contentNewsService;
     @Resource
     private BackgroundUserService backgroundUserService;
     @Resource
@@ -229,6 +232,16 @@ public class ContentController {
                     ContentAllScene contentAllScene = this.contentAllSceneService.getByContent(content);
                     request.setAttribute("contentaddtion", contentAllScene);
                     break;
+                case Constant.CHANNEL_JOURNAL:
+                    ContentNews contentNews = this.contentNewsService.getByContent(content);
+                    request.setAttribute("contentaddtion", contentNews);
+                    if (content.getChannel().getId() == Constant.CHANNEL_JOURNAL) {
+                        List<Journal> list = this.journalService.listNormal();
+                        if (list != null && list.size() > 0) {
+                            request.setAttribute("journals", list);
+                        }
+                    }
+                    break;
             }
             request.setAttribute("content", content);
             request.setAttribute("activechildmenu", "ccmenu" + content.getChannel().getId());
@@ -238,7 +251,8 @@ public class ContentController {
     }
 
     @PostMapping("/edit")
-    public String edit(Content content, String seriesName, String authorName, String cover, String attachments, String time, String place, String publisher, String pic, String path, Integer channelId, HttpServletRequest request) {
+    public String edit(Content content, String seriesName, String authorName, String cover, String attachments, String time, String place, String publisher,
+                      String pic, String path, Date newsTime, Integer section, String position, Integer journalId, Integer channelId, HttpServletRequest request) {
         switch (channelId) {
             case Constant.CHANNEL_BOOK:
                 editBook(content, seriesName, authorName, cover, attachments, channelId, request);
@@ -262,6 +276,9 @@ public class ContentController {
                 break;
             case Constant.CHANNEL_ALLSCENE:
                 editAllScene(content, publisher, cover, path, channelId, request);
+                break;
+            case Constant.CHANNEL_JOURNAL:
+                editNews(content, journalId, newsTime, section, position, path, channelId, request);
                 break;
         }
         return "forward:/backstage/content/toedit/" + content.getId();
@@ -1083,6 +1100,56 @@ public class ContentController {
             request.setAttribute("section", section);
             request.setAttribute("position", position);
             request.setAttribute("path", path);
+        }
+    }
+
+    /**
+     * 修改报刊的新闻
+     * @param content
+     * @param journalId
+     * @param newsTime
+     * @param section
+     * @param position
+     * @param path
+     * @param channelId
+     * @param request
+     */
+    public void editNews(Content content, Integer journalId, Date newsTime, Integer section, String position, String path, Integer channelId, HttpServletRequest request) {
+        boolean checked = true;
+        if (channelId == null) {
+            request.setAttribute("contentinfo", "请选择栏目类型");
+            checked = false;
+        } else if (StringUtils.isEmpty(content.getTitle())) {
+            request.setAttribute("contentinfo", "请填写标题");
+            checked = false;
+        } else if (StringUtils.isEmpty(path)) {
+            request.setAttribute("contentinfo", "请上传图片");
+            checked = false;
+        } else if (StringUtils.isEmpty(path)) {
+            request.setAttribute("contentinfo", "请上传内容");
+            checked = false;
+        } else if (journalId == null) {
+            request.setAttribute("contentinfo", "请选择报刊");
+            checked = false;
+        } else if (newsTime == null) {
+            request.setAttribute("contentinfo", "请填写时间");
+            checked = false;
+        } else if (section == null) {
+            request.setAttribute("contentinfo", "请填写版块");
+            checked = false;
+        } else if (StringUtils.isEmpty(position)) {
+            request.setAttribute("contentinfo", "请设置新闻位置");
+            checked = false;
+        }
+        // 验证成功，新增内容，失败返回重新填写
+        if (checked) {
+            try {
+                this.contentService.editNews(content, channelId, journalId, newsTime, section, position, path);
+                request.setAttribute("contentinfo", "修改报刊的新闻成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("contentinfo", "修改报刊的新闻失败，请稍后再试");
+            }
         }
     }
 

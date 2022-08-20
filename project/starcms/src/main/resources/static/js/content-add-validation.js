@@ -59,6 +59,9 @@ var Script = function () {
                 },
                 section: {
                     required: true
+                },
+                position: {
+                    required: true
                 }
             },
             messages: {
@@ -88,6 +91,9 @@ var Script = function () {
                 },
                 section: {
                     required: "<font color='red'>请填写板块</font>"
+                },
+                position: {
+                    required: "<font color='red'>请设置新闻位置</font>"
                 }
             }
         });

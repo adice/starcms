@@ -191,15 +191,16 @@
                                 <div class="form-group" th:if="${channelId == 10}">
                                     <label class="col-sm-2 col-sm-2 control-label">报刊<span style="color: red;">*</span>：</label>
                                     <div class="col-sm-4">
-                                        <select class="form-control" id="journalId" name="journalId" th:each="journal : ${journals}">
-                                            <option th:value="${journal.id}" th:text="${journal.title}"></option>
+                                        <select class="form-control" id="journalId" name="journalId">
+                                            <option></option>
+                                            <option th:each="journal : ${journals}" th:value="${journal.id}" th:text="${journal.title}"></option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group" th:if="${channelId == 10}">
                                     <label class="col-sm-2 col-sm-2 control-label">日期<span style="color: red;">*</span>：</label>
                                     <div class="col-md-4">
-                                            <input type="text" class="form-control dpd1" id="newsTime" name="newsTime" th:value="${newsTime}">
+                                            <input type="text" class="form-control dpd1" id="newsTime" name="newsTime" th:value="${#dates.format(newsTime, 'yyyy-MM-dd')}">
                                     </div>
                                 </div>
                                 <div class="form-group" th:if="${channelId == 10}">
@@ -217,8 +218,9 @@
                                 </div>
                                 <div class="form-group" th:if="${channelId == 10}">
                                     <label class="col-sm-2 col-sm-2 control-label">位置<span style="color: red;">*</span>：</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" id="position" name="position" th:value="${position}" class="form-control">
+                                    <div class="col-sm-10 form-inline">
+                                        <button class="btn btn-white" type="button">设置新闻位置</button>
+                                        <input type="text" id="position" name="position" th:value="${position}" readonly class="form-control">
                                     </div>
                                 </div>
                                 <!--addition end-->

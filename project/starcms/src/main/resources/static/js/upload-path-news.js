@@ -20,12 +20,12 @@ $(document).ready(function () {
         init: function () {
             this.on('success', function (files, response) {
                 //文件上传成功之后的操作
-                $("#path").val($("#path").val() + response[0].url + ",");
+                $("#path").val($("#path").val() + response[0].url);
                 files.path = response[0].url;
                 $("html").niceScroll().resize();
             });
             this.on('removedfile', function (files, response) {
-                $("#path").val($("#path").val().replace(files.path + ',', ''));
+                $("#path").val($("#path").val().replace(files.path, ''));
                 $("html").niceScroll().resize();
             });
         }

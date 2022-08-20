@@ -20,7 +20,7 @@ spring:
     url: jdbc:mysql://localhost:3306/starcms_db?useUnicode=true&characterEncoding=UTF-8
     username: root
     password: 123456
-    initialization-mode: always
+    initialization-mode: never
     data: classpath*:/db-import.sql
 
   jpa:
@@ -28,7 +28,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
       # 若由实体Bean自动创建表，则ddl-auto设置为always，如果由脚本创建表，则设置为none
-      ddl-auto: create
+      ddl-auto: none
     show-sql: true
     open-in-view: true
 

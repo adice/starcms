@@ -253,14 +253,18 @@ public class ContentService {
 
     }
 
-    public void editNews(Content content, Integer channelId, String publisher, String cover, String path) throws Exception {
+    public void editNews(Content content, Integer channelId, Integer journalId, Date newsTime, Integer section, String position, String path) throws Exception {
         editContent(content, channelId);
 
-        ContentAllScene contentAllScene = this.contentAllSceneDao.findByContent(content);
-        contentAllScene.setPublisher(publisher);
-        contentAllScene.setCover(cover);
-        contentAllScene.setPath(path);
-        this.contentAllSceneDao.save(contentAllScene);
+        ContentNews contentNews = this.contentNewsDao.findByContent(content);
+        Journal journal = new Journal();
+        journal.setId(journalId);
+        contentNews.setJournal(journal);
+        contentNews.setNewsTime(newsTime);
+        contentNews.setSection(section);
+        contentNews.setPosition(position);
+        contentNews.setPath(path);
+        this.contentNewsDao.save(contentNews);
     }
 
     public void delete(int id) {
@@ -288,6 +292,9 @@ public class ContentService {
                 break;
             case Constant.CHANNEL_ALLSCENE:
                 this.contentAllSceneDao.deleteByContent(content);
+                break;
+            case Constant.CHANNEL_JOURNAL:
+                this.contentNewsDao.deleteByContent(content);
                 break;
         }
         this.contentDao.deleteById(id);
