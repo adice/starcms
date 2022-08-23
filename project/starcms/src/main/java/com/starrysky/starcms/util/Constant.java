@@ -9,6 +9,7 @@ package com.starrysky.starcms.util;
 public class Constant {
 
     public static final String UPLOAD_PATH = "D:/starcms/contents/";
+    public static final String LUCENE_INDEX_PATH = "D:/starcms/lucene/index/";
 
     // 栏目编号
     public static final int CHANNEL_BOOK = 1;
