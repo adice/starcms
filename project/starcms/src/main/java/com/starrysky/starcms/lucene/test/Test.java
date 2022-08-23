@@ -22,6 +22,8 @@ import java.nio.file.Paths;
  */
 public class Test {
 
+    String LUCENE_INDEX_PATH = "D:/starcms/lucene/index/";
+
     public static void main(String[] args) {
         Test test = new Test();
         try {
@@ -34,7 +36,7 @@ public class Test {
 
     public void createIndex() throws Exception {
         // 获取索引目录
-        Path path = Paths.get(Constant.LUCENE_INDEX_PATH);
+        Path path = Paths.get(LUCENE_INDEX_PATH);
         File file = path.toFile();
         if(!file.exists()) {
             file.mkdirs();
@@ -65,7 +67,7 @@ public class Test {
     }
 
     public void searchIndex() throws Exception {
-        Path path = Paths.get(Constant.LUCENE_INDEX_PATH);
+        Path path = Paths.get(LUCENE_INDEX_PATH);
         FSDirectory fsDirectory = FSDirectory.open(path);
         // 索引读取类
         IndexReader indexReader = DirectoryReader.open(fsDirectory);

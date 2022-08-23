@@ -65,7 +65,6 @@ public class ContentService {
         contentBook.setAttachments(attachments);
         contentBook.setContent(content);
 
-        this.contentDao.save(content);
         this.contentBookDao.save(contentBook);
 
     }
@@ -91,7 +90,6 @@ public class ContentService {
         contentPic.setPath(pic);
         contentPic.setContent(content);
 
-        this.contentDao.save(content);
         this.contentPicDao.save(contentPic);
     }
 
@@ -117,7 +115,6 @@ public class ContentService {
         contentRubbings.setPath(path);
         contentRubbings.setContent(content);
 
-        this.contentDao.save(content);
         this.contentRubbingsDao.save(contentRubbings);
     }
 
@@ -144,7 +141,6 @@ public class ContentService {
         contentAudio.setPath(path);
         contentAudio.setContent(content);
 
-        this.contentDao.save(content);
         this.contentAudioDao.save(contentAudio);
     }
 
@@ -171,7 +167,6 @@ public class ContentService {
         contentVideo.setPath(path);
         contentVideo.setContent(content);
 
-        this.contentDao.save(content);
         this.contentVideoDao.save(contentVideo);
     }
 
@@ -196,7 +191,6 @@ public class ContentService {
         content3D.setPath(path);
         content3D.setContent(content);
 
-        this.contentDao.save(content);
         this.content3DDao.save(content3D);
 
     }
@@ -220,7 +214,6 @@ public class ContentService {
         contentAllScene.setPath(path);
         contentAllScene.setContent(content);
 
-        this.contentDao.save(content);
         this.contentAllSceneDao.save(contentAllScene);
 
     }
@@ -248,7 +241,6 @@ public class ContentService {
         contentNews.setPath(path);
         contentNews.setContent(content);
 
-        this.contentDao.save(content);
         this.contentNewsDao.save(contentNews);
 
     }
@@ -319,9 +311,7 @@ public class ContentService {
     public void checks(String ids) {
         String[] allId = ids.split(",");
         for(String id : allId){
-            Content content = this.contentDao.getOne(Integer.parseInt(id));
-            content.setStatus(Constant.CONTENT_STATUS_AUDITSUCCESS);
-            this.contentDao.save(content);
+            check(Integer.parseInt(id));
         }
     }
 
@@ -334,9 +324,7 @@ public class ContentService {
     public void denys(String ids) {
         String[] allId = ids.split(",");
         for(String id : allId){
-            Content content = this.contentDao.getOne(Integer.parseInt(id));
-            content.setStatus(Constant.CONTENT_STATUS_AUDITFAILURE);
-            this.contentDao.save(content);
+            deny(Integer.parseInt(id));
         }
     }
 
@@ -354,6 +342,7 @@ public class ContentService {
         if (content.getStatus() == 0) {
             content.setStatus(Constant.CONTENT_STATUS_AUDITING);
         }
+        this.contentDao.save(content);
     }
 
     private void editContent(Content content, Integer channelId) {

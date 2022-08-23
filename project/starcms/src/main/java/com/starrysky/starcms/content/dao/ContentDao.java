@@ -34,11 +34,8 @@ public interface ContentDao extends JpaRepository<Content, Integer>, JpaSpecific
                 Predicate namePredicate = criteriaBuilder.equal(root.get("recommend"), recommend);
                 predicatesList.add(namePredicate);
             }
-            if (status != null && status > 0) {
+            if (status != null && status > 0 && status <= 5) {
                 Predicate namePredicate = criteriaBuilder.equal(root.get("status"), status);
-                predicatesList.add(namePredicate);
-            } else {
-                Predicate namePredicate = criteriaBuilder.notEqual(root.get("status"), Constant.CONTENT_STATUS_RECYLE);
                 predicatesList.add(namePredicate);
             }
             if (channelIds != null) {

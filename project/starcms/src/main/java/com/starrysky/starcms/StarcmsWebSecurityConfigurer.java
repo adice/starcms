@@ -41,7 +41,7 @@ public class StarcmsWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 // 授权
-                .mvcMatchers("/backstage/user/**", "/backstage/channel/**").hasRole("admin")
+                .mvcMatchers("/backstage/user/**", "/backstage/channel/**", "/backstage/lucene/**").hasRole("admin")
                 .mvcMatchers("/backstage/content/**").hasAnyRole("admin", "entry", "audit")
                 .mvcMatchers("/backstage/journal/**").hasAnyRole("admin", "entry")
                 // 认证
@@ -105,4 +105,5 @@ public class StarcmsWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     public HttpSessionEventPublisher httpSessionEventPublisher(){
         return new HttpSessionEventPublisher();
     }
+
 }

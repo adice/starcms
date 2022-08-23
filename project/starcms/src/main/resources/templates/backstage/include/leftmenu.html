@@ -56,6 +56,11 @@
                     <li><a href="chartjs.html"> Chartjs</a></li>
                 </ul>
             </li>
+            <li sec:authorize="hasRole('admin')" th:class="${activemenu eq 'sysmenu' ? 'menu-list nav-active' : 'menu-list'}"><a href="javascript;"><i class="fa fa-bar-chart-o"></i> <span>系统管理</span></a>
+                <ul class="child-list">
+                    <li th:class="${activemenu eq 'sysmenu' ? 'active' : ''}"><a th:href="@{/backstage/lucene/list}">索引管理</a></li>
+                </ul>
+            </li>
         </ul>
         <!--sidebar nav end-->
     </div>
