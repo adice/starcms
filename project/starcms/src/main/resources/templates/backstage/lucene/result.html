@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/img/ico/favicon.png}">
+    <title>STARCMS</title>
+    <!--right slidebar-->
+    <link th:href="@{/css/slidebars.css}" rel="stylesheet">
+    <!--jquery-ui-->
+    <link th:href="@{/jquery-ui/jquery-ui-1.10.1.custom.min.css}" rel="stylesheet"/>
+    <!--jquery-toastr-->
+    <link th:href="@{/css/toastr.min.css}" rel="stylesheet"/>
+    <!--common style-->
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link th:href="@{/css/style-responsive.css}" rel="stylesheet">
+    <!--sweetalert-->
+    <link th:href="@{/sweetalert/sweetalert.css}" rel="stylesheet">
+</head>
+<body class="sticky-header">
+<section>
+    <!-- sidebar left start-->
+    <div th:replace="backstage/include/leftmenu::leftmenu"></div>
+    <!-- sidebar left end-->
+
+    <!-- body content start-->
+    <div class="body-content">
+        <!-- header section start-->
+        <div th:replace="backstage/include/header::topheader"></div>
+        <!-- header section end-->
+
+        <!-- page head start-->
+        <div class="page-head">
+            <h3 class="m-b-less">
+                检索结果
+            </h3>
+            <div class="state-information">
+                <ol class="breadcrumb m-b-less bg-less">
+                    <li><a th:href="@{/backstage/index}">首页</a></li>
+                    <li class="active">检索结果</li>
+                </ol>
+            </div>
+        </div>
+        <!-- page head end-->
+
+        <!--body wrapper start-->
+        <div class="wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <section class="panel">
+                        <table class="table table-striped custom-table table-hover">
+                            <thead>
+                            <tr>
+                                <th><i class="fa fa-file-text-o"></i>标题</th>
+                                <th><i class="fa fa-reorder"></i>类型</th>
+                                <th><i class="fa fa-hand-o-up"></i>内容</th>
+                                <th><i class=" fa fa-bell-o"></i>录入时间</th>
+                                <th class="hidden-xs"><i class="fa fa-cogs"></i>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="content, contentstat : ${page}">
+                                <td th:utext="${content.title}"></td>
+                                <td th:text="${content.channel.title}"></td>
+                                <td th:utext="${content.txt}"></td>
+                                <td th:text="${#dates.format(content.addTime, 'yyyy-MM-dd hh:mm:ss')}"></td>
+                                <td class="hidden-xs">
+                                    <button class="btn btn-primary btn-xs" th:alt-title="查看详情"
+                                            th:onclick="location.href='/backstage/content/[[${content.id}]]'">
+                                        <i class="fa fa-external-link"></i></button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!-- page start -->
+                        <div class="tbl-footer clearfix">
+                            <div class="tbl-info pull-left">
+                                <span th:text="'总共 ' + ${page.totalElements} + ' 条数据，当前是第 ' + ${page.number + 1} + ' 页，总共 ' + ${page.totalPages} + ' 页'">
+                                </span>
+                                <span style="margin-left: 20px; display: inline-block">
+                                    <select id="countofpage" name="countofpage" class="form-control" style="width: 100px;">
+                                        <option value="10" th:attr="selected=${page.size == 10 ? 'true' : 'false'}">10条/页</option>
+                                        <option value="20" th:attr="selected=${page.size == 20 ? 'true' : 'false'}">20条/页</option>
+                                        <option value="100" th:attr="selected=${page.size == 100 ? 'true' : 'false'}">100条/页</option>
+                                        <option value="200" th:attr="selected=${page.size == 200 ? 'true' : 'false'}">200条/页</option>
+                                    </select>
+                                </span>
+                                <span style="margin-left: 20px; margin-right: 10px; display: inline-block">跳转到</span>
+                                <span style="display: inline-block">
+                                    <input id="txtJumpNum" type="text" class="form-control inline" style="width: 60px;">
+                                </span>
+                                <span style="display: inline-block">
+                                    <button id="btnJumpNum" type="button"
+                                            class="btn btn-success fa fa-arrow-right"> 跳转</button>
+                                </span>
+                            </div>
+                            <div class="tbl-pagin pull-right">
+                                <div>
+                                    <ul class="pagination">
+                                        <li th:class="|paginate_button ${page.number <= 0 ? 'active disabled' : ''}|"
+                                            tabindex="0">
+                                            <a th:href="${page.number <= 0 ? 'javascript:;' : 'javascript:jumpPage(1)'}">1</a>
+                                        </li>
+                                        <li th:class="paginate_button" tabindex="0" th:if="${page.number - 3 > 0}">
+                                            <a href="javascript:;">...</a>
+                                        </li>
+                                        <li th:if="${page.totalPages > 2}"
+                                            th:class="|paginate_button ${page.number + 1 == i ? 'active disabled' : ''}|"
+                                            th:each="i : ${#numbers.sequence((page.number - 3 > 0 ? page.number - 1 : 2), page.number + 3 > page.totalPages ? page.totalPages - 1 : page.number + 3)}">
+                                            <a th:href="${page.number + 1 == i ? 'javascript:;' : 'javascript:jumpPage(' + i + ')'}"
+                                               th:text="${i}"></a>
+                                        </li>
+                                        <li th:class="paginate_button" tabindex="0"
+                                            th:if="${page.number + 3 < page.totalPages}">
+                                            <a href="javascript:;">...</a>
+                                        </li>
+                                        <li th:if="${page.totalPages > 1}"
+                                            th:class="|paginate_button ${page.number + 1 >= page.totalPages ? 'active disabled' : ''}|"
+                                            tabindex="0">
+                                            <a th:href="${page.number + 1 >= page.totalPages ? 'javascript:;' : 'javascript:jumpPage(' + page.totalPages +')'}"
+                                               th:text="${page.totalPages}"></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- page end -->
+                    </section>
+                </div>
+            </div>
+            <!--body wrapper end-->
+            <!--footer section start-->
+            <footer th:replace="backstage/include/footer::footer"></footer>
+            <!--footer section end-->
+        </div>
+    </div>
+    <!-- body content end-->
+</section>
+<div th:replace="backstage/include/jss"></div>
+<script th:src="@{/sweetalert/sweetalert.min.js}" type="text/javascript"></script>
+<!-- page -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#countofpage").change(function () {
+            $("#pageSize").val($(this).val());
+            $("#searchForm").submit();
+        });
+        $("#txtJumpNum").keypress(function (event) {
+            if (event.which == 13 && $("#txtJumpNum").val() != "") {
+                if ($("#txtJumpNum").val() - 0 <= 1) {
+                    $("#pageNum").val(1);
+                } else if ($("#txtJumpNum").val() - 0 >= [[${page.totalPages}]]) {
+                    $("#pageNum").val([[${page.totalPages}]]);
+                } else {
+                    $("#pageNum").val($("#txtJumpNum").val());
+                }
+                $("#searchForm").submit();
+            }
+        });
+        $("#btnJumpNum").click(function () {
+            if ($("#txtJumpNum").val() - 0 <= 1) {
+                $("#pageNum").val(1);
+            } else if ($("#txtJumpNum").val() - 0 >= [[${page.totalPages}]]) {
+                $("#pageNum").val([[${page.totalPages}]]);
+            } else {
+                $("#pageNum").val($("#txtJumpNum").val());
+            }
+            $("#searchForm").submit();
+        });
+        jumpPage = function (pageNum) {
+            $("#pageNum").val(pageNum);
+            $("#searchForm").submit();
+        };
+    });
+</script>
+<script type="text/javascript" th:if="${luceneinfo} != null">
+    $(document).ready(function () {
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "progressBar": true,
+            "positionClass": "toast-top-center"
+        };
+        toastr.warning("[[${luceneinfo}]]", "提示");
+    });
+</script>
+</body>
+</html>

@@ -30,8 +30,8 @@
         <div class="right-notification">
             <ul class="notification-menu">
                 <li>
-                    <form class="search-content" action="index.html" method="post">
-                        <input type="text" class="form-control" name="keyword" placeholder="Search...">
+                    <form class="search-content" th:action="@{/backstage/lucene/search}" method="post">
+                        <input type="text" class="form-control" name="keywords" th:value="${param.keywords}" placeholder="Search...">
                     </form>
                 </li>
                 <li>

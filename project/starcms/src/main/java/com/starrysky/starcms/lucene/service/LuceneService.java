@@ -26,6 +26,7 @@ public class LuceneService {
     /**
      * 初始化已有数据的索引
      * 将所有状态为审核通过的数据创建索引
+     *
      * @throws IOException 初始化索引失败，抛出异常
      */
     public void initIndex() throws IOException {
@@ -34,18 +35,19 @@ public class LuceneService {
         int pageCount;
         // 先清空所有索引
         luceneDao.deleteAllIndex();
-        do{
+        do {
             Page<Content> page = contentDao.findDynamic(null, null, Constant.CONTENT_STATUS_AUDITSUCCESS, null, null, null, null, pageNum, pageSize);
             pageCount = page.getTotalPages();
-            if(pageCount > 0){
+            if (pageCount > 0) {
                 luceneDao.createIndex(page.getContent());
                 pageNum++;
             }
-        }while(pageNum <= pageCount);
+        } while (pageNum <= pageCount);
     }
 
     /**
      * 当状态改为审核通过时，增加索引
+     *
      * @param id 添加索引的数据的id
      * @throws IOException 添加失败抛出的异常
      */
@@ -57,10 +59,15 @@ public class LuceneService {
 
     /**
      * 当状态改为草稿、审核退回或删除该数据时，删除索引
+     *
      * @param id 删除索引所对应的数据的id
      * @throws IOException 删除失败抛出的异常
      */
     public void deleteIndexById(String id) throws IOException {
         luceneDao.deleteIndexById(id);
+    }
+
+    public Page<Content> search(String keywords, int pageNum, int pageSize) throws Exception {
+        return luceneDao.search(keywords, pageNum, pageSize);
     }
 }
