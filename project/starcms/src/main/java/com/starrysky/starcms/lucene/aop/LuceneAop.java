@@ -1,6 +1,8 @@
 package com.starrysky.starcms.lucene.aop;
 
+import com.starrysky.starcms.entity.Content;
 import com.starrysky.starcms.lucene.service.LuceneService;
+import com.starrysky.starcms.util.Constant;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -37,6 +39,31 @@ public class LuceneAop {
         if (joinPoint.getArgs() != null && joinPoint.getArgs().length > 0) {
             try {
                 luceneService.deleteIndexById(joinPoint.getArgs()[0].toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @After("execution(* com.starrysky.starcms.content.service.ContentService.delete(..))")
+    public void afterDelete(JoinPoint joinPoint) {
+        if (joinPoint.getArgs() != null && joinPoint.getArgs().length > 0) {
+            try {
+                luceneService.deleteIndexById(joinPoint.getArgs()[0].toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @After("execution(* com.starrysky.starcms.content.service.ContentService.edit*(..))")
+    public void afterEditDraft(JoinPoint joinPoint) {
+        if (joinPoint.getArgs() != null && joinPoint.getArgs().length > 0) {
+            try {
+                Content content = (Content) joinPoint.getArgs()[0];
+                if (content.getStatus() == Constant.CONTENT_STATUS_DRAFT) {
+                    luceneService.deleteIndexById(String.valueOf(content.getId()));
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

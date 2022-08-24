@@ -122,8 +122,10 @@ public class LuceneDao {
                 Content content = new Content();
                 Document doc = indexSearcher.doc(scoreDocs[i].doc);
                 content.setId(Integer.parseInt(doc.get("id")));
-                content.setTitle(getHtmlHighlight(booleanQuery, "title", doc.get("title")));
-                content.setTxt(getHtmlHighlight(booleanQuery, "shorttxt", doc.get("shorttxt")));
+                String title = getHtmlHighlight(booleanQuery, "title", doc.get("title"));
+                content.setTitle(title == null ? doc.get("title") : title);
+                String shorttxt = getHtmlHighlight(booleanQuery, "shorttxt", doc.get("shorttxt"));
+                content.setTxt(shorttxt == null ? doc.get("shorttxt") : shorttxt);
                 Channel channel = new Channel();
                 channel.setTitle(doc.get("channelTitle"));
                 content.setChannel(channel);

@@ -72,12 +72,11 @@ public class LuceneConfig {
 
     /**
      * SearcherManager管理
-     * @param directory 索引目录
      * @return 检索管理器
      * @throws IOException
      */
     @Bean
-    public SearcherManager searcherManager(Directory directory, IndexWriter indexWriter) throws IOException {
+    public SearcherManager searcherManager(IndexWriter indexWriter) throws IOException {
         SearcherManager searcherManager = new SearcherManager(indexWriter, false, false, new SearcherFactory());
         ControlledRealTimeReopenThread controlledRealTimeReopenThread = new ControlledRealTimeReopenThread(indexWriter, searcherManager,
                 5.0, 0.025);
