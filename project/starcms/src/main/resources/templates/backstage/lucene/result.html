@@ -144,7 +144,7 @@
     $(document).ready(function () {
         $("#countofpage").change(function () {
             $("#pageSize").val($(this).val());
-            $("#searchForm").submit();
+            $("#allSearchForm").submit();
         });
         $("#txtJumpNum").keypress(function (event) {
             if (event.which == 13 && $("#txtJumpNum").val() != "") {
@@ -155,7 +155,8 @@
                 } else {
                     $("#pageNum").val($("#txtJumpNum").val());
                 }
-                $("#searchForm").submit();
+                $("#allSearchForm").submit();
+
             }
         });
         $("#btnJumpNum").click(function () {
@@ -166,11 +167,11 @@
             } else {
                 $("#pageNum").val($("#txtJumpNum").val());
             }
-            $("#searchForm").submit();
+            $("#allSearchForm").submit();
         });
         jumpPage = function (pageNum) {
             $("#pageNum").val(pageNum);
-            $("#searchForm").submit();
+            $("#allSearchForm").submit();
         };
     });
 </script>

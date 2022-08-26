@@ -62,7 +62,7 @@
 60. map
 61. calendar
 62. slick carousel
-
+63. drag-circle
 */
 
 
@@ -6516,4 +6516,12 @@ a.view-all:hover {
 .gallery li img{
     width: 100%;
     height: auto;
+}
+
+.drag-circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 3px solid red;
+    position: absolute;
 }

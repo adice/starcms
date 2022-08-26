@@ -4,19 +4,11 @@ import com.starrysky.starcms.security.LoginSuccessHandler;
 import com.starrysky.starcms.security.SecurityUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
-import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
-
 import javax.annotation.Resource;
-import javax.sql.DataSource;
 
 /**
  * @ClassName StarcmsWebSecurityConfigurer
@@ -79,7 +71,7 @@ public class StarcmsWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 //        http.headers()
 //                .xssProtection()
 //                .and()
-//                .contentSecurityPolicy("script-src 'self'");
+//                .contentSecurityPolicy("script-src 'self' 'sha256-+Hgiz/ECd4pXVDDa2NGHdKRPHC5B/yWLVVbppzTJTcg='");
         // 认证失败跳转
         http.exceptionHandling()
                 .accessDeniedPage("/backstage/unauthen");

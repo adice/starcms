@@ -66,16 +66,21 @@
                             内容信息
                         </header>
                         <div class="panel-body">
-                            <form id="contentform" class="form-horizontal tasi-form" th:action="@{/backstage/content/add}" method="post">
+                            <form id="contentform" class="form-horizontal tasi-form"
+                                  th:action="@{/backstage/content/add}" method="post">
                                 <div class="form-group">
                                     <label class="col-sm-2 col-sm-2 control-label">栏目<span style="color: red;">*</span>：</label>
                                     <div class="col-sm-10">
                                         <div class="input-group m-b-8">
                                             <span class="input-group-btn">
-                                                <button id="btnchoosechannel" class="btn btn-white" type="button">选择栏目</button>
+                                                <button id="btnchoosechannel" class="btn btn-white"
+                                                        type="button">选择栏目</button>
                                             </span>
-                                            <input type="text" id="channelTitle" name="channelTitle" readonly th:value="${channelTitle}" class="form-control" style="width: 400px;">
-                                            <input type="hidden" id="channelId" name="channelId" th:value="${channelId}" >
+                                            <input type="text" id="channelTitle" name="channelTitle" readonly
+                                                   th:value="${channelTitle}" class="form-control"
+                                                   style="width: 400px;">
+                                            <input type="hidden" id="channelId" name="channelId"
+                                                   th:value="${channelId}">
                                         </div>
                                     </div>
                                 </div>
@@ -83,7 +88,7 @@
                                     <label class="col-sm-2 col-sm-2 control-label"></label>
                                     <div class="col-sm-10">
                                         <div id="channelTree" class="tree tree-plus-minus">
-                                            <div class = "tree-folder" style="display:none;">
+                                            <div class="tree-folder" style="display:none;">
                                                 <div class="tree-folder-header">
                                                     <i class="fa fa-folder"></i>
                                                     <div class="tree-folder-name"></div>
@@ -101,7 +106,8 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 col-sm-2 control-label">标题<span style="color: red;">*</span>：</label>
                                     <div class="col-sm-10">
-                                        <input type="text" id="title" name="title" th:value="${title}" class="form-control">
+                                        <input type="text" id="title" name="title" th:value="${title}"
+                                               class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -115,7 +121,8 @@
                                     <label class="col-sm-2 col-sm-2 control-label">是否推荐：</label>
                                     <div class="col-sm-10">
                                         <label class="checkbox-custom inline check-success">
-                                            <input type="checkbox" name="recommend" id="recommend" value="true" th:attr="checked=${recommend}">
+                                            <input type="checkbox" name="recommend" id="recommend" value="true"
+                                                   th:attr="checked=${recommend}">
                                             <label for="recommend">推荐</label>
                                         </label>
                                     </div>
@@ -134,31 +141,39 @@
                                 <div class="form-group" th:if="${channelId == 1}">
                                     <label class="col-sm-2 col-sm-2 control-label">丛书名：</label>
                                     <div class="col-sm-10">
-                                        <input type="text" id="seriesName" name="seriesName" th:value="${seriesName}" class="form-control">
+                                        <input type="text" id="seriesName" name="seriesName" th:value="${seriesName}"
+                                               class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group" th:if="${channelId == 1}">
                                     <label class="col-sm-2 col-sm-2 control-label">作者名：</label>
                                     <div class="col-sm-10">
-                                        <input type="text" id="authorName" name="authorName" th:value="${authorName}" class="form-control">
+                                        <input type="text" id="authorName" name="authorName" th:value="${authorName}"
+                                               class="form-control">
                                     </div>
                                 </div>
-                                <div class="form-group" th:if="${channelId == 2 || channelId == 8 || channelId == 9 || channelId == 3 || channelId == 4 || channelId == 5}">
+                                <div class="form-group"
+                                     th:if="${channelId == 2 || channelId == 8 || channelId == 9 || channelId == 3 || channelId == 4 || channelId == 5}">
                                     <label class="col-sm-2 col-sm-2 control-label">时间：</label>
                                     <div class="col-sm-10">
-                                        <input type="text" id="time" name="time" th:value="${time}" class="form-control">
+                                        <input type="text" id="time" name="time" th:value="${time}"
+                                               class="form-control">
                                     </div>
                                 </div>
-                                <div class="form-group" th:if="${channelId == 2 || channelId == 8 || channelId == 9 || channelId == 3 || channelId == 4 || channelId == 5}">
+                                <div class="form-group"
+                                     th:if="${channelId == 2 || channelId == 8 || channelId == 9 || channelId == 3 || channelId == 4 || channelId == 5}">
                                     <label class="col-sm-2 col-sm-2 control-label">地点：</label>
                                     <div class="col-sm-10">
-                                        <input type="text" id="place" name="place" th:value="${place}" class="form-control">
+                                        <input type="text" id="place" name="place" th:value="${place}"
+                                               class="form-control">
                                     </div>
                                 </div>
-                                <div class="form-group" th:if="${channelId == 2 || channelId == 8 || channelId == 9 || channelId == 3 || channelId == 4 || channelId == 5 || channelId == 6 || channelId == 7}">
+                                <div class="form-group"
+                                     th:if="${channelId == 2 || channelId == 8 || channelId == 9 || channelId == 3 || channelId == 4 || channelId == 5 || channelId == 6 || channelId == 7}">
                                     <label class="col-sm-2 col-sm-2 control-label">来源：</label>
                                     <div class="col-sm-10">
-                                        <input type="text" id="publisher" name="publisher" th:value="${publisher}" class="form-control">
+                                        <input type="text" id="publisher" name="publisher" th:value="${publisher}"
+                                               class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group" th:if="${channelId == 2 || channelId == 8 || channelId == 9}">
@@ -168,24 +183,29 @@
                                         <div id="dropzpic" class="dropzone"></div>
                                     </div>
                                 </div>
-                                <div class="form-group" th:if="${channelId == 1 || channelId == 3 || channelId == 4 || channelId == 5 || channelId == 6 || channelId == 7}">
+                                <div class="form-group"
+                                     th:if="${channelId == 1 || channelId == 3 || channelId == 4 || channelId == 5 || channelId == 6 || channelId == 7}">
                                     <label class="col-sm-2 col-sm-2 control-label">图片<span style="color: red;">*</span>：</label>
                                     <div class="col-sm-10">
-                                        <input type="text" id="cover" name="cover" th:value="${cover}" class="form-control">
+                                        <input type="text" id="cover" name="cover" th:value="${cover}"
+                                               class="form-control">
                                         <div id="dropzcover" class="dropzone"></div>
                                     </div>
                                 </div>
                                 <div class="form-group" th:if="${channelId == 1}">
                                     <label class="col-sm-2 col-sm-2 control-label">附件<span style="color: red;">*</span>：</label>
                                     <div class="col-sm-10">
-                                        <input type="text" id="attachments" name="attachments" th:value="${attachments}" class="form-control">
+                                        <input type="text" id="attachments" name="attachments" th:value="${attachments}"
+                                               class="form-control">
                                         <div id="dropzattachments" class="dropzone"></div>
                                     </div>
                                 </div>
-                                <div class="form-group" th:if="${channelId == 3 || channelId == 4 || channelId == 5 || channelId == 6 || channelId == 7}">
+                                <div class="form-group"
+                                     th:if="${channelId == 3 || channelId == 4 || channelId == 5 || channelId == 6 || channelId == 7}">
                                     <label class="col-sm-2 col-sm-2 control-label">内容<span style="color: red;">*</span>：</label>
                                     <div class="col-sm-10">
-                                        <input type="text" id="path" name="path" th:value="${path}" class="form-control">
+                                        <input type="text" id="path" name="path" th:value="${path}"
+                                               class="form-control">
                                         <div id="dropzpath" class="dropzone"></div>
                                     </div>
                                 </div>
@@ -194,26 +214,30 @@
                                     <div class="col-sm-4">
                                         <select class="form-control" id="journalId" name="journalId">
                                             <option></option>
-                                            <option th:each="journal : ${journals}" th:value="${journal.id}" th:text="${journal.title}"></option>
+                                            <option th:each="journal : ${journals}" th:value="${journal.id}"
+                                                    th:text="${journal.title}"></option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group" th:if="${channelId == 10}">
                                     <label class="col-sm-2 col-sm-2 control-label">日期<span style="color: red;">*</span>：</label>
                                     <div class="col-md-4">
-                                            <input type="text" class="form-control dpd1" id="newsTime" name="newsTime" th:value="${#dates.format(newsTime, 'yyyy-MM-dd')}">
+                                        <input type="text" class="form-control dpd1" id="newsTime" name="newsTime"
+                                               th:value="${#dates.format(newsTime, 'yyyy-MM-dd')}">
                                     </div>
                                 </div>
                                 <div class="form-group" th:if="${channelId == 10}">
                                     <label class="col-sm-2 col-sm-2 control-label">板块<span style="color: red;">*</span>：</label>
                                     <div class="col-sm-4">
-                                        <input type="text" id="section" name="section" th:value="${section}" class="form-control">
+                                        <input type="text" id="section" name="section" th:value="${section}"
+                                               class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group" th:if="${channelId == 10}">
                                     <label class="col-sm-2 col-sm-2 control-label">内容<span style="color: red;">*</span>：</label>
                                     <div class="col-sm-10">
-                                        <input type="text" id="path" name="path" th:value="${path}" class="form-control">
+                                        <input type="text" id="path" name="path" th:value="${path}"
+                                               class="form-control">
                                         <div id="dropzpath" class="dropzone"></div>
                                     </div>
                                 </div>
@@ -221,14 +245,15 @@
                                     <label class="col-sm-2 col-sm-2 control-label">位置<span style="color: red;">*</span>：</label>
                                     <div class="col-sm-10 form-inline">
                                         <button id="btnPosition" class="btn btn-white" type="button">设置新闻位置</button>
-                                        <input type="text" id="position" name="position" th:value="${position}" readonly class="form-control">
+                                        <input type="text" id="position" name="position" th:value="${position}" readonly
+                                               class="form-control">
                                     </div>
                                 </div>
                                 <!--addition end-->
                                 <div class="form-group">
                                     <label class="col-sm-2 col-sm-2 control-label">标签：</label>
                                     <div class="col-sm-10">
-                                        <input type="hidden" name="tags" id="tags" >
+                                        <input type="hidden" name="tags" id="tags">
                                         <div id="tagsinput"></div>
                                     </div>
                                 </div>
@@ -268,9 +293,11 @@
 <script th:src="@{/fuelux/js/tree.min.js}" type="text/javascript"></script>
 <script th:src="@{/js/tree-init-channel.js}" type="text/javascript"></script>
 <script th:src="@{/js/dropzone.min.js}" type="text/javascript"></script>
-<script th:src="@{/js/upload-cover.js}" type="text/javascript" th:if="${channelId == 1 || channelId == 3 ||  channelId == 4 || channelId == 5 || channelId == 6 || channelId == 7}"></script>
+<script th:src="@{/js/upload-cover.js}" type="text/javascript"
+        th:if="${channelId == 1 || channelId == 3 ||  channelId == 4 || channelId == 5 || channelId == 6 || channelId == 7}"></script>
 <script th:src="@{/js/upload-attachments.js}" type="text/javascript" th:if="${channelId == 1}"></script>
-<script th:src="@{/js/upload-pic.js}" type="text/javascript" th:if="${channelId == 2 || channelId == 8 || channelId == 9}"></script>
+<script th:src="@{/js/upload-pic.js}" type="text/javascript"
+        th:if="${channelId == 2 || channelId == 8 || channelId == 9}"></script>
 <script th:src="@{/js/upload-path-rubbings.js}" type="text/javascript" th:if="${channelId == 3}"></script>
 <script th:src="@{/js/upload-path-audio.js}" type="text/javascript" th:if="${channelId == 4}"></script>
 <script th:src="@{/js/upload-path-video.js}" type="text/javascript" th:if="${channelId == 5}"></script>
@@ -285,24 +312,50 @@
 <script th:src="@{/js/touchspin.js}" type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+        function markCircle(cleft, ctop) {
+            $('.drag-circle').remove();
+            cleft = parseInt(cleft) + parseInt($(".viewer-move").css("margin-left").replace("px", ""));
+            ctop = parseInt(ctop) + parseInt($(".viewer-move").css("margin-top").replace("px", ""));
+            //红色圆圈
+            var div = $('<div class="drag-circle">dfs</div>');
+            div.css({
+                left: cleft + "px",
+                top: ctop + "px"
+            });
+            $(".viewer-move").parent()[0].append(div[0]);
+        }
         $("#btnPosition").click(function () {
             if ($("#path").val() != "") {
+                var ct, cl;
                 var image = new Image();
                 image.src = '/contents' + $("#path").val();
+                image.id = "viewimage";
                 var viewer = new Viewer(image, {
-                    shown: function (e) {
-                        console.log(e.path[0]);
-                        var imgPre = document.getElementsByClassName("viewer-move viewer-transition");
-                        console.log(imgPre);
-                        e.path[0].onclick = function (e) {
-                            console.log(e);
+                    zoomable: false,
+                    viewed: function (ev) {
+                        if($("#position").val() != "") {
+                            cl = $('#position').val().split(",")[0];
+                            ct = $('#position').val().split(",")[1];
+                            markCircle(cl, ct);
+                        }
+                        $(".viewer-move.viewer-transition")[0].addEventListener('dblclick', function (e) {
+                            markCircle(e.offsetX - 8, e.offsetY - 8);
+                            $('#position').val((e.offsetX - 8) + ',' + (e.offsetY - 8));
+                        });
+                    },
+                    moved: function (ev) {
+                        if($("#position").val() != "") {
+                            cl = $('#position').val().split(",")[0];
+                            ct = $('#position').val().split(",")[1];
+                            markCircle(cl, ct);
                         }
                     },
                     hidden: function () {
                         viewer.destroy();
                     }
                 });
-                viewer.show();
+                viewer.view();
+
             } else {
                 toastr.options = {
                     "closeButton": true,
@@ -310,7 +363,7 @@
                     "progressBar": true,
                     "positionClass": "toast-top-center"
                 };
-                toastr.warning("图片不存在，请上传", "提示");
+                toastr.warning("图片不存在，请先上传", "提示");
             }
         });
         // 标签输入框
@@ -342,7 +395,7 @@
             $("#contentform").submit();
         });
         $("#journalId").select2({
-            escapeMarkup: function(m) {
+            escapeMarkup: function (m) {
                 return m;
             }
         });
@@ -367,7 +420,7 @@
         });
         // TreeView.init();
         var DataSourceTree = function (options) {
-            this._data  = options.data;
+            this._data = options.data;
             this._delay = options.delay;
         };
         DataSourceTree.prototype = {
@@ -376,16 +429,17 @@
                 var $data = null
                 if (!("name" in options) && !("type" in options)) {
                     $data = self._data;//the root tree
-                    callback({ data: $data });
+                    callback({data: $data});
                     return;
-                }
-                else if ("type" in options && options.type == "folder") {
+                } else if ("type" in options && options.type == "folder") {
                     if ("additionalParameters" in options && "children" in options.additionalParameters)
                         $data = options.additionalParameters.children || {};
                     else $data = {}//no data
                 }
                 if ($data != null)//this setTimeout is only for mimicking some random delay
-                    setTimeout(function () { callback({ data: $data }); }, parseInt(Math.random() * 500) + 200);
+                    setTimeout(function () {
+                        callback({data: $data});
+                    }, parseInt(Math.random() * 500) + 200);
             }
         };
         // INITIALIZING TREE
@@ -394,28 +448,42 @@
                 {
                     name: [[${parentChannel.title}]],
                     type: [[${#lists.size(parentChannel.childChannels) > 0 ? 'folder' : 'item'}]],
-                    additionalParameters: { id: '[[${parentChannel.id}]]',
-                    [# th:if="${parentChannel.childChannels.size() > 0}"]
-                    children: [
-                        [# th:each="childChannel : ${parentChannel.childChannels}"]
-                            { name: [[${childChannel.title}]], type: 'item', additionalParameters: { id: '[[${childChannel.id}]]' } },
-                        [/]
-                    ],
-                    [/]
-                    },
-                },
-            ],
-            delay: 200
-        });
+                    additionalParameters: {
+                        id: '[[${parentChannel.id}]]',
+                        [# th:if = "${parentChannel.childChannels.size() > 0}"]
+            children: [
+                [# th
+    :
+        each = "childChannel : ${parentChannel.childChannels}"
+    ]
+        {
+            name: [[${childChannel.title}]], type
+        :
+            'item', additionalParameters
+        :
+            {
+                id: '[[${childChannel.id}]]'
+            }
+        }
+    ,
+        [/]
+        ],
+            [/]
+    },
+    },
+    ],
+        delay: 200
+    })
+        ;
         $('#channelTree').tree({
             dataSource: treeDataSource,
             loadingHTML: '<div class="tree-loading"><i class="ace-icon fa fa-refresh fa-spin blue"></i></div>',
             folderSelect: true
-        }).on('selected.fu.tree', function(e) {
+        }).on('selected.fu.tree', function (e) {
             $("#channelId").val($('#channelTree').tree('selectedItems')[0].additionalParameters.id);
             $("#channelTitle").val($('#channelTree').tree('selectedItems')[0].name);
             $("#channelDiv").hide();
-        }).on('closed.fu.tree', function(e) { // 只有一级菜单
+        }).on('closed.fu.tree', function (e) { // 只有一级菜单
             $("#channelId").val(treeDataSource._data[0].additionalParameters.id);
             $("#channelTitle").val(treeDataSource._data[0].name);
             $("#channelDiv").hide();
