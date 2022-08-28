@@ -1,13 +1,13 @@
 package com.starrysky.starcms.content.dao;
 
 import com.starrysky.starcms.entity.Content;
-import com.starrysky.starcms.util.Constant;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -71,4 +71,7 @@ public interface ContentDao extends JpaRepository<Content, Integer>, JpaSpecific
         };
         return this.findAll(specification, PageRequest.of((pageNum - 1), pageSize, Sort.Direction.DESC, "addTime"));
     }
+
+    @Query(value = "select DATE_FORMAT(c.add_time, '%Y-%m-%d') myaddtime, count(c.id) from ct_content c where c.user_id = ?1 and c.status = ?2 and c.add_time between ?3 and ?4 group by myaddtime", nativeQuery = true)
+    public List<Object[]> countByUserIdAndYear(Integer userId, int status, String begin, String end);
 }
