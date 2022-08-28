@@ -29,4 +29,10 @@ public class ContentCountController {
         SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return this.contentCountService.countByUserAndYear(securityUser.getId());
     }
+
+    @PostMapping("/countstackedline")
+    @ResponseBody
+    public LinkedHashMap<String, LinkedHashMap<String, Integer>> countStackedLine() {
+        return this.contentCountService.countByMonth();
+    }
 }

@@ -74,4 +74,10 @@ public interface ContentDao extends JpaRepository<Content, Integer>, JpaSpecific
 
     @Query(value = "select DATE_FORMAT(c.add_time, '%Y-%m-%d') myaddtime, count(c.id) from ct_content c where c.user_id = ?1 and c.status = ?2 and c.add_time between ?3 and ?4 group by myaddtime", nativeQuery = true)
     public List<Object[]> countByUserIdAndYear(Integer userId, int status, String begin, String end);
+
+    @Query(value = "select DATE_FORMAT(c.add_time, '%Y-%m-%d') myaddtime, count(c.id) from ct_content c where c.channel_id = ?1 and c.status = ?2 and c.add_time between ?3 and ?4 group by myaddtime", nativeQuery = true)
+    public List<Object[]> countByChannelAndMonth(int channelId, int status, String begin, String end);
+
+    @Query(value = "select DATE_FORMAT(c.add_time, '%Y-%m-%d') myaddtime, count(c.id) from ct_content c where c.status = ?1 and c.add_time between ?2 and ?3 group by myaddtime", nativeQuery = true)
+    public List<Object[]> countByMonth(int status, String begin, String end);
 }

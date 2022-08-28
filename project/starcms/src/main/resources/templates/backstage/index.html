@@ -97,6 +97,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div id="heatchart" class="col-md-12" style="width: 960px;height:600px;" sec:authorize="hasRole('entry')"></div>
+                    <div id="stackedline" class="col-md-12" style="width: 960px;height:600px;" sec:authorize="hasRole('admin')"></div>
                 </div>
             </div>
         </div>
@@ -108,7 +109,8 @@
     <!-- body content end-->
 </section>
 <div th:replace="backstage/include/jss"></div>
-<script th:src="@{/echarts/echarts.min.js}" type="text/javascript" sec:authorize="hasRole('entry')"></script>
-<script th:src="@{/echarts/theme/wonderland.js}" type="text/javascript" sec:authorize="hasRole('entry')"></script>
+<script th:src="@{/echarts/echarts.min.js}" type="text/javascript" sec:authorize="hasAnyRole('admin', 'entry')"></script>
+<script th:src="@{/echarts/theme/wonderland.js}" type="text/javascript" sec:authorize="hasAnyRole('admin', 'entry')"></script>
 <script th:src="@{/echarts/personheat.js}" type="text/javascript" sec:authorize="hasRole('entry')"></script>
+<script th:src="@{/echarts/stackedline.js}" type="text/javascript" sec:authorize="hasRole('admin')"></script>
 </html>
