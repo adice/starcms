@@ -448,33 +448,19 @@
                 {
                     name: [[${parentChannel.title}]],
                     type: [[${#lists.size(parentChannel.childChannels) > 0 ? 'folder' : 'item'}]],
-                    additionalParameters: {
-                        id: '[[${parentChannel.id}]]',
+                    additionalParameters: {id: '[[${parentChannel.id}]]',
                         [# th:if = "${parentChannel.childChannels.size() > 0}"]
-            children: [
-                [# th
-    :
-        each = "childChannel : ${parentChannel.childChannels}"
-    ]
-        {
-            name: [[${childChannel.title}]], type
-        :
-            'item', additionalParameters
-        :
-            {
-                id: '[[${childChannel.id}]]'
-            }
-        }
-    ,
-        [/]
-        ],
-            [/]
-    },
-    },
-    ],
-        delay: 200
-    })
-        ;
+                             children: [
+                                [# th:each = "childChannel : ${parentChannel.childChannels}"]
+                                    {name: [[${childChannel.title}]], type:'item', additionalParameters: {id: '[[${childChannel.id}]]'} },
+                                [/]
+                             ],
+                         [/]
+                    },
+                },
+            ],
+            delay: 200
+        });
         $('#channelTree').tree({
             dataSource: treeDataSource,
             loadingHTML: '<div class="tree-loading"><i class="ace-icon fa fa-refresh fa-spin blue"></i></div>',

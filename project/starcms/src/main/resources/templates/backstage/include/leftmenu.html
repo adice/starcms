@@ -49,11 +49,9 @@
             <li>
                 <h3 class="navigation-title">Extra</h3>
             </li>
-            <li class="menu-list"><a href=""><i class="fa fa-bar-chart-o"></i> <span>报表统计</span></a>
+            <li sec:authorize="hasRole('admin')" th:class="${activemenu eq 'countmenu' ? 'menu-list nav-active' : 'menu-list'}"><a href=""><i class="fa fa-bar-chart-o"></i> <span>报表统计</span></a>
                 <ul class="child-list">
-                    <li><a href="flot-chart.html"> Flot Charts</a></li>
-                    <li><a href="morris-chart.html"> Morris Charts</a></li>
-                    <li><a href="chartjs.html"> Chartjs</a></li>
+                    <li th:class="${activemenu eq 'countmenu' ? 'active' : ''}"><a th:href="@{/backstage/contentcount/list}"> 数据录入统计并导出</a></li>
                 </ul>
             </li>
             <li sec:authorize="hasRole('admin')" th:class="${activemenu eq 'sysmenu' ? 'menu-list nav-active' : 'menu-list'}"><a href="javascript;"><i class="fa fa-bar-chart-o"></i> <span>系统管理</span></a>

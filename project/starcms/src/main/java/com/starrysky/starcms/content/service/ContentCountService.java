@@ -87,4 +87,8 @@ public class ContentCountService {
         }
         return chartMap;
     }
+
+    public List<Object[]> countByDateGroupByUser(String beginTime, String endTime) {
+        return this.contentDao.countByDateGroupByUser(beginTime, endTime, Constant.CONTENT_STATUS_AUDITSUCCESS);
+    }
 }
