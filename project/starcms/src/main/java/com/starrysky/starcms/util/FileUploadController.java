@@ -16,24 +16,24 @@ import java.util.List;
  * @Date 2020-03-30 16:40
  */
 @RestController
-public class FileUtilController {
+public class FileUploadController {
     @Resource
-    private UploadFileUtil uploadFileUtil;
+    private FileUploadUtil fileUploadUtil;
 
     @RequestMapping("/backstage/uploadpic")
-    public List<UploadResponse> uploadPic(@RequestParam(value = "uploadfiles") MultipartFile[] files) {
-        List<UploadResponse> list = new ArrayList<>();
+    public List<FileUploadResponse> uploadPic(@RequestParam(value = "uploadfiles") MultipartFile[] files) {
+        List<FileUploadResponse> list = new ArrayList<>();
         for(MultipartFile file : files) {
-            list.add(uploadFileUtil.upoloadPic(file, UploadFileUtil.FILE_NAME_UUID));
+            list.add(fileUploadUtil.upoloadFile(file, FileUploadUtil.FILE_NAME_UUID));
         }
         return list;
     }
 
     @RequestMapping("/backstage/uploadfile")
-    public List<UploadResponse> uploadFile(@RequestParam(value = "uploadfiles") MultipartFile[] files) {
-        List<UploadResponse> list = new ArrayList<>();
+    public List<FileUploadResponse> uploadFile(@RequestParam(value = "uploadfiles") MultipartFile[] files) {
+        List<FileUploadResponse> list = new ArrayList<>();
         for(MultipartFile file : files) {
-            list.add(uploadFileUtil.upoloadPic(file, UploadFileUtil.FILE_NAME_UUID));
+            list.add(fileUploadUtil.upoloadFile(file, FileUploadUtil.FILE_NAME_UUID));
         }
         return list;
     }

@@ -6,7 +6,7 @@ package com.starrysky.starcms.util;
  * @Author adi
  * @Date 2022-08-05 14:50
  */
-public class UploadResponse {
+public class FileUploadResponse {
     private int code;
     private String msg;
     private String url;

@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @ClassName UploadWebAppConfigurer
- * @Description
+ * @Description 配置虚拟路径，从而前端可以访问到
  * @Author adi
  * @Date 2020-03-28 15:49
  */
