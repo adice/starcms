@@ -2,7 +2,7 @@ $(document).ready(function () {
     // 上传附件
     Dropzone.autoDiscover = false;
     $("#dropzattachments").dropzone({
-        url: "/backstage/uploadfile",
+        url: "/backstage/uploadpdf",
         paramName: "uploadfiles",
         maxFilesize: 20,
         createImageThumbnails: false,

@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -24,6 +26,61 @@ public class FileUploadUtil {
     public static final int FILE_NAME_UUID = 2;
     public static final int FILE_NAME_ORIGINAL = 3;
 
+    public FileUploadResponse uploadPic(MultipartFile file) {
+        Set<FileTypeEnum> fileTypeEnumSet = new HashSet<>();
+        fileTypeEnumSet.add(FileTypeEnum.JPEG);
+        fileTypeEnumSet.add(FileTypeEnum.JPG);
+        fileTypeEnumSet.add(FileTypeEnum.BMP);
+        fileTypeEnumSet.add(FileTypeEnum.BMP_16);
+        fileTypeEnumSet.add(FileTypeEnum.BMP_24);
+        fileTypeEnumSet.add(FileTypeEnum.BMP_256);
+        fileTypeEnumSet.add(FileTypeEnum.PNG);
+        fileTypeEnumSet.add(FileTypeEnum.GIF);
+        fileTypeEnumSet.add(FileTypeEnum.TIFF);
+        return checkAndUploadFile(file, fileTypeEnumSet);
+    }
+
+    public FileUploadResponse uploadPdf(MultipartFile file) {
+        Set<FileTypeEnum> fileTypeEnumSet = new HashSet<>();
+        fileTypeEnumSet.add(FileTypeEnum.PDF);
+        return checkAndUploadFile(file, fileTypeEnumSet);
+    }
+
+    public FileUploadResponse uploadVideo(MultipartFile file) {
+        Set<FileTypeEnum> fileTypeEnumSet = new HashSet<>();
+        fileTypeEnumSet.add(FileTypeEnum.MP4);
+        fileTypeEnumSet.add(FileTypeEnum.AVI);
+        fileTypeEnumSet.add(FileTypeEnum.FLV);
+        fileTypeEnumSet.add(FileTypeEnum.MOV);
+        return checkAndUploadFile(file, fileTypeEnumSet);
+    }
+
+    public FileUploadResponse uploadAudio(MultipartFile file) {
+        Set<FileTypeEnum> fileTypeEnumSet = new HashSet<>();
+        fileTypeEnumSet.add(FileTypeEnum.MP3);
+        fileTypeEnumSet.add(FileTypeEnum.WAV);
+        return checkAndUploadFile(file, fileTypeEnumSet);
+    }
+
+    public FileUploadResponse uploadZip(MultipartFile file) {
+        Set<FileTypeEnum> fileTypeEnumSet = new HashSet<>();
+        fileTypeEnumSet.add(FileTypeEnum.ZIP);
+        fileTypeEnumSet.add(FileTypeEnum.RAR);
+        return checkAndUploadFile(file, fileTypeEnumSet);
+    }
+
+    private FileUploadResponse checkAndUploadFile(MultipartFile file, Set<FileTypeEnum> fileTypeEnumSet) {
+        if(FileTypeUtil.checkFile(file, fileTypeEnumSet)) {
+            return uploadFile(file, FILE_NAME_UUID);
+        } else {
+            FileUploadResponse fileUploadResponse = new FileUploadResponse();
+            fileUploadResponse.setCode(2);
+            fileUploadResponse.setMsg("上传类型不符合要求");
+            fileUploadResponse.setUrl("/");
+            return fileUploadResponse;
+        }
+    }
+
     /**
      * @param file      上传的文件
      * @param nameStyle 命名方式，目前支持3种：1取当前时间命名，2UUID命名，3上传文件原名命名
@@ -31,7 +88,8 @@ public class FileUploadUtil {
      * @description 上传文件，以月为单位分文件夹存储
      * @author adi
      */
-    public FileUploadResponse upoloadFile(MultipartFile file, int nameStyle) {
+    private FileUploadResponse uploadFile(MultipartFile file, int nameStyle) {
+
         // 获取上传文件后缀
         String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
         // 根据要求设置上传后的文件名

@@ -2,7 +2,7 @@ $(document).ready(function () {
     // 上传内容
     Dropzone.autoDiscover = false;
     $("#dropzpath").dropzone({
-        url: "/backstage/uploadfile",
+        url: "/backstage/uploadzip",
         paramName: "uploadfiles",
         maxFiles: 1,
         maxFilesize: 20,

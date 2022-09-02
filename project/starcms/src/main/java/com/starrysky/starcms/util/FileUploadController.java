@@ -24,16 +24,43 @@ public class FileUploadController {
     public List<FileUploadResponse> uploadPic(@RequestParam(value = "uploadfiles") MultipartFile[] files) {
         List<FileUploadResponse> list = new ArrayList<>();
         for(MultipartFile file : files) {
-            list.add(fileUploadUtil.upoloadFile(file, FileUploadUtil.FILE_NAME_UUID));
+            list.add(fileUploadUtil.uploadPic(file));
         }
         return list;
     }
 
-    @RequestMapping("/backstage/uploadfile")
-    public List<FileUploadResponse> uploadFile(@RequestParam(value = "uploadfiles") MultipartFile[] files) {
+    @RequestMapping("/backstage/uploadpdf")
+    public List<FileUploadResponse> uploadPdf(@RequestParam(value = "uploadfiles") MultipartFile[] files) {
         List<FileUploadResponse> list = new ArrayList<>();
         for(MultipartFile file : files) {
-            list.add(fileUploadUtil.upoloadFile(file, FileUploadUtil.FILE_NAME_UUID));
+            list.add(fileUploadUtil.uploadPdf(file));
+        }
+        return list;
+    }
+
+    @RequestMapping("/backstage/uploadvideo")
+    public List<FileUploadResponse> uploadVideo(@RequestParam(value = "uploadfiles") MultipartFile[] files) {
+        List<FileUploadResponse> list = new ArrayList<>();
+        for(MultipartFile file : files) {
+            list.add(fileUploadUtil.uploadVideo(file));
+        }
+        return list;
+    }
+
+    @RequestMapping("/backstage/uploadaudio")
+    public List<FileUploadResponse> uploadAudio(@RequestParam(value = "uploadfiles") MultipartFile[] files) {
+        List<FileUploadResponse> list = new ArrayList<>();
+        for(MultipartFile file : files) {
+            list.add(fileUploadUtil.uploadAudio(file));
+        }
+        return list;
+    }
+
+    @RequestMapping("/backstage/uploadzip")
+    public List<FileUploadResponse> uploadZip(@RequestParam(value = "uploadfiles") MultipartFile[] files) {
+        List<FileUploadResponse> list = new ArrayList<>();
+        for(MultipartFile file : files) {
+            list.add(fileUploadUtil.uploadZip(file));
         }
         return list;
     }
