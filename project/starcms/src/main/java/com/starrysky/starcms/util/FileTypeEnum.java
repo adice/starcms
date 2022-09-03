@@ -10,9 +10,9 @@ public enum FileTypeEnum {
     /**
      * JPEG  (jpg)
      */
-    JPEG("JPEG", "FFD8FF"),
+    JPEG("JPEG", "FFD8FFE0"),
 
-    JPG("JPG", "FFD8FF"),
+    JPG("JPG", "FFD8FFE"),
 
     /**
      * PNG
@@ -35,36 +35,6 @@ public enum FileTypeEnum {
     BMP("BMP", "424D"),
 
     /**
-     * 16色位图(bmp)
-     */
-    BMP_16("BMP", "424D228C010000000000"),
-
-    /**
-     * 24位位图(bmp)
-     */
-    BMP_24("BMP", "424D8240090000000000"),
-
-    /**
-     * 256色位图(bmp)
-     */
-    BMP_256("BMP", "424D8E1B030000000000"),
-
-    /**
-     * CAD  (dwg)
-     */
-    DWG("DWG", "41433130"),
-
-    /**
-     * Adobe photoshop  (psd)
-     */
-    PSD("PSD", "38425053"),
-
-    /**
-     * Rich Text Format  (rtf)
-     */
-    RTF("RTF", "7B5C727466"),
-
-    /**
      * XML
      */
     XML("XML", "3C3F786D6C"),
@@ -75,20 +45,14 @@ public enum FileTypeEnum {
     HTML("HTML", "68746D6C3E"),
 
     /**
-     * Email [thorough only] (eml)
-     */
-    EML("EML", "44656C69766572792D646174653A"),
-
-    /**
-     * doc;xls;dot;ppt;xla;ppa;pps;pot;msi;sdw;db
-     */
-    OLE2("OLE2", "0xD0CF11E0A1B11AE1"),
-
-    /**
      * Microsoft Word/Excel 注意：word 和 excel的文件头一样
      */
     XLS("XLS", "D0CF11E0"),
 
+    /**
+     * Microsoft Word/Excel 2007以上版本文件 注意：word 和 excel的文件头一样 504B030414000600080000002100
+     */
+    XLSX("XLSX", "504B0304"),
     /**
      * Microsoft Word/Excel 注意：word 和 excel的文件头一样
      */
@@ -100,19 +64,9 @@ public enum FileTypeEnum {
     DOCX("DOCX", "504B0304"),
 
     /**
-     * Microsoft Word/Excel 2007以上版本文件 注意：word 和 excel的文件头一样 504B030414000600080000002100
-     */
-    XLSX("XLSX", "504B0304"),
-
-    /**
-     * Microsoft Access (mdb)
-     */
-    MDB("MDB", "5374616E64617264204A"),
-
-    /**
      * Adobe Acrobat (pdf) 255044462D312E
      */
-    PDF("PDF", "25504446"),
+    PDF("PDF", "255044462D312E"),
 
     /**
      * WAVE (wav)
@@ -123,21 +77,6 @@ public enum FileTypeEnum {
      * AVI
      */
     AVI("AVI", "41564920"),
-
-    /**
-     * Real Audio (ram)
-     */
-    RAM("RAM", "2E7261FD"),
-
-    /**
-     * Real Media (rm) rmvb/rm相同
-     */
-    RM("RM", "2E524D46"),
-
-    /**
-     * Real Media (rm) rmvb/rm相同
-     */
-    RMVB("RMVB", "2E524D46000000120001"),
 
     /**
      * MPEG (mpg)
@@ -162,12 +101,12 @@ public enum FileTypeEnum {
     /**
      * MP3
      */
-    MP3("MP3", "49443303000000002176"),
+    MP3("MP3", "4944330300"),
 
     /**
      * FLV
      */
-    FLV("FLV", "464C5601050000000900"),
+    FLV("FLV", "464C5601"),
 
     /**
      * EXE Archive
@@ -177,12 +116,12 @@ public enum FileTypeEnum {
     /**
      * ZIP Archive
      */
-    ZIP("ZIP", ""),
+    ZIP("ZIP", "504B0304"),
 
     /**
      * RAR Archive
      */
-    RAR("RAR", "");
+    RAR("RAR", "52617221");
 
     /**
      * 后缀 大写字母

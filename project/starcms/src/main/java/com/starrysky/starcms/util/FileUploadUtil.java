@@ -31,19 +31,16 @@ public class FileUploadUtil {
         fileTypeEnumSet.add(FileTypeEnum.JPEG);
         fileTypeEnumSet.add(FileTypeEnum.JPG);
         fileTypeEnumSet.add(FileTypeEnum.BMP);
-        fileTypeEnumSet.add(FileTypeEnum.BMP_16);
-        fileTypeEnumSet.add(FileTypeEnum.BMP_24);
-        fileTypeEnumSet.add(FileTypeEnum.BMP_256);
         fileTypeEnumSet.add(FileTypeEnum.PNG);
         fileTypeEnumSet.add(FileTypeEnum.GIF);
         fileTypeEnumSet.add(FileTypeEnum.TIFF);
-        return checkAndUploadFile(file, fileTypeEnumSet);
+        return checkAndUploadFile(file, fileTypeEnumSet, true);
     }
 
     public FileUploadResponse uploadPdf(MultipartFile file) {
         Set<FileTypeEnum> fileTypeEnumSet = new HashSet<>();
         fileTypeEnumSet.add(FileTypeEnum.PDF);
-        return checkAndUploadFile(file, fileTypeEnumSet);
+        return checkAndUploadFile(file, fileTypeEnumSet, true);
     }
 
     public FileUploadResponse uploadVideo(MultipartFile file) {
@@ -52,25 +49,25 @@ public class FileUploadUtil {
         fileTypeEnumSet.add(FileTypeEnum.AVI);
         fileTypeEnumSet.add(FileTypeEnum.FLV);
         fileTypeEnumSet.add(FileTypeEnum.MOV);
-        return checkAndUploadFile(file, fileTypeEnumSet);
+        return checkAndUploadFile(file, fileTypeEnumSet, false);
     }
 
     public FileUploadResponse uploadAudio(MultipartFile file) {
         Set<FileTypeEnum> fileTypeEnumSet = new HashSet<>();
         fileTypeEnumSet.add(FileTypeEnum.MP3);
         fileTypeEnumSet.add(FileTypeEnum.WAV);
-        return checkAndUploadFile(file, fileTypeEnumSet);
+        return checkAndUploadFile(file, fileTypeEnumSet, false);
     }
 
     public FileUploadResponse uploadZip(MultipartFile file) {
         Set<FileTypeEnum> fileTypeEnumSet = new HashSet<>();
         fileTypeEnumSet.add(FileTypeEnum.ZIP);
         fileTypeEnumSet.add(FileTypeEnum.RAR);
-        return checkAndUploadFile(file, fileTypeEnumSet);
+        return checkAndUploadFile(file, fileTypeEnumSet, true);
     }
 
-    private FileUploadResponse checkAndUploadFile(MultipartFile file, Set<FileTypeEnum> fileTypeEnumSet) {
-        if(FileTypeUtil.checkFile(file, fileTypeEnumSet)) {
+    private FileUploadResponse checkAndUploadFile(MultipartFile file, Set<FileTypeEnum> fileTypeEnumSet, boolean isCheckMagic) {
+        if(FileTypeUtil.checkFile(file, fileTypeEnumSet, isCheckMagic)) {
             return uploadFile(file, FILE_NAME_UUID);
         } else {
             FileUploadResponse fileUploadResponse = new FileUploadResponse();

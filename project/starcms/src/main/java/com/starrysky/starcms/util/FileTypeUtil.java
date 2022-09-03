@@ -2,6 +2,8 @@ package com.starrysky.starcms.util;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
@@ -15,14 +17,18 @@ import java.util.Set;
  */
 public class FileTypeUtil {
 
-    public static boolean checkFile(MultipartFile file, Set<FileTypeEnum> fileTypeSet) {
+    public static boolean checkFile(MultipartFile file, Set<FileTypeEnum> fileTypeSet, boolean isCheckMagic) {
         try {
             Set<String> suffixSet = new HashSet<>();
             for (FileTypeEnum fileTypeEnum : fileTypeSet) {
                 suffixSet.add(fileTypeEnum.getSuffix());
             }
             if (checkSuffix(file, suffixSet)) {
-                return checkMagicNumber(file, fileTypeSet);
+                if(isCheckMagic) {
+                    return checkMagicNumber(file, fileTypeSet);
+                } else {
+                    return true;
+                }
             } else {
                 return false;
             }
@@ -46,7 +52,7 @@ public class FileTypeUtil {
 
     private static boolean checkSuffix(MultipartFile file, Set<String> suffixSet) throws Exception {
         boolean checked = false;
-        String fileSuffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+        String fileSuffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
         for (String suffix : suffixSet) {
             if (suffix.toUpperCase().equalsIgnoreCase(fileSuffix)) {
                 checked = true;
@@ -81,5 +87,17 @@ public class FileTypeUtil {
             stringBuilder.append(hv);
         }
         return stringBuilder.toString();
+    }
+
+    public static void main(String[] args) {
+        try {
+            InputStream is = new FileInputStream("D:\\b.mp3");
+            byte[] fileHeader = new byte[8];
+            is.read(fileHeader);
+            String result = byteArray2Hex(fileHeader);
+            System.out.println(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
