@@ -122,11 +122,11 @@
                                         <label th:for="'cbdelete'+${contentstat.count}" th:text="${content.id}"></label>
                                     </label>
                                 </td>
-                                <td th:text="${content.title}"></td>
-                                <td th:text="${content.channel.title}"></td>
-                                <td class="hidden-xs" th:text="${content.user.name + '/' + content.user.realName}"></td>
-                                <td th:text="${content.viewCount}"></td>
-                                <td th:text="${#dates.format(content.addTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                <td th:utext="${content.title}"></td>
+                                <td th:utext="${content.channel.title}"></td>
+                                <td class="hidden-xs" th:utext="${content.user.name + '/' + content.user.realName}"></td>
+                                <td th:utext="${content.viewCount}"></td>
+                                <td th:utext="${#dates.format(content.addTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                                 <td><span class="label label-info label-mini" th:text="${content.status == 1 ? '草稿' : (content.status == 2 ? '审核中' : (content.status == 3 ? '审核通过' : (content.status == 4 ? '审核退回' : '')))}"></span></td>
                                 <td><span class="label label-info label-mini" th:text="${content.recommend ? '是' : '否'}"></span></td>
                                 <td class="hidden-xs">

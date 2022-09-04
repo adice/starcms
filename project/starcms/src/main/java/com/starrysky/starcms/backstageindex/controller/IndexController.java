@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @ClassName IndexController
+ * @ClassName IndexController1
  * @Description
  * @Author adi
- * @Date 2022-07-26 16:13
+ * @Date 2022-09-04 17:04
  */
 @Controller
 @RequestMapping("/backstage")

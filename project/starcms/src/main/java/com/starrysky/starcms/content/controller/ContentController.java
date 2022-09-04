@@ -12,6 +12,7 @@ import com.starrysky.starcms.contentrubbings.service.ContentRubbingsService;
 import com.starrysky.starcms.contentvideo.service.ContentVideoService;
 import com.starrysky.starcms.entity.*;
 import com.starrysky.starcms.journal.service.JournalService;
+import com.starrysky.starcms.security.HtmlUnEscapeUtil;
 import com.starrysky.starcms.security.SecurityUser;
 import com.starrysky.starcms.util.Constant;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -25,7 +26,6 @@ import org.springframework.web.context.request.WebRequest;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -210,6 +210,7 @@ public class ContentController {
                 case Constant.CHANNEL_MURAL:
                 case Constant.CHANNEL_PAINTING:
                     ContentPic contentPic = this.contentPicService.getByContent(content);
+                    contentPic = HtmlUnEscapeUtil.unEscapeContentPic(contentPic);
                     request.setAttribute("contentaddtion", contentPic);
                     break;
                 case Constant.CHANNEL_RUBBINGS:
@@ -243,6 +244,7 @@ public class ContentController {
                     }
                     break;
             }
+            content = HtmlUnEscapeUtil.unEscapeContent(content);
             request.setAttribute("content", content);
             request.setAttribute("activechildmenu", "ccmenu" + content.getChannel().getId());
             request.setAttribute("activemenu", "contentmenu");

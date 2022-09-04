@@ -44,7 +44,7 @@ public class ContentCountService {
             heatMap.put(dfMap.format(begin.plusDays(i)), 0);
         }
 
-        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         List<Object[]> list = this.contentDao.countByUserIdAndYear(userId, Constant.CONTENT_STATUS_AUDITSUCCESS, begin.format(df), now.format(df));
         for (Object[] obj : list) {
             heatMap.put(obj[0].toString(), Integer.valueOf(obj[1].toString()));
@@ -73,7 +73,9 @@ public class ContentCountService {
             chartMap.put(channel.getTitle(), countMap1);
         }
         // 统计所有栏目数据
-        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        System.out.println(begin.format(df));
+        System.out.println(now.format(df));
         List<Object[]> listAll = this.contentDao.countByMonth(Constant.CONTENT_STATUS_AUDITSUCCESS, begin.format(df), now.format(df));
         for (Object[] obj : listAll) {
             chartMap.get("全部").put(obj[0].toString(), Integer.valueOf(obj[1].toString()));

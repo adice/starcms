@@ -4,7 +4,6 @@ import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import java.util.stream.Stream;
 
 /**
  * @ClassName XssHttpServletRequestWrapper
@@ -20,20 +19,31 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     @Override
     public String getHeader(String name) {
         String value = super.getHeader(name);
-        return HtmlUtils.htmlEscape(value);
+        if(value != null)
+            return HtmlUtils.htmlEscape(value);
+        else
+            return null;
     }
 
     @Override
     public String getParameter(String name) {
         String value = super.getParameter(name);
-        return HtmlUtils.htmlEscape(value);
+        if(value != null)
+            return HtmlUtils.htmlEscape(value);
+        else
+            return null;
     }
 
     @Override
     public String[] getParameterValues(String name) {
-        String[] values = super.getParameterValues(name);
-        return values != null ? (String[]) Stream.of(values)
-                .map(HtmlUtils::htmlEscape).toArray() :
-                super.getParameterValues(name);
+        String[] parameterValues = super.getParameterValues(name);
+        if (parameterValues == null) {
+            return null;
+        }
+        for (int i = 0; i < parameterValues.length; i++) {
+            String value = parameterValues[i];
+            parameterValues[i] = HtmlUtils.htmlEscape(value);
+        }
+        return parameterValues;
     }
 }
