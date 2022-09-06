@@ -125,12 +125,12 @@ public class LuceneDao {
                 String title = getHtmlHighlight(booleanQuery, "title", doc.get("title"));
                 content.setTitle(title == null ? doc.get("title") : title);
                 String shorttxt = getHtmlHighlight(booleanQuery, "shorttxt", doc.get("shorttxt"));
-                if(shorttxt == null) {
+                if(shorttxt != null) {
                     StringBuffer stringBuffer = new StringBuffer(doc.get("shorttxt"));
                     stringBuffer = stringBuffer.replace(stringBuffer.lastIndexOf("..."), stringBuffer.lastIndexOf("...") + 3, "<font color='red'>...</font>");
                     shorttxt = stringBuffer.toString();
                 }
-                content.setTxt(shorttxt);
+                content.setTxt(shorttxt == null ? doc.get("shorttxt") : shorttxt);
                 Channel channel = new Channel();
                 channel.setTitle(doc.get("channelTitle"));
                 content.setChannel(channel);

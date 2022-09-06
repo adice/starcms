@@ -5,10 +5,8 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
@@ -18,8 +16,6 @@ import java.io.IOException;
  * @Author adi
  * @Date 2022-09-03 17:24
  */
-@WebFilter("/*")
-@Component
 public class XssFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -28,9 +24,11 @@ public class XssFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        System.out.println("xss");
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         XssHttpServletRequestWrapper xssRequestWrapper = new XssHttpServletRequestWrapper(request);
         filterChain.doFilter(xssRequestWrapper, servletResponse);
+        XssUnEscapeHttpServletRequestWrapper xssUnEscapeRequestWrapper = new XssUnEscapeHttpServletRequestWrapper(xssRequestWrapper);
     }
 
     @Override

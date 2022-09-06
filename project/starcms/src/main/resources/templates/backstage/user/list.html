@@ -51,10 +51,10 @@
                         <div class="panel-body">
                             <form class="form-inline" id="searchForm" name="searchForm" action="/backstage/user/list" method="post">
                                 <div class="form-group">
-                                    用户名：<input type="text" name="name" class="form-control" placeholder="登录的账号" th:value="${param.name}">
+                                    用户名：<input type="text" name="name" class="form-control" placeholder="登录的账号" th:value="${name}">
                                 </div>
                                 <div class="form-group">
-                                    真实姓名：<input type="text" name="realName" class="form-control" placeholder="真实姓名" th:value="${param.realName}">
+                                    真实姓名：<input type="text" name="realName" class="form-control" placeholder="真实姓名" th:value="${realName}">
                                 </div>
                                 <label class="checkbox-custom inline check-success">
                                     <input type="checkbox" name="state" value="2" id="checkbox1" th:checked="${param.state} != null ? (${param.state[0]} == 2 ? 'true' : 'false') : 'false'" > <label for="checkbox1">禁用</label>
@@ -99,8 +99,8 @@
                                         <label th:for="'cbdelete'+${userstat.count}" th:text="${userstat.count}"></label>
                                     </label>
                                 </td>
-                                <td th:text="${user.name}"></td>
-                                <td class="hidden-xs" th:text="${user.realName}"></td>
+                                <td th:utext="${user.name}"></td>
+                                <td class="hidden-xs" th:utext="${user.realName}"></td>
                                 <td th:text="${#dates.format(user.lastLoginTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                                 <td th:text="${user.loginCount}"></td>
                                 <td><span class="label label-info label-mini" th:text="${user.state == 1 ? '否' : '是'}"></span></td>

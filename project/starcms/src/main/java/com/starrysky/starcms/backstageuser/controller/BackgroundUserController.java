@@ -4,12 +4,14 @@ import com.starrysky.starcms.backstageuser.service.BackgroundUserService;
 import com.starrysky.starcms.entity.BackgroundRole;
 import com.starrysky.starcms.entity.BackgroundUser;
 import com.starrysky.starcms.role.service.BackgroundRoleService;
+import com.starrysky.starcms.security.HtmlUnEscapeUtil;
 import com.starrysky.starcms.security.SecurityUser;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -73,6 +75,11 @@ public class BackgroundUserController {
         try {
             Page<BackgroundUser> page = this.backgroundUserService.list(name, realName, state, pageNum, pageSize);
             request.setAttribute("page", page);
+            // 反转译HTML内容
+            if(name != null)
+                request.setAttribute("name", HtmlUtils.htmlUnescape(name));
+            if(realName != null)
+                request.setAttribute("realName", HtmlUtils.htmlUnescape(realName));
             request.setAttribute("activemenu", "usermenu");
             return "/backstage/user/list";
         } catch (Exception e) {
@@ -208,6 +215,7 @@ public class BackgroundUserController {
             user.setRoles(null);
             request.setAttribute("roles", rolesMap);
             request.setAttribute("activemenu", "usermenu");
+            user = HtmlUnEscapeUtil.unEscapeUser(user); //反转译Html内容
             request.setAttribute("edituser", user);
             return "/backstage/user/edit";
         }

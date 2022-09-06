@@ -52,7 +52,7 @@
                         <div class="panel-body">
                             <form class="form-inline" id="searchForm" name="searchForm" th:action="@{/backstage/journal/list}" method="post">
                                 <div class="form-group">
-                                    报刊名：<input type="text" name="title" class="form-control" placeholder="报刊名" th:value="${param.title}">
+                                    报刊名：<input type="text" name="title" class="form-control" placeholder="报刊名" th:value="${title}">
                                 </div>
                                 <label class="checkbox-custom inline check-success">
                                     <input type="checkbox" name="state" value="2" id="checkbox1" th:checked="${param.state} != null ? (${param.state[0]} == 2 ? 'true' : 'false') : 'false'" > <label for="checkbox1">禁用</label>

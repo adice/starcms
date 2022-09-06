@@ -31,7 +31,7 @@
             <ul class="notification-menu">
                 <li>
                     <form id="allSearchForm" class="search-content" th:action="@{/backstage/lucene/search}" method="post">
-                        <input type="text" class="form-control" name="keywords" th:value="${param.keywords}" placeholder="Search...">
+                        <input type="text" class="form-control" name="keywords" th:value="${keywords}" placeholder="Search...">
                         <input type="hidden" id="allPageNum" name="allPageNum" th:value="${param.allPageNum}" >
                         <input type="hidden" id="allPageSize" name="allPageSize" th:value="${param.allPageSize}" >
                     </form>

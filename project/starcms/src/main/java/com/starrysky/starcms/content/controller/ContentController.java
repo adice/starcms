@@ -23,6 +23,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -120,6 +121,14 @@ public class ContentController {
             Page<Content> page = this.contentService.list(title, recommend, status, channelIds, userId, name, realName, pageNum, pageSize);
             request.setAttribute("page", page);
             request.setAttribute("activemenu", "contentmenu");
+            // 反转译HTML内容
+            if(title != null)
+                request.setAttribute("title", HtmlUtils.htmlUnescape(title));
+            if(name != null)
+                request.setAttribute("name", HtmlUtils.htmlUnescape(name));
+            if(realName != null)
+                request.setAttribute("realName", HtmlUtils.htmlUnescape(realName));
+
             if (channelId == null) {
                 request.setAttribute("activechildmenu", "ccmenu");
             } else {
@@ -204,41 +213,51 @@ public class ContentController {
             switch (content.getChannel().getId()) {
                 case Constant.CHANNEL_BOOK:
                     ContentBook contentBook = this.contentBookService.getByContent(content);
+                    contentBook = HtmlUnEscapeUtil.unEscapeContentBook(contentBook);   // 反转译html
                     request.setAttribute("contentaddtion", contentBook);
                     break;
                 case Constant.CHANNEL_PIC:
                 case Constant.CHANNEL_MURAL:
                 case Constant.CHANNEL_PAINTING:
                     ContentPic contentPic = this.contentPicService.getByContent(content);
-                    contentPic = HtmlUnEscapeUtil.unEscapeContentPic(contentPic);
+                    contentPic = HtmlUnEscapeUtil.unEscapeContentPic(contentPic);   // 反转译html
                     request.setAttribute("contentaddtion", contentPic);
                     break;
                 case Constant.CHANNEL_RUBBINGS:
                     ContentRubbings contentRubbings = this.contentRubbingsService.getByContent(content);
+                    contentRubbings = HtmlUnEscapeUtil.unEscapeContentRubbings(contentRubbings);    // 反转译html
                     request.setAttribute("contentaddtion", contentRubbings);
                     break;
                 case Constant.CHANNEL_AUDIO:
                     ContentAudio contentAudio = this.contentAudioService.getByContent(content);
+                    contentAudio = HtmlUnEscapeUtil.unEscapeContentAudio(contentAudio);    // 反转译html
                     request.setAttribute("contentaddtion", contentAudio);
                     break;
                 case Constant.CHANNEL_VIDEO:
                     ContentVideo contentVideo = this.contentVideoService.getByContent(content);
+                    contentVideo = HtmlUnEscapeUtil.unEscapeContentVideo(contentVideo);    // 反转译html
                     request.setAttribute("contentaddtion", contentVideo);
                     break;
                 case Constant.CHANNEL_3D:
                     Content3D content3D = this.content3DService.getByContent(content);
+                    content3D = HtmlUnEscapeUtil.unEscapeContent3D(content3D);    // 反转译html
                     request.setAttribute("contentaddtion", content3D);
                     break;
                 case Constant.CHANNEL_ALLSCENE:
                     ContentAllScene contentAllScene = this.contentAllSceneService.getByContent(content);
+                    contentAllScene = HtmlUnEscapeUtil.unEscapeContentAllScene(contentAllScene);    // 反转译html
                     request.setAttribute("contentaddtion", contentAllScene);
                     break;
                 case Constant.CHANNEL_JOURNAL:
                     ContentNews contentNews = this.contentNewsService.getByContent(content);
+                    contentNews = HtmlUnEscapeUtil.unEscapeContentNews(contentNews);    // 反转译html
                     request.setAttribute("contentaddtion", contentNews);
                     if (content.getChannel().getId() == Constant.CHANNEL_JOURNAL) {
                         List<Journal> list = this.journalService.listNormal();
                         if (list != null && list.size() > 0) {
+                            for(Journal journal : list) {   // 反转译html
+                                journal = HtmlUnEscapeUtil.unEscapeJournal(journal);
+                            }
                             request.setAttribute("journals", list);
                         }
                     }

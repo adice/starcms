@@ -18,8 +18,8 @@ import java.util.Map;
  * @Author adi
  * @Date 2022-08-17 14:52
  */
-public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
-    public XssHttpServletRequestWrapper(HttpServletRequest request) {
+public class XssUnEscapeHttpServletRequestWrapper extends HttpServletRequestWrapper {
+    public XssUnEscapeHttpServletRequestWrapper(HttpServletRequest request) {
         super(request);
     }
 
@@ -27,7 +27,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     public String getHeader(String name) {
         String value = super.getHeader(name);
         if(value != null)
-            return HtmlUtils.htmlEscape(value);
+            return HtmlUtils.htmlUnescape(value);
         else
             return null;
     }
@@ -35,14 +35,14 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     @Override
     public String getQueryString() {
         String target = super.getQueryString();
-        return target == null ? null : HtmlUtils.htmlEscape(target);
+        return target == null ? null : HtmlUtils.htmlUnescape(target);
     }
 
     @Override
     public String getParameter(String name) {
         String value = super.getParameter(name);
         if(value != null)
-            return HtmlUtils.htmlEscape(value);
+            return HtmlUtils.htmlUnescape(value);
         else
             return null;
     }
@@ -55,7 +55,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
         }
         for (int i = 0; i < parameterValues.length; i++) {
             String value = parameterValues[i];
-            parameterValues[i] = HtmlUtils.htmlEscape(value);
+            parameterValues[i] = HtmlUtils.htmlUnescape(value);
         }
         return parameterValues;
     }
@@ -69,7 +69,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 //        for(String key:map.keySet()){
 //            Object val=map.get(key);
 //            if(map.get(key) instanceof String){
-//                resultMap.put(key,HtmlUtils.htmlEscape(val.toString()));
+//                resultMap.put(key,HtmlUtils.htmlUnescape(val.toString()));
 //            }else{
 //                resultMap.put(key,val);
 //            }

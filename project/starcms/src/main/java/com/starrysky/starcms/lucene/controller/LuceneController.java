@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -48,6 +49,9 @@ public class LuceneController {
             try {
                 Page<Content> page = this.luceneService.search(keywords, pageNum, pageSize);
                 request.setAttribute("page", page);
+                // 反转译HTML内容
+                if(keywords != null)
+                    request.setAttribute("keywords", HtmlUtils.htmlUnescape(keywords));
             } catch (Exception e) {
                 e.printStackTrace();
                 request.setAttribute("luceneinfo", "检索出错，请稍后再试");

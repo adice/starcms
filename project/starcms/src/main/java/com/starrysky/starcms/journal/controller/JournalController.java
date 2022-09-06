@@ -2,6 +2,7 @@ package com.starrysky.starcms.journal.controller;
 
 import com.starrysky.starcms.entity.*;
 import com.starrysky.starcms.journal.service.JournalService;
+import com.starrysky.starcms.security.HtmlUnEscapeUtil;
 import com.starrysky.starcms.util.Constant;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.domain.Page;
@@ -10,6 +11,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +40,9 @@ public class JournalController {
         try {
             Page<Journal> page = this.journalService.list(title, state, pageNum, pageSize);
             request.setAttribute("page", page);
+            // 反转译HTML内容
+            if(title != null)
+                request.setAttribute("keywords", HtmlUtils.htmlUnescape(title));
             request.setAttribute("activemenu", "journalmenu");
             return "/backstage/journal/list";
         } catch (Exception e) {
@@ -109,6 +114,7 @@ public class JournalController {
             request.setAttribute("activemenu", "journalmenu");
             return "redirect:/backstage/journal/list";
         } else {
+            journal = HtmlUnEscapeUtil.unEscapeJournal(journal);    // 反转译Html
             request.setAttribute("journal", journal);
             request.setAttribute("activemenu", "journalmenu");
             return "/backstage/journal/edit";
