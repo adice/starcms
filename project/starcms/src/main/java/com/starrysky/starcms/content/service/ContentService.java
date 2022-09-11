@@ -355,10 +355,10 @@ public class ContentService {
         contentDb.setLastEditTime(new Date());
         contentDb.setRecommend(content.isRecommend());
         // 原为草稿状态，修改为非草稿状态则进入待审核状态，其它情况不变，否则改为草稿状态
-        if (contentDb.getStatus() == 1 && content.getStatus() == 0) {
-            contentDb.setStatus(Constant.CONTENT_STATUS_AUDITING);
-        } else {
+        if (content.getStatus() == 1) {
             contentDb.setStatus(Constant.CONTENT_STATUS_DRAFT);
+        } else {
+            contentDb.setStatus(Constant.CONTENT_STATUS_AUDITING);
         }
         contentDb.setTags(content.getTags());
         contentDb.setTxt(content.getTxt());

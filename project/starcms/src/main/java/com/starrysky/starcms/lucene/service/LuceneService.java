@@ -29,7 +29,7 @@ public class LuceneService {
      *
      * @throws IOException 初始化索引失败，抛出异常
      */
-    public void initIndex() throws IOException {
+    public void initIndex() throws Exception {
         int pageNum = 1;
         int pageSize = 10000;
         int pageCount;

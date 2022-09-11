@@ -61,9 +61,7 @@ public class LuceneAop {
         if (joinPoint.getArgs() != null && joinPoint.getArgs().length > 0) {
             try {
                 Content content = (Content) joinPoint.getArgs()[0];
-                if (content.getStatus() == Constant.CONTENT_STATUS_DRAFT) {
-                    luceneService.deleteIndexById(String.valueOf(content.getId()));
-                }
+                luceneService.deleteIndexById(String.valueOf(content.getId()));
             } catch (IOException e) {
                 e.printStackTrace();
             }

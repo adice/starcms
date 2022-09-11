@@ -1,7 +1,6 @@
 package com.starrysky.starcms;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.search.ControlledRealTimeReopenThread;
@@ -9,6 +8,11 @@ import org.apache.lucene.search.SearcherFactory;
 import org.apache.lucene.search.SearcherManager;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.lionsoul.jcseg.ISegment;
+import org.lionsoul.jcseg.analyzer.JcsegAnalyzer;
+import org.lionsoul.jcseg.dic.ADictionary;
+import org.lionsoul.jcseg.dic.DictionaryFactory;
+import org.lionsoul.jcseg.segmenter.SegmenterConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -36,7 +40,10 @@ public class LuceneConfig {
      */
     @Bean
     public Analyzer analyzer() {
-        return new SmartChineseAnalyzer();
+//        return new SmartChineseAnalyzer();
+        SegmenterConfig config = new SegmenterConfig();
+        ADictionary dictionary = DictionaryFactory.createDefaultDictionary(config, true);
+        return new JcsegAnalyzer(ISegment.MOST, config, dictionary);
     }
 
     /**

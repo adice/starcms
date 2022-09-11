@@ -83,7 +83,7 @@ public class LuceneDao {
      *
      * @throws Exception 清空索引出错抛出的异常
      */
-    public void deleteAllIndex() throws IOException {
+    public void deleteAllIndex() throws Exception {
         indexWriter.deleteAll();
         indexWriter.commit();
     }
@@ -93,19 +93,19 @@ public class LuceneDao {
         doc.add(new StringField("id", content.getId() + "", Field.Store.YES));
         doc.add(new TextField("title", content.getTitle(), Field.Store.YES));
         doc.add(new TextField("txt", content.getTxt(), Field.Store.NO));
-        if (content.getTxt().length() > 10) {
+        if (content.getTxt().length() > 20) {
             doc.add(new StoredField("shorttxt", HtmlStringUtil.subStringHTML(content.getTxt(), 20)));
         } else {
             doc.add(new StoredField("shorttxt", content.getTxt()));
         }
         doc.add(new StoredField("channelTitle", content.getChannel().getTitle()));
-        doc.add(new StoredField("addTime", new SimpleDateFormat("yyyy-MM-dd hh:mm:dd").format(content.getAddTime())));
+        doc.add(new StoredField("addTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:dd").format(content.getAddTime())));
         return doc;
     }
 
     public Page<Content> search(String keywords, int pageNum, int pageSize) throws Exception {
         String[] keys = keywords.split("\\s+");
-        if (keys != null && keys.length > 0) {
+        if (keys.length > 0) {
             searcherManager.maybeRefresh();
             IndexSearcher indexSearcher = searcherManager.acquire();
             BooleanQuery.Builder builder = new BooleanQuery.Builder();
@@ -125,16 +125,17 @@ public class LuceneDao {
                 String title = getHtmlHighlight(booleanQuery, "title", doc.get("title"));
                 content.setTitle(title == null ? doc.get("title") : title);
                 String shorttxt = getHtmlHighlight(booleanQuery, "shorttxt", doc.get("shorttxt"));
-                if(shorttxt != null) {
-                    StringBuffer stringBuffer = new StringBuffer(doc.get("shorttxt"));
-                    stringBuffer = stringBuffer.replace(stringBuffer.lastIndexOf("..."), stringBuffer.lastIndexOf("...") + 3, "<font color='red'>...</font>");
-                    shorttxt = stringBuffer.toString();
-                }
-                content.setTxt(shorttxt == null ? doc.get("shorttxt") : shorttxt);
+//                if (shorttxt == null) {
+//                    StringBuffer stringBuffer = new StringBuffer(doc.get("shorttxt"));
+//                     System.out.println(stringBuffer.lastIndexOf("..."));
+//                    stringBuffer.replace(stringBuffer.lastIndexOf("..."), stringBuffer.lastIndexOf("...") + 3, "<font color='red'>...</font>");
+//                    shorttxt = stringBuffer.toString();
+//                }
+                content.setTxt(shorttxt);
                 Channel channel = new Channel();
                 channel.setTitle(doc.get("channelTitle"));
                 content.setChannel(channel);
-                content.setAddTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:dd").parse(doc.get("addTime")));
+                content.setAddTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:dd").parse(doc.get("addTime")));
                 list.add(content);
             }
             Page<Content> page = new PageImpl<>(list, PageRequest.of(pageNum - 1, pageSize, Sort.Direction.DESC, "id"), topDocs.totalHits.value);
