@@ -290,7 +290,7 @@
             cleft = parseInt(cleft) + parseInt($(".viewer-move").css("margin-left").replace("px", ""));
             ctop = parseInt(ctop) + parseInt($(".viewer-move").css("margin-top").replace("px", ""));
             //红色圆圈
-            var div = $('<div class="drag-circle">dfs</div>');
+            let div = $('<div class="drag-circle"></div>');
             div.css({
                 left: cleft + "px",
                 top: ctop + "px"
@@ -299,27 +299,31 @@
         }
         $("#btnPosition").click(function () {
             if ($("#path").val() != "") {
-                var ct, cl;
-                var image = new Image();
+                let image = new Image();
                 image.src = '/contents' + $("#path").val();
                 image.id = "viewimage";
-                var viewer = new Viewer(image, {
-                    zoomable: false,
+                let viewer = new Viewer(image, {
+                    scalable: false,
+                    toggleOnDblclick: false,
+                    zoomOnWheel: false,
+                    zoomOnTouch: false,
+                    toolbar: false,
                     viewed: function (ev) {
                         if($("#position").val() != "") {
-                            cl = $('#position').val().split(",")[0];
-                            ct = $('#position').val().split(",")[1];
+                            let cl = $('#position').val().split(",")[0];
+                            let ct = $('#position').val().split(",")[1];
                             markCircle(cl, ct);
                         }
                         $(".viewer-move.viewer-transition")[0].addEventListener('dblclick', function (e) {
                             markCircle(e.offsetX - 8, e.offsetY - 8);
                             $('#position').val((e.offsetX - 8) + ',' + (e.offsetY - 8));
                         });
+                        viewer.zoomTo(1);
                     },
                     moved: function (ev) {
                         if($("#position").val() != "") {
-                            cl = $('#position').val().split(",")[0];
-                            ct = $('#position').val().split(",")[1];
+                            let cl = $('#position').val().split(",")[0];
+                            let ct = $('#position').val().split(",")[1];
                             markCircle(cl, ct);
                         }
                     },
@@ -328,7 +332,6 @@
                     }
                 });
                 viewer.view();
-
             } else {
                 toastr.options = {
                     "closeButton": true,
@@ -452,15 +455,7 @@
             "closeButton": true,
             "debug": false,
             "progressBar": true,
-            "positionClass": "toast-top-center",
-            "showDuration": "300",
-            "hideDuration": "1000",
-            "timeOut": "5000",
-            "extendedTimeOut": "1000",
-            "showEasing": "swing",
-            "hideEasing": "linear",
-            "showMethod": "fadeIn",
-            "hideMethod": "fadeOut"
+            "positionClass": "toast-top-center"
         };
         toastr.warning("[[${contentinfo}]]", "提示");
     });

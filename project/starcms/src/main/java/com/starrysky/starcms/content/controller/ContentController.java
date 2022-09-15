@@ -34,7 +34,7 @@ import java.util.List;
 
 /**
  * @ClassName ContentController
- * @Description
+ * @Description 内容控制器，用于内容的管理
  * @Author adi
  * @Date 2022-08-02 09:24
  */
@@ -67,16 +67,16 @@ public class ContentController {
     /**
      * 内容列表
      *
-     * @param title
-     * @param recommend
-     * @param status
-     * @param channelId
-     * @param name
-     * @param realName
-     * @param pageNum
-     * @param pageSize
-     * @param request
-     * @return
+     * @param title 标题
+     * @param recommend 是否推荐
+     * @param status 状态
+     * @param channelId 栏目id
+     * @param name 账户
+     * @param realName 真实姓名
+     * @param pageNum 页码
+     * @param pageSize 每页数据量
+     * @param request 请求
+     * @return 列表页
      */
     @RequestMapping("/list")
     public String list(String title, Boolean recommend, Integer status, Integer channelId, String name, String realName, Integer pageNum, Integer pageSize, HttpServletRequest request) {
@@ -103,7 +103,7 @@ public class ContentController {
                         break;
                     }
                 }
-                if (beParent == false) {
+                if (!beParent) {
                     channelIds = new Integer[1];
                     channelIds[0] = channelId;
                 }
@@ -142,6 +142,58 @@ public class ContentController {
             return "redirect:/backstage/index";
         }
     }
+
+    @GetMapping("/{id}")
+    public String content(@PathVariable("id") String id, HttpServletRequest request) {
+        try {
+            int contentId = Integer.parseInt(id);
+            Content content = this.contentService.getById(contentId);
+            content = HtmlUnEscapeUtil.unEscapeContent(content);
+            request.setAttribute("content", content);
+            switch (content.getChannel().getId()) {
+                case Constant.CHANNEL_BOOK:
+                    ContentBook contentBook = this.contentBookService.getByContent(content);
+                    request.setAttribute("contentaddtion", HtmlUnEscapeUtil.unEscapeContentBook(contentBook));
+                    break;
+                case Constant.CHANNEL_PIC:
+                case Constant.CHANNEL_MURAL:
+                case Constant.CHANNEL_PAINTING:
+                    ContentPic contentPic = this.contentPicService.getByContent(content);
+                    request.setAttribute("contentaddtion", HtmlUnEscapeUtil.unEscapeContentPic(contentPic));
+                    break;
+                case Constant.CHANNEL_RUBBINGS:
+                    ContentRubbings contentRubbings = this.contentRubbingsService.getByContent(content);
+                    request.setAttribute("contentaddtion", HtmlUnEscapeUtil.unEscapeContentRubbings(contentRubbings));
+                    break;
+                case Constant.CHANNEL_AUDIO:
+                    ContentAudio contentAudio = this.contentAudioService.getByContent(content);
+                    request.setAttribute("contentaddtion", HtmlUnEscapeUtil.unEscapeContentAudio(contentAudio));
+                    break;
+                case Constant.CHANNEL_VIDEO:
+                    ContentVideo contentVideo = this.contentVideoService.getByContent(content);
+                    request.setAttribute("contentaddtion", HtmlUnEscapeUtil.unEscapeContentVideo(contentVideo));
+                    break;
+                case Constant.CHANNEL_3D:
+                    Content3D content3D = this.content3DService.getByContent(content);
+                    request.setAttribute("contentaddtion", HtmlUnEscapeUtil.unEscapeContent3D(content3D));
+                    break;
+                case Constant.CHANNEL_ALLSCENE:
+                    ContentAllScene contentAllScene = this.contentAllSceneService.getByContent(content);
+                    request.setAttribute("contentaddtion", HtmlUnEscapeUtil.unEscapeContentAllScene(contentAllScene));
+                    break;
+                case Constant.CHANNEL_JOURNAL:
+                    ContentNews contentNews = this.contentNewsService.getByContent(content);
+                    request.setAttribute("contentaddtion", HtmlUnEscapeUtil.unEscapeContentNews(contentNews));
+            }
+            request.setAttribute("activechildmenu", "ccmenu" + content.getChannel().getId());
+            request.setAttribute("activemenu", "contentmenu");
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("contentinfo", "查询出错，请稍后再试！");
+        }
+        return "/backstage/content/content";
+    }
+
 
     @RequestMapping("/toadd")
     public String toAdd(Integer channelId, HttpServletRequest request) {
@@ -394,13 +446,13 @@ public class ContentController {
     /**
      * 添加书籍
      *
-     * @param content
-     * @param seriesName
-     * @param authorName
-     * @param cover
-     * @param attachments
-     * @param channelId
-     * @param request
+     * @param content 内容
+     * @param seriesName 丛书名
+     * @param authorName 作者名
+     * @param cover 封面
+     * @param attachments PDF附件
+     * @param channelId 栏目id
+     * @param request 请求
      */
     public void addBook(Content content, String seriesName, String authorName, String cover, String attachments, Integer channelId, HttpServletRequest request) {
         boolean checked = true;
@@ -452,13 +504,13 @@ public class ContentController {
     /**
      * 修改书籍
      *
-     * @param content
-     * @param seriesName
-     * @param authorName
-     * @param cover
-     * @param attachments
-     * @param channelId
-     * @param request
+     * @param content 内容
+     * @param seriesName 丛书名
+     * @param authorName 作者鸣
+     * @param cover 封面
+     * @param attachments PDF附件
+     * @param channelId 栏目id
+     * @param request 请求
      */
     public void editBook(Content content, String seriesName, String authorName, String cover, String attachments, Integer channelId, HttpServletRequest request) {
         boolean checked = true;

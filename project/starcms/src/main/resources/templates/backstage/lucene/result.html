@@ -66,10 +66,10 @@
                                 <td th:utext="${content.title}"></td>
                                 <td th:text="${content.channel.title}"></td>
                                 <td th:utext="${content.txt}"></td>
-                                <td th:text="${#dates.format(content.addTime, 'yyyy-MM-dd hh:mm:ss')}"></td>
+                                <td th:text="${#dates.format(content.addTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                                 <td class="hidden-xs">
                                     <button class="btn btn-primary btn-xs" th:alt-title="查看详情"
-                                            th:onclick="location.href='/backstage/content/[[${content.id}]]'">
+                                            th:onclick="window.open('/backstage/content/[[${content.id}]]', '_blank')">
                                         <i class="fa fa-external-link"></i></button>
                                 </td>
                             </tr>

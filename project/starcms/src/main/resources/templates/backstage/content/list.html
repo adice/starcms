@@ -130,6 +130,8 @@
                                 <td><span class="label label-info label-mini" th:text="${content.status == 1 ? '草稿' : (content.status == 2 ? '审核中' : (content.status == 3 ? '审核通过' : (content.status == 4 ? '审核退回' : '')))}"></span></td>
                                 <td><span class="label label-info label-mini" th:text="${content.recommend ? '是' : '否'}"></span></td>
                                 <td class="hidden-xs">
+                                    <button class="btn btn-primary btn-xs" th:alt-title="查看详情" th:onclick="window.open('/backstage/content/[[${content.id}]]', '_blank')">
+                                        <i class="fa fa-external-link"></i></button>
                                     <button sec:authorize="hasAnyRole('admin', 'entry')" class="btn btn-primary btn-xs" th:alt-title="修改" th:onclick="location.href='/backstage/content/toedit/[[${content.id}]]'">
                                         <i class="fa fa-pencil"></i></button>
                                     <button sec:authorize="hasAnyRole('admin', 'entry')" class="btn btn-danger btn-xs" th:alt-title="删除" th:onclick="deleteContent([[${content.id}]], [[${channelId != null ? channelId : ''}]])">
